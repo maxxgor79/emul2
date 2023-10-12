@@ -1,0 +1,22 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
+package gui;
+
+import java.util.ResourceBundle;
+import java.io.File;
+import javax.swing.filechooser.FileFilter;
+
+public class FileFilterTape extends FileFilter
+{
+    @Override
+    public boolean accept(final File fIn) {
+        return fIn.getName().toLowerCase().endsWith(".tap") || fIn.getName().toLowerCase().endsWith(".tzx") || fIn.isDirectory();
+    }
+    
+    @Override
+    public String getDescription() {
+        return ResourceBundle.getBundle("gui/Bundle").getString("TAPE_TYPE");
+    }
+}
