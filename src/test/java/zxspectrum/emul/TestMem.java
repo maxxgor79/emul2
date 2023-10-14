@@ -108,4 +108,64 @@ public class TestMem {
         val = z80.getMemory().peek8(20000);
         Assertions.assertEquals(val, 77);
     }
+
+    @Test
+    void testPaging() {
+        Z80 z80 = new Z80(MachineModel.SPECTRUM128K);
+        z80.A.setValue(50);
+        z80.getMemory().poke(0xf000, z80.A);
+        z80.A.setValue(51);
+        z80.getMemory().setPageMapping(1);
+        z80.getMemory().poke(0xf000, z80.A);
+        z80.A.setValue(52);
+        z80.getMemory().setPageMapping(2);
+        z80.getMemory().poke(0xf000, z80.A);
+        z80.A.setValue(53);
+        z80.getMemory().setPageMapping(3);
+        z80.getMemory().poke(0xf000, z80.A);
+        z80.A.setValue(54);
+        z80.getMemory().setPageMapping(4);
+        z80.getMemory().poke(0xf000, z80.A);
+        z80.A.setValue(55);
+        z80.getMemory().setPageMapping(5);
+        z80.getMemory().poke(0xf000, z80.A);
+        z80.A.setValue(56);
+        z80.getMemory().setPageMapping(6);
+        z80.getMemory().poke(0xf000, z80.A);
+        z80.A.setValue(57);
+        z80.getMemory().setPageMapping(7);
+        z80.getMemory().poke(0xf000, z80.A);
+
+        z80.getMemory().setPageMapping(0);
+        int val = z80.getMemory().peek8(0xf000);
+        Assertions.assertEquals(val, 50);
+
+        z80.getMemory().setPageMapping(1);
+        val = z80.getMemory().peek8(0xf000);
+        Assertions.assertEquals(val, 51);
+
+        z80.getMemory().setPageMapping(2);
+        val = z80.getMemory().peek8(0xf000);
+        Assertions.assertEquals(val, 52);
+
+        z80.getMemory().setPageMapping(3);
+        val = z80.getMemory().peek8(0xf000);
+        Assertions.assertEquals(val, 53);
+
+        z80.getMemory().setPageMapping(4);
+        val = z80.getMemory().peek8(0xf000);
+        Assertions.assertEquals(val, 54);
+
+        z80.getMemory().setPageMapping(5);
+        val = z80.getMemory().peek8(0xf000);
+        Assertions.assertEquals(val, 55);
+
+        z80.getMemory().setPageMapping(6);
+        val = z80.getMemory().peek8(0xf000);
+        Assertions.assertEquals(val, 56);
+
+        z80.getMemory().setPageMapping(7);
+        val = z80.getMemory().peek8(0xf000);
+        Assertions.assertEquals(val, 57);
+    }
 }

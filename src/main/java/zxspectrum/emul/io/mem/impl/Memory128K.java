@@ -27,13 +27,13 @@ public class Memory128K extends MemoryPaged {
 
   public Memory128K() {
     rom = new byte[0x02][romSize];
-    pages = new byte[0x08][0x8000];
+    pages = new byte[0x08][0x4000];
     buf = new byte[0x04][];//64Kb
     defaultPageMapping();
     lastAddress = 0xFFFF;
     lastPageIndex = 0x03;
     pagedAddressShift = 0x10 - lastPageIndex;
-    lastPageAddress = 0x7FFF;
+    lastPageAddress = 0x3FFF;
   }
 
   @Override
@@ -47,7 +47,7 @@ public class Memory128K extends MemoryPaged {
     int selectedRom = (value & SELECTED_ROM) == 0x00 ? 0x00 : 0x01;
     disabledPageSelecting = (value & DISABLED_PAGE_SELECTING) != 0x00;
     buf[0x00] = rom[selectedRom];
-    buf[0x0] = pages[pageIndex];
+    buf[0x03] = pages[pageIndex];
   }
 
   protected void defaultPageMapping() {
