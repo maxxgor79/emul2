@@ -23,14 +23,14 @@ public class MemoryPlus2 extends Memory128K {
 
   public MemoryPlus2() {
     rom = new byte[0x04][romSize];
-    pages = new byte[0x08][0x8000];
+    pages = new byte[0x08][0x4000];
     buf = new byte[0x04][];//64Kb
     defaultPageMapping();
 
     lastAddress = 0xFFFF;
     lastPageIndex = 0x03;
     pagedAddressShift = 0x10 - lastPageIndex;
-    lastPageAddress = 0x7FFF;
+    lastPageAddress = 0x3FFF;
   }
 
   @Override
@@ -73,12 +73,14 @@ public class MemoryPlus2 extends Memory128K {
         buf[0x02] = pages[0x06];
         buf[0x03] = pages[0x03];
       }
+      romSize = 0x0000;
     } else {
       int index = selectedRomHi | selectedRomLo;
       buf[0x00] = rom[index];
       buf[0x01] = pages[0x05];
       buf[0x02] = pages[0x02];
       buf[0x03] = pages[pageIndex];
+      romSize = 0x4000;
     }
   }
 

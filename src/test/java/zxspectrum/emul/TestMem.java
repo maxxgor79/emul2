@@ -168,4 +168,14 @@ public class TestMem {
         val = z80.getMemory().peek8(0xf000);
         Assertions.assertEquals(val, 57);
     }
+
+    @Test
+    void testPagingPlus2() {
+        Z80 z80 = new Z80(MachineModel.SPECTRUMPLUS2);
+        z80.getMemory().setPageMapping((0b0000_0001 << 16));
+        z80.A.setValue(190);
+        z80.getMemory().poke(0, z80.A);
+        z80.getMemory().peek(0, z80.B);
+        Assertions.assertEquals(z80.B.getValue(), 190);
+    }
 }
