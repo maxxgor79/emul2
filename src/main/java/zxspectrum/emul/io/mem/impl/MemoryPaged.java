@@ -218,6 +218,9 @@ abstract class MemoryPaged implements MemoryControl {
     @Override
     public void poke(int address, @NonNull Reg8 r) {
         address &= lastAddress;
+        if (address < romSize) {
+            return;
+        }
         int pageIndex = (address >>> pagedAddressShift) & lastPageIndex;
         address &= lastPageAddress;
         buf[pageIndex][address] = (byte) r.getValue();

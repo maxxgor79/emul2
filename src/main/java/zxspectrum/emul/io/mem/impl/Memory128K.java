@@ -1,5 +1,7 @@
 package zxspectrum.emul.io.mem.impl;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Arrays;
 
 /**
@@ -7,15 +9,16 @@ import java.util.Arrays;
  *
  * @author Maxim Gorin
  */
+@Slf4j
 public class Memory128K extends MemoryPaged {
 
     protected static final int SELECTED_PAGE = 0x07;
 
-    protected static final int SHADOW_SCREEN = 0x08;
+    public static final int SHADOW_SCREEN = 0x08;
 
-    protected static final int SELECTED_ROM = 0x10;
+    public static final int SELECTED_ROM = 0x10;
 
-    protected static final int DISABLED_PAGE_SELECTING = 0x20;
+    public static final int DISABLED_PAGE_SELECTING = 0x20;
 
     protected byte[][] pages;
 
@@ -38,16 +41,15 @@ public class Memory128K extends MemoryPaged {
 
     @Override
     public void setPageMapping(int value) {
-        if (disabledPageSelecting) {
-            return;
-        }
         value &= 0x3F;
-        int pageIndex = value & SELECTED_PAGE;
-        selectedShadowScreen = (value & SHADOW_SCREEN) != 0x00;
-        int selectedRom = (value & SELECTED_ROM) == 0x00 ? 0x00 : 0x01;
-        disabledPageSelecting = (value & DISABLED_PAGE_SELECTING) != 0x00;
-        buf[0x00] = rom[selectedRom];
-        buf[0x03] = pages[pageIndex];
+        if (!disabledPageSelecting) {
+            selectedShadowScreen = (value & SHADOW_SCREEN) != 0x00;
+            disabledPageSelecting = (value & DISABLED_PAGE_SELECTING) != 0x00;
+            int pageIndex = value & SELECTED_PAGE;
+            int selectedRom = (value & SELECTED_ROM) == 0x00 ? 0x00 : 0x01;
+            buf[0x00] = rom[selectedRom];
+            buf[0x03] = pages[pageIndex];
+        }
     }
 
     protected void defaultPageMapping() {

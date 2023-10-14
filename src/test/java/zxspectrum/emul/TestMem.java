@@ -2,9 +2,11 @@ package zxspectrum.emul;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import zxspectrum.emul.io.mem.impl.Memory128K;
 import zxspectrum.emul.machine.MachineModel;
 import zxspectrum.emul.proc.Z80;
 
@@ -18,8 +20,15 @@ import zxspectrum.emul.proc.Z80;
 public class TestMem {
 
     @Test
+    @Order(1)
     void testMem48k() {
         Z80 z80 = new Z80(MachineModel.SPECTRUM48K);
+        z80.A.setValue(150);
+        z80.getMemory().poke(0, z80.A);
+        int val = z80.getMemory().peek8(0);
+        Assertions.assertEquals(val, 0);
+
+
         z80.BC.setValue(0x1234);
         z80.getMemory().push(z80.BC);
         z80.getMemory().pop(z80.HL);
@@ -49,7 +58,7 @@ public class TestMem {
 
         z80.HL.setValue(0x4001);
         z80.getMemory().poke8(z80.HL, 123);
-        int val = z80.getMemory().peek8(z80.HL);
+        val = z80.getMemory().peek8(z80.HL);
         Assertions.assertEquals(val, 123);
 
         z80.HL.setValue(0x4500);
@@ -64,8 +73,15 @@ public class TestMem {
     }
 
     @Test
+    @Order(2)
     void testMem128k() {
         Z80 z80 = new Z80(MachineModel.SPECTRUM128K);
+
+        z80.A.setValue(150);
+        z80.getMemory().poke(0, z80.A);
+        int val = z80.getMemory().peek8(0);
+        Assertions.assertEquals(val, 0);
+
         z80.BC.setValue(0x1234);
         z80.getMemory().push(z80.BC);
         z80.getMemory().pop(z80.HL);
@@ -95,7 +111,7 @@ public class TestMem {
 
         z80.HL.setValue(0x4001);
         z80.getMemory().poke8(z80.HL, 123);
-        int val = z80.getMemory().peek8(z80.HL);
+        val = z80.getMemory().peek8(z80.HL);
         Assertions.assertEquals(val, 123);
 
         z80.HL.setValue(0x4500);
@@ -110,6 +126,7 @@ public class TestMem {
     }
 
     @Test
+    @Order(3)
     void testPaging() {
         Z80 z80 = new Z80(MachineModel.SPECTRUM128K);
         z80.A.setValue(50);
@@ -170,6 +187,21 @@ public class TestMem {
     }
 
     @Test
+    @Order(100)
+    void testPaging2() {
+        Z80 z80 = new Z80(MachineModel.SPECTRUM128K);
+        z80.A.setValue(50);
+        z80.getMemory().setPageMapping(0);
+        z80.getMemory().poke(0xf000, z80.A);
+        z80.getMemory().setPageMapping(Memory128K.DISABLED_PAGE_SELECTING);
+        z80.getMemory().setPageMapping(5);
+        z80.getMemory().peek(0xf000, z80.B);
+        Assertions.assertEquals(z80.B.getValue(), 50);
+        z80.getMemory().reset();
+    }
+
+    @Test
+    @Order(4)
     void testPagingPlus2() {
         Z80 z80 = new Z80(MachineModel.SPECTRUMPLUS2);
         z80.getMemory().setPageMapping((0b0000_0001 << 16));
@@ -177,5 +209,13 @@ public class TestMem {
         z80.getMemory().poke(0, z80.A);
         z80.getMemory().peek(0, z80.B);
         Assertions.assertEquals(z80.B.getValue(), 190);
+        z80.getMemory().setPageMapping(0);
+        z80.A.setValue(191);
+        z80.getMemory().poke(5, z80.A);
+        z80.getMemory().peek(5, z80.B);
+        if (z80.B.getValue() == 191) {
+            Assertions.fail();
+        }
+
     }
 }

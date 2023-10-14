@@ -1,11 +1,5 @@
 package zxspectrum.emul.io.mem.impl;
 
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import zxspectrum.emul.io.mem.MemoryAccess;
-import zxspectrum.emul.proc.reg.Reg16;
-import zxspectrum.emul.proc.reg.Reg8;
-
 /**
  * MemoryPlus2.
  *
@@ -13,24 +7,23 @@ import zxspectrum.emul.proc.reg.Reg8;
  */
 public class MemoryPlus2 extends Memory128K {
 
-  protected static final int SELECTED_ROM_LOW = SELECTED_ROM;
+  public static final int SELECTED_ROM_LOW = SELECTED_ROM;
 
-  protected static final int SPECIAL_PAGING_MODE = 0x01;
+  public static final int SPECIAL_PAGING_MODE = 0x01;
 
-  protected static final int SPECIAL_ATTRIBUTE = 0x02;
+  public static final int SPECIAL_ATTRIBUTE = 0x02;
 
-  protected static final int SPECIAL_SELECTED_ROM_HI = 0x04;
+  public static final int SPECIAL_SELECTED_ROM_HI = 0x04;
 
   public MemoryPlus2() {
     rom = new byte[0x04][romSize];
     pages = new byte[0x08][0x4000];
     buf = new byte[0x04][];//64Kb
-    defaultPageMapping();
-
     lastAddress = 0xFFFF;
     lastPageIndex = 0x03;
     pagedAddressShift = 0x10 - lastPageIndex;
     lastPageAddress = 0x3FFF;
+    defaultPageMapping();
   }
 
   @Override
