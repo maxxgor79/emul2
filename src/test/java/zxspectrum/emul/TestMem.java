@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import zxspectrum.emul.io.mem.Memory;
 import zxspectrum.emul.io.mem.impl.Memory128K;
 import zxspectrum.emul.machine.MachineModel;
 import zxspectrum.emul.proc.Z80;
@@ -23,6 +24,7 @@ public class TestMem {
     @Order(1)
     void testMem48k() {
         Z80 z80 = new Z80(MachineModel.SPECTRUM48K);
+        z80.setMemory(Memory.getInstance(MachineModel.SPECTRUM48K));
         z80.A.setValue(150);
         z80.getMemory().poke(0, z80.A);
         int val = z80.getMemory().peek8(0);
@@ -76,7 +78,7 @@ public class TestMem {
     @Order(2)
     void testMem128k() {
         Z80 z80 = new Z80(MachineModel.SPECTRUM128K);
-
+        z80.setMemory(Memory.getInstance(MachineModel.SPECTRUM128K));
         z80.A.setValue(150);
         z80.getMemory().poke(0, z80.A);
         int val = z80.getMemory().peek8(0);
@@ -129,6 +131,7 @@ public class TestMem {
     @Order(3)
     void testPaging() {
         Z80 z80 = new Z80(MachineModel.SPECTRUM128K);
+        z80.setMemory(Memory.getInstance(MachineModel.SPECTRUM128K));
         z80.A.setValue(50);
         z80.getMemory().poke(0xf000, z80.A);
         z80.A.setValue(51);
@@ -190,6 +193,7 @@ public class TestMem {
     @Order(100)
     void testPaging2() {
         Z80 z80 = new Z80(MachineModel.SPECTRUM128K);
+        z80.setMemory(Memory.getInstance(MachineModel.SPECTRUM128K));
         z80.A.setValue(50);
         z80.getMemory().setPageMapping(0);
         z80.getMemory().poke(0xf000, z80.A);
@@ -203,7 +207,8 @@ public class TestMem {
     @Test
     @Order(4)
     void testPagingPlus2() {
-        Z80 z80 = new Z80(MachineModel.SPECTRUMPLUS2);
+        Z80 z80 = new Z80(MachineModel.SPECTRUMPLUS2A);
+        z80.setMemory(Memory.getInstance(MachineModel.SPECTRUMPLUS2A));
         z80.getMemory().setPageMapping((0b0000_0001 << 16));
         z80.A.setValue(190);
         z80.getMemory().poke(0, z80.A);
