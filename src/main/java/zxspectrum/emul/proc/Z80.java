@@ -9,6 +9,7 @@ import zxspectrum.emul.io.port.Port;
 import zxspectrum.emul.io.port.Ports;
 import zxspectrum.emul.machine.MachineModel;
 import zxspectrum.emul.proc.reg.ArithmeticProcessor;
+import zxspectrum.emul.proc.reg.ArrayProcessor;
 import zxspectrum.emul.proc.reg.LogicalProcessor;
 import zxspectrum.emul.proc.reg.RegA;
 import zxspectrum.emul.proc.reg.RegAF;
@@ -64,6 +65,14 @@ public class Z80 implements Resettable {
 
     public final RegDE DE = new RegDE(E, D);
 
+
+    public final RegD altD = new RegD();
+
+    public final RegE altE = new RegE();
+
+    public final RegDE altDE = new RegDE(altE, altD);
+
+
     public final RegH H = new RegH();
 
     public final RegL L = new RegL();
@@ -111,6 +120,8 @@ public class Z80 implements Resettable {
 
     private RegisterProcessor registerProcessor;
 
+    private ArrayProcessor arrayProcessor;
+
     public Z80() {
         setMachineModel(MachineModel.SPECTRUM48K);
         init();
@@ -133,6 +144,7 @@ public class Z80 implements Resettable {
         arithmeticProcessor = new ArithmeticProcessor(this);
         logicalProcessor = new LogicalProcessor(this);
         registerProcessor = new RegisterProcessor(this);
+        arrayProcessor = new ArrayProcessor(this);
         reset();
     }
 
