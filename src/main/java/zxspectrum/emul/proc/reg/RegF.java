@@ -7,40 +7,23 @@ import java.util.Arrays;
  *
  * @author Maxim Gorin
  */
-public class RegF extends Reg8 {
+public class RegF extends Reg8 implements Const {
 
-    private static final int BIT7 = 0b1000_0000;
+    public static final int SIGN_FLAG = BIT_7;
 
-    private static final int BIT7MASK = 0b0111_1111;
+    public static final int ZERO_FLAG = BIT_6;
 
-    private static final int BIT6 = 0b0100_0000;
+    public static final int HALF_CARRY_FLAG = BIT_4;
 
-    private static final int BIT6MASK = 0b1011_1111;
+    public static final int P_V_FLAG = BIT_2;
 
-    private static final int BIT4 = 0b0001_0000;
+    public static final int N_FLAG = BIT_1;
 
-    private static final int BIT4MASK = 0b1110_1111;
+    public static final int CARRY_FLAG = BIT_0;
 
-    private static final int BIT2 = 0b0000_0100;
+    private static final int BIT_5 = 0b0010_0000;
 
-    private static final int BIT2MASK = 0b1111_1011;
-
-    private static final int BIT1 = 0b0000_0010;
-
-    private static final int BIT1MASK = 0b1111_1101;
-
-    private static final int BIT0 = 0b0000_0001;
-
-    private static final int BIT0MASK = 0b1111_1110;
-
-    private static final int BIT5 = 0b0010_0000;
-
-    private static final int BIT5MASK = 0b1101_1111;
-
-
-    private static final int BIT3 = 0b0000_1000;
-
-    private static final int BIT3MASK = 0b1111_0111;
+    private static final int BIT_3 = 0b0000_1000;
 
     public static int[] SZ53N_ADD_TABLE;
 
@@ -99,98 +82,98 @@ public class RegF extends Reg8 {
 
     public void setSign(final boolean sign) {
         if (sign) {
-            value |= BIT7;
+            value |= SIGN_FLAG;
         } else {
-            value &= BIT7MASK;
+            value &= ~SIGN_FLAG;
         }
     }
 
     public boolean isSign() {
-        return (value & BIT7) != 0;
+        return (value & SIGN_FLAG) != 0;
     }
 
 
     public void setZero(final boolean zero) {
         if (zero) {
-            value |= BIT6;
+            value |= ZERO_FLAG;
         } else {
-            value &= BIT6MASK;
+            value &= ~ZERO_FLAG;
         }
     }
 
     public boolean isZero() {
-        return (value & BIT6) != 0;
+        return (value & ZERO_FLAG) != 0;
     }
 
     public void setHalfCarry(final boolean halfCarry) {
         if (halfCarry) {
-            value |= BIT4;
+            value |= HALF_CARRY_FLAG;
         } else {
-            value &= BIT4MASK;
+            value &= ~HALF_CARRY_FLAG;
         }
     }
 
     public boolean isHalfCarry() {
-        return (value & BIT4) != 0;
+        return (value & HALF_CARRY_FLAG) != 0;
     }
 
     public void setParityOverflow(final boolean po) {
         if (po) {
-            value |= BIT2;
+            value |= P_V_FLAG;
         } else {
-            value &= BIT2MASK;
+            value &= ~P_V_FLAG;
         }
     }
 
     public boolean isParityOverflow() {
-        return (value & BIT2) != 0;
+        return (value & P_V_FLAG) != 0;
     }
 
     public void setAddSubstract(boolean n) {
         if (n) {
-            value |= BIT1;
+            value |= N_FLAG;
         } else {
-            value &= BIT1MASK;
+            value &= ~N_FLAG;
         }
     }
 
     public boolean isAddSubstract() {
-        return (value & BIT1) != 0;
+        return (value & N_FLAG) != 0;
     }
 
     public void setCarry(final boolean carry) {
         if (carry) {
-            value |= BIT0;
+            value |= CARRY_FLAG;
         } else {
-            value &= BIT0MASK;
+            value &= ~CARRY_FLAG;
         }
     }
 
     public boolean isCarry() {
-        return (value & BIT0) != 0;
+        return (value & CARRY_FLAG) != 0;
     }
 
     public boolean is5Bit() {
-        return (value & BIT5) != 0;
+        return (value & BIT_5) != 0;
     }
 
     public void set5Bit(final boolean on) {
         if (on) {
-            value |= BIT5;
+            value |= BIT_5;
         } else {
-            value &= BIT5MASK;
+            value &= ~BIT_5;
         }
     }
 
     public boolean is3Bit() {
-        return (value & BIT3) != 0;
+        return (value & BIT_3) != 0;
     }
 
     public void set3Bit(final boolean on) {
         if (on) {
-            value |= BIT3;
+            value |= BIT_3;
         } else {
-            value &= BIT3MASK;
+            value &= ~BIT_3;
         }
     }
 }

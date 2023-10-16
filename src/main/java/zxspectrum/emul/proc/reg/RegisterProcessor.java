@@ -3,7 +3,8 @@ package zxspectrum.emul.proc.reg;
 import lombok.NonNull;
 import zxspectrum.emul.proc.Z80;
 
-public class RegisterProcessor {
+public class RegisterProcessor implements Const {
+
     private final Z80 z80;
 
     public RegisterProcessor(@NonNull Z80 z80) {
@@ -20,7 +21,7 @@ public class RegisterProcessor {
         if (zeroFlag) {
             z80.F.value |= 0x44;
         }
-        if (mask == 128 && !zeroFlag) {
+        if (mask == 0x80 && !zeroFlag) {
             z80.F.value |= 0x80;
         }
     }

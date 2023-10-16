@@ -4,7 +4,7 @@ import lombok.NonNull;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.proc.Z80;
 
-public class LogicalProcessor {
+public class LogicalProcessor implements Const {
     private final Z80 z80;
 
     private MemoryControl memory;
@@ -51,7 +51,7 @@ public class LogicalProcessor {
     public int sll(@NonNull Reg8 r) {
         final boolean carryFlag = (r.value > 127);
         r.value <<= 1;
-        r.value |= 0x1;
+        r.value |= BIT_0;
         r.value &= 0xFF;
         z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
@@ -62,7 +62,7 @@ public class LogicalProcessor {
         final boolean carryFlag = ((r.value & 0x01) != 0x00);
         r.value >>>= 1;
         if (carryFlag) {
-            r.value |= 0x80;
+            r.value |= BIT_7;
         }
         z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
@@ -74,7 +74,7 @@ public class LogicalProcessor {
         boolean carryFlag = ((r.value & 0x1) != 0x0);
         r.value >>>= 1;
         if (carry) {
-            r.value |= 0x80;
+            r.value |= BIT_7;
         }
         z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
@@ -106,8 +106,8 @@ public class LogicalProcessor {
 
      */
     public int sra(@NonNull Reg8 r) {
-        final int tmp = r.value & 0x80;
-        final boolean carryFlag = ((r.value & 0x01) != 0x00);
+        final int tmp = r.value & BIT_7;
+        final boolean carryFlag = ((r.value & BIT_0) != 0x00);
         r.value = (r.value >> 1 | tmp);
         z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
@@ -115,7 +115,7 @@ public class LogicalProcessor {
     }
 
     public int srl(@NonNull Reg8 r) {
-        final boolean carryFlag = ((r.value & 0x01) != 0x00);
+        final boolean carryFlag = ((r.value & BIT_0) != 0x00);
         r.value >>>= 1;
         z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
@@ -125,7 +125,7 @@ public class LogicalProcessor {
     public void and(@NonNull Reg8 r) {
         z80.A.value &= r.value;
         final boolean carryFlag = false;
-        z80.F.value = (z80.F.SZ53PN_ADD_TABLE[z80.A.value] | 0x10);
+        z80.F.value = (z80.F.SZ53PN_ADD_TABLE[z80.A.value] | RegF.HALF_CARRY_FLAG);
         z80.F.setCarry(carryFlag);
     }
 
