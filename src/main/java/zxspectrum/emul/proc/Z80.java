@@ -6,7 +6,6 @@ import lombok.Setter;
 import zxspectrum.emul.Resettable;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.port.Port;
-import zxspectrum.emul.io.port.Ports;
 import zxspectrum.emul.machine.MachineModel;
 import zxspectrum.emul.proc.reg.ArithmeticProcessor;
 import zxspectrum.emul.proc.reg.ArrayProcessor;
@@ -30,8 +29,6 @@ import zxspectrum.emul.proc.reg.RegPC;
 import zxspectrum.emul.proc.reg.RegR;
 import zxspectrum.emul.proc.reg.RegSP;
 import zxspectrum.emul.proc.reg.RegisterProcessor;
-
-import java.util.Arrays;
 
 public class Z80 implements Resettable {
 
@@ -64,7 +61,6 @@ public class Z80 implements Resettable {
     public final RegE E = new RegE();
 
     public final RegDE DE = new RegDE(E, D);
-
 
     public final RegD altD = new RegD();
 

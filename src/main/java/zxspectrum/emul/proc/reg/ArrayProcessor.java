@@ -2,16 +2,22 @@ package zxspectrum.emul.proc.reg;
 
 import lombok.NonNull;
 import zxspectrum.emul.io.mem.MemoryControl;
+import zxspectrum.emul.io.port.Port;
 import zxspectrum.emul.proc.Z80;
+
+import java.io.IOException;
 
 public class ArrayProcessor implements Const {
     private final Z80 z80;
 
     private MemoryControl memory;
 
+    private final Port port;
+
     public ArrayProcessor(@NonNull final Z80 z80) {
         this.z80 = z80;
         this.memory = z80.getMemory();
+        this.port = z80.getPort();
     }
 
     public void ldi() {
@@ -24,10 +30,10 @@ public class ArrayProcessor implements Const {
         value += z80.A.value;
         z80.F.value = ((z80.F.value & 0xC0) | (value & BIT_3));
         if ((value & BIT_1) != 0x00) {
-            z80.F.value |= BIT_5;
+            z80.F.set5Bit(true);
         }
         if (!z80.BC.isZero()) {
-            z80.F.value |= RegF.P_V_FLAG;
+            z80.F.setParityOverflow(true);
         }
     }
 
@@ -40,52 +46,107 @@ public class ArrayProcessor implements Const {
         z80.BC.dec();
         work8 += z80.A.value;
         z80.F.value = ((this.z80.F.value & 0xC0) | (work8 & BIT_3));
-        if ((work8 & BIT_1) != 0x0) {
-            z80.F.value |= BIT_5;
+        if ((work8 & BIT_1) != 0x00) {
+            z80.F.set5Bit(true);
         }
         if (!z80.BC.isZero()) {
-            z80.F.value |= RegF.P_V_FLAG;
+            z80.F.setParityOverflow(true);
         }
     }
 
-    /*public void cpi() {
-        final int regHL = this.getRegHL();
-        int memHL = this.MemIoImpl.peek8(regHL);
-        final boolean carry = this.carryFlag;
-        this.cp(memHL);
-        this.MemIoImpl.contendedStates(regHL, 5);
-        this.carryFlag = carry;
-        this.incRegHL();
-        this.decRegBC();
-        memHL = this.regA - memHL - (((this.sz5h3pnFlags & 0x10) != 0x0) ? 1 : 0);
-        this.sz5h3pnFlags = ((this.sz5h3pnFlags & 0xD2) | (memHL & 0x8));
-        if ((memHL & 0x2) != 0x0) {
-            this.sz5h3pnFlags |= 0x20;
+    public void ini() throws IOException {
+        //this.MemIoImpl.contendedStates(this.getPairIR(), 1);
+        final int work8 = port.read(z80.AF.getValue());
+        memory.poke8(z80.HL, work8);
+        //this.memptr = (this.getRegBC() + 1 & 0xFFFF);
+        z80.B.dec();
+        z80.HL.inc();
+        z80.F.value = RegF.SZ53PN_ADD_TABLE[z80.B.value];
+        if (work8 > 127) {
+            z80.F.setN(true);
         }
-        if (this.getRegBC() != 0) {
-            this.sz5h3pnFlags |= 0x4;
+        final int tmp = work8 + (z80.C.value + 1 & 0xFF);
+        if (tmp > 255) {
+            z80.F.setHalfCarry(true);
+            z80.F.setCarry(true);
+        } else {
+            z80.F.setCarry(false);
         }
-        this.memptr = (this.memptr + 1 & 0xFFFF);
+        if ((RegF.SZ53PN_ADD_TABLE[(tmp & 0x07) ^ z80.B.value] & BIT_2) == BIT_2) {
+            z80.F.setParityOverflow(true);
+        } else {
+            z80.F.value &= 0xFFFFFFFB;
+        }
     }
 
-    public void cpd() {
-        final int regHL = this.getRegHL();
-        int memHL = this.MemIoImpl.peek8(regHL);
-        final boolean carry = this.carryFlag;
-        this.cp(memHL);
-        this.MemIoImpl.contendedStates(regHL, 5);
-        this.carryFlag = carry;
-        this.decRegHL();
-        this.decRegBC();
-        memHL = this.regA - memHL - (((this.sz5h3pnFlags & 0x10) != 0x0) ? 1 : 0);
-        this.sz5h3pnFlags = ((this.sz5h3pnFlags & 0xD2) | (memHL & 0x8));
-        if ((memHL & 0x2) != 0x0) {
-            this.sz5h3pnFlags |= 0x20;
+    public void ind() throws IOException {
+        //this.MemIoImpl.contendedStates(this.getPairIR(), 1);
+        final int work8 = port.read(z80.BC.getValue());
+        memory.poke8(z80.HL, work8);
+        //this.memptr = (this.getRegBC() - 1 & 0xFFFF);
+        z80.B.dec();
+        z80.HL.dec();
+        z80.F.value = RegF.SZ53PN_ADD_TABLE[z80.B.value];
+        if (work8 > 127) {
+            z80.F.setN(true);
         }
-        if (this.getRegBC() != 0) {
-            this.sz5h3pnFlags |= 0x4;
+        final int tmp = work8 + (z80.C.value - 1 & 0xFF);
+        if (tmp > 255) {
+            z80.F.setHalfCarry(true);
+            z80.F.setCarry(true);
+        } else {
+            z80.F.setCarry(false);
         }
-        this.memptr = (this.memptr - 1 & 0xFFFF);
+        if ((RegF.SZ53PN_ADD_TABLE[(tmp & 0x7) ^ z80.B.value] & BIT_2) == BIT_2) {
+            z80.F.setParityOverflow(true);
+        } else {
+            z80.F.value &= 0xFFFFFFFB;
+        }
     }
-    */
+
+    public void outi() throws IOException {
+        //this.MemIoImpl.contendedStates(this.getPairIR(), 1);
+        z80.B.dec();
+        //this.memptr = (this.getRegBC() + 1 & 0xFFFF);
+        final int work8 = this.memory.peek8(z80.HL);
+        port.write(z80.BC.getValue(), work8);
+        z80.HL.inc();
+        if (work8 > 127) {
+            z80.F.value = RegF.SZ53N_SUB_TABLE[z80.B.value];
+        } else {
+            z80.F.value = RegF.SZ53N_ADD_TABLE[z80.B.value];
+        }
+        if ((z80.L.value + work8) > 255) {
+            z80.F.setHalfCarry(true);
+            z80.F.setCarry(true);
+        } else {
+            z80.F.setCarry(false);
+        }
+        if ((RegF.SZ53PN_ADD_TABLE[(z80.L.value + work8 & 0x7) ^ z80.B.value] & BIT_2) == BIT_2) {
+            z80.F.setParityOverflow(true);
+        }
+    }
+
+    public void outd() throws IOException {
+        //this.MemIoImpl.contendedStates(this.getPairIR(), 1);
+        z80.B.dec();
+        //this.memptr = (this.getRegBC() - 1 & 0xFFFF);
+        final int work8 = memory.peek8(z80.HL);
+        port.write(z80.BC.getValue(), work8);
+        z80.HL.dec();
+        if (work8 > 127) {
+            z80.F.value = RegF.SZ53N_SUB_TABLE[z80.B.value];
+        } else {
+            z80.F.value = RegF.SZ53N_ADD_TABLE[z80.B.value];
+        }
+        if ((z80.L.value + work8) > 255) {
+            z80.F.setHalfCarry(true);
+            z80.F.setCarry(true);
+        } else {
+            z80.F.setCarry(false);
+        }
+        if ((RegF.SZ53PN_ADD_TABLE[(z80.L.value + work8 & 0x07) ^ z80.B.value] & BIT_2) == BIT_2) {
+            z80.F.setParityOverflow(true);
+        }
+    }
 }

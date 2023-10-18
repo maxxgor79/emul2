@@ -19,10 +19,10 @@ public class ArithmeticProcessor implements Const {
         z80.F.value = RegF.SZ53N_ADD_TABLE[r.value];
 
         if ((r.value & 0x0F) == 0x00) {
-            z80.F.value |= RegF.HALF_CARRY_FLAG;
+            z80.F.setHalfCarry(true);
         }
         if (r.value == BIT_7) {
-            z80.F.value |= RegF.P_V_FLAG;
+            z80.F.setParityOverflow(true);
         }
         return r.value;
     }
@@ -31,10 +31,10 @@ public class ArithmeticProcessor implements Const {
         r.value = (--r.value & 0xFF);
         z80.F.value = RegF.SZ53N_SUB_TABLE[r.value];
         if ((r.value & 0x0F) == 0x0F) {
-            z80.F.value |= RegF.HALF_CARRY_FLAG;
+            z80.F.setHalfCarry(true);
         }
         if (r.value == 0x7F) {
-            z80.F.value |= RegF.P_V_FLAG;
+            z80.F.setParityOverflow(true);
         }
         return r.value;
     }
@@ -49,10 +49,10 @@ public class ArithmeticProcessor implements Const {
         res &= 0xFF;
         z80.F.value = RegF.SZ53N_SUB_TABLE[res];
         if ((res & 0x0F) > (z80.A.value & 0x0F)) {
-            z80.F.value |= RegF.HALF_CARRY_FLAG;
+            z80.F.setHalfCarry(true);
         }
         if (((z80.A.value ^ value) & (z80.A.value ^ res)) > 0x7F) {
-            z80.F.value |= RegF.P_V_FLAG;
+            z80.F.setParityOverflow(true);
         }
         z80.A.value = res;
         z80.F.setCarry(carryFlag);
@@ -65,10 +65,10 @@ public class ArithmeticProcessor implements Const {
         res &= 0xFF;
         z80.F.value = RegF.SZ53N_SUB_TABLE[res];
         if (((z80.A.value & 0x0F) - (value & 0x0F) - carry & BIT_4) != 0x00) {
-            z80.F.value |= RegF.HALF_CARRY_FLAG;
+            z80.F.setHalfCarry(true);
         }
         if (((z80.A.value ^ value) & (z80.A.value ^ res)) > 0x7F) {
-            z80.F.value |= RegF.P_V_FLAG;
+            z80.F.setParityOverflow(true);
         }
         z80.A.value = res;
         z80.F.setCarry(carryFlag);
@@ -91,10 +91,10 @@ public class ArithmeticProcessor implements Const {
             z80.F.value &= 0xFFFFFFBF;
         }
         if (((regHL & 0xFFF) - (value & 0xFFF) - carry & 0x1000) != 0x00) {
-            z80.F.value |= RegF.HALF_CARRY_FLAG;
+            z80.F.setHalfCarry(true);
         }
         if (((regHL ^ value) & (regHL ^ res)) > 0x7FFF) {
-            z80.F.value |= RegF.P_V_FLAG;
+            z80.F.setParityOverflow(true);
         }
         z80.F.setCarry(carryFlag);
     }
@@ -109,10 +109,10 @@ public class ArithmeticProcessor implements Const {
         res &= 0xFF;
         z80.F.value = RegF.SZ53N_ADD_TABLE[res];
         if ((res & 0x0F) < (z80.A.value & 0x0F)) {
-            z80.F.value |= RegF.HALF_CARRY_FLAG;
+            z80.F.setHalfCarry(true);
         }
         if (((z80.A.value ^ ~value) & (z80.A.value ^ res)) > 0x7F) {
-            z80.F.value |= RegF.P_V_FLAG;
+            z80.F.setParityOverflow(true);
         }
         z80.A.value = res;
         z80.F.setCarry(carryFlag);
@@ -125,10 +125,10 @@ public class ArithmeticProcessor implements Const {
         res &= 0xFF;
         z80.F.value = RegF.SZ53N_ADD_TABLE[res];
         if ((z80.A.value & 0x0F) + (value & 0x0F) + carry > 0x0F) {
-            z80.F.value |= RegF.HALF_CARRY_FLAG;
+            z80.F.setHalfCarry(true);
         }
         if (((z80.A.value ^ ~value) & (z80.A.value ^ res)) > 0x7F) {
-            z80.F.value |= RegF.P_V_FLAG;
+            z80.F.setParityOverflow(true);
         }
         z80.A.value = res;
         z80.F.setCarry(carryFlag);
@@ -151,10 +151,10 @@ public class ArithmeticProcessor implements Const {
             z80.F.value &= 0xFFFFFFBF;
         }
         if ((regHL & 0xFFF) + (value & 0xFFF) + carry > 4095) {
-            z80.F.value |= RegF.HALF_CARRY_FLAG;
+            z80.F.setHalfCarry(true);
         }
         if (((regHL ^ ~value) & (regHL ^ res)) > 0x7FFF) {
-            z80.F.value |= RegF.P_V_FLAG;
+            z80.F.setParityOverflow(true);
         }
         z80.F.setCarry(carryFlag);
     }
@@ -162,7 +162,7 @@ public class ArithmeticProcessor implements Const {
     public void daa() {
         int summa = 0;
         boolean carry = z80.F.isCarry();
-        if ((z80.F.value & RegF.HALF_CARRY_FLAG) != 0x00 || (z80.A.value & 0x0F) > 0x09) {
+        if (z80.F.isHalfCarry() || (z80.A.value & 0x0F) > 0x09) {
             summa = 0x06;
         }
         if (carry || z80.A.value > 153) {
@@ -171,7 +171,7 @@ public class ArithmeticProcessor implements Const {
         if (z80.A.value > 153) {
             carry = true;
         }
-        if ((z80.F.value & RegF.N_FLAG) != 0x00) {
+        if (z80.F.isN()) {
             this.sub(summa);
             z80.F.value = ((z80.F.value & RegF.HALF_CARRY_FLAG) | RegF.SZ53PN_SUB_TABLE[z80.A.value]);
         } else {
@@ -191,11 +191,49 @@ public class ArithmeticProcessor implements Const {
         res &= 0xFF;
         z80.F.value = ((RegF.SZ53N_ADD_TABLE[value] & 0x28) | (RegF.SZ53N_SUB_TABLE[res] & 0xD2));
         if ((res & 0x0F) > (z80.A.value & 0x0F)) {
-            z80.F.value |= RegF.HALF_CARRY_FLAG;
+            z80.F.setHalfCarry(true);
         }
         if (((z80.A.value ^ value) & (z80.A.value ^ res)) > 0x7F) {
-            z80.F.value |= RegF.P_V_FLAG;
+            z80.F.setParityOverflow(true);
         }
         z80.F.setCarry(carryFlag);
+    }
+
+    public void cpi() {
+        int memHL = this.memory.peek8(z80.HL);
+        final boolean carry = this.z80.F.isCarry();
+        this.cp(memHL);
+        //this.MemIoImpl.contendedStates(regHL, 5);
+        z80.F.setCarry(carry);
+        z80.HL.inc();
+        z80.BC.dec();
+        memHL = z80.A.value - memHL - (z80.F.isHalfCarry() ? 1 : 0);
+        z80.F.value = ((z80.F.value & 0xD2) | (memHL & BIT_3));
+        if ((memHL & BIT_1) != 0x00) {
+            z80.F.set5Bit(true);
+        }
+        if (!z80.BC.isZero()) {
+            z80.F.setParityOverflow(true);
+        }
+        //this.memptr = (this.memptr + 1 & 0xFFFF);
+    }
+
+    public void cpd() {
+        int memHL = this.memory.peek8(z80.HL);
+        final boolean carry = z80.F.isCarry();
+        this.cp(memHL);
+        //this.MemIoImpl.contendedStates(regHL, 5);
+        z80.F.setCarry(carry);
+        z80.HL.dec();
+        z80.BC.dec();
+        memHL = z80.A.value - memHL - (z80.F.isHalfCarry() ? 1 : 0);
+        z80.F.value = ((z80.F.value & 0xD2) | (memHL & BIT_3));
+        if ((memHL & BIT_1) != 0x00) {
+            z80.F.set5Bit(true);
+        }
+        if (!z80.BC.isZero()) {
+            z80.F.setParityOverflow(true);
+        }
+        // this.memptr = (this.memptr - 1 & 0xFFFF);
     }
 }

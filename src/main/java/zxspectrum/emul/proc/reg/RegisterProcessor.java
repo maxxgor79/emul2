@@ -18,7 +18,7 @@ public class RegisterProcessor implements Const {
             z80.F.value |= RegF.P_V_FLAG | BIT_3 | BIT_5;
         }
         if (mask == BIT_7 && !zeroFlag) {
-            z80.F.value |= RegF.SIGN_FLAG;
+            z80.F.setSign(true);
         }
     }
 

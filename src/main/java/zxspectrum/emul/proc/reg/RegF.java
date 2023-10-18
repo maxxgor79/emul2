@@ -1,5 +1,7 @@
 package zxspectrum.emul.proc.reg;
 
+import zxspectrum.emul.Resettable;
+
 import java.util.Arrays;
 
 /**
@@ -7,7 +9,7 @@ import java.util.Arrays;
  *
  * @author Maxim Gorin
  */
-public class RegF extends Reg8 implements Const {
+public class RegF extends Reg8 implements Const, Resettable {
 
     public static final int SIGN_FLAG = BIT_7;
 
@@ -20,10 +22,6 @@ public class RegF extends Reg8 implements Const {
     public static final int N_FLAG = BIT_1;
 
     public static final int CARRY_FLAG = BIT_0;
-
-    private static final int BIT_5 = 0b0010_0000;
-
-    private static final int BIT_3 = 0b0000_1000;
 
     public static int[] SZ53N_ADD_TABLE;
 
@@ -141,6 +139,18 @@ public class RegF extends Reg8 implements Const {
         return (value & N_FLAG) != 0;
     }
 
+    public void setN(boolean n) {
+        if (n) {
+            value |= N_FLAG;
+        } else {
+            value &= ~N_FLAG;
+        }
+    }
+
+    public boolean isN() {
+        return (value & N_FLAG) != 0;
+    }
+
     public void setCarry(final boolean carry) {
         if (carry) {
             value |= CARRY_FLAG;
@@ -175,5 +185,10 @@ public class RegF extends Reg8 implements Const {
         } else {
             value &= ~BIT_3;
         }
+    }
+
+    @Override
+    public void reset() {
+        value = 0;
     }
 }
