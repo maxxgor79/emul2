@@ -7,7 +7,7 @@ import zxspectrum.emul.proc.Z80;
 
 import java.io.IOException;
 
-public class ArrayProcessor implements Const {
+public class ArrayProcessor extends Processor implements Const {
     private final Z80 z80;
 
     private MemoryControl memory;
@@ -61,7 +61,7 @@ public class ArrayProcessor implements Const {
         //this.memptr = (this.getRegBC() + 1 & 0xFFFF);
         z80.B.dec();
         z80.HL.inc();
-        z80.F.value = RegF.SZ53PN_ADD_TABLE[z80.B.value];
+        z80.F.value = SZ53PN_ADD_TABLE[z80.B.value];
         if (work8 > 127) {
             z80.F.setN(true);
         }
@@ -72,7 +72,7 @@ public class ArrayProcessor implements Const {
         } else {
             z80.F.setCarry(false);
         }
-        if ((RegF.SZ53PN_ADD_TABLE[(tmp & 0x07) ^ z80.B.value] & BIT_2) == BIT_2) {
+        if ((SZ53PN_ADD_TABLE[(tmp & 0x07) ^ z80.B.value] & BIT_2) == BIT_2) {
             z80.F.setParityOverflow(true);
         } else {
             z80.F.value &= 0xFFFFFFFB;
@@ -86,7 +86,7 @@ public class ArrayProcessor implements Const {
         //this.memptr = (this.getRegBC() - 1 & 0xFFFF);
         z80.B.dec();
         z80.HL.dec();
-        z80.F.value = RegF.SZ53PN_ADD_TABLE[z80.B.value];
+        z80.F.value = SZ53PN_ADD_TABLE[z80.B.value];
         if (work8 > 127) {
             z80.F.setN(true);
         }
@@ -97,7 +97,7 @@ public class ArrayProcessor implements Const {
         } else {
             z80.F.setCarry(false);
         }
-        if ((RegF.SZ53PN_ADD_TABLE[(tmp & 0x7) ^ z80.B.value] & BIT_2) == BIT_2) {
+        if ((SZ53PN_ADD_TABLE[(tmp & 0x7) ^ z80.B.value] & BIT_2) == BIT_2) {
             z80.F.setParityOverflow(true);
         } else {
             z80.F.value &= 0xFFFFFFFB;
@@ -112,9 +112,9 @@ public class ArrayProcessor implements Const {
         port.write(z80.BC.getValue(), work8);
         z80.HL.inc();
         if (work8 > 127) {
-            z80.F.value = RegF.SZ53N_SUB_TABLE[z80.B.value];
+            z80.F.value = SZ53N_SUB_TABLE[z80.B.value];
         } else {
-            z80.F.value = RegF.SZ53N_ADD_TABLE[z80.B.value];
+            z80.F.value = SZ53N_ADD_TABLE[z80.B.value];
         }
         if ((z80.L.value + work8) > 255) {
             z80.F.setHalfCarry(true);
@@ -122,7 +122,7 @@ public class ArrayProcessor implements Const {
         } else {
             z80.F.setCarry(false);
         }
-        if ((RegF.SZ53PN_ADD_TABLE[(z80.L.value + work8 & 0x7) ^ z80.B.value] & BIT_2) == BIT_2) {
+        if ((SZ53PN_ADD_TABLE[(z80.L.value + work8 & 0x7) ^ z80.B.value] & BIT_2) == BIT_2) {
             z80.F.setParityOverflow(true);
         }
     }
@@ -135,9 +135,9 @@ public class ArrayProcessor implements Const {
         port.write(z80.BC.getValue(), work8);
         z80.HL.dec();
         if (work8 > 127) {
-            z80.F.value = RegF.SZ53N_SUB_TABLE[z80.B.value];
+            z80.F.value = SZ53N_SUB_TABLE[z80.B.value];
         } else {
-            z80.F.value = RegF.SZ53N_ADD_TABLE[z80.B.value];
+            z80.F.value = SZ53N_ADD_TABLE[z80.B.value];
         }
         if ((z80.L.value + work8) > 255) {
             z80.F.setHalfCarry(true);
@@ -145,7 +145,7 @@ public class ArrayProcessor implements Const {
         } else {
             z80.F.setCarry(false);
         }
-        if ((RegF.SZ53PN_ADD_TABLE[(z80.L.value + work8 & 0x07) ^ z80.B.value] & BIT_2) == BIT_2) {
+        if ((SZ53PN_ADD_TABLE[(z80.L.value + work8 & 0x07) ^ z80.B.value] & BIT_2) == BIT_2) {
             z80.F.setParityOverflow(true);
         }
     }

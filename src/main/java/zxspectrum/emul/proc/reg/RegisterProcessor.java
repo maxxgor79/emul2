@@ -3,7 +3,7 @@ package zxspectrum.emul.proc.reg;
 import lombok.NonNull;
 import zxspectrum.emul.proc.Z80;
 
-public class RegisterProcessor implements Const {
+public class RegisterProcessor extends Processor implements Const {
 
     private final Z80 z80;
 
@@ -13,7 +13,7 @@ public class RegisterProcessor implements Const {
 
     public void bit(final int mask, @NonNull final Reg8 r) {
         final boolean zeroFlag = (mask & r.value) == 0x00;
-        z80.F.value = ((RegF.SZ53N_ADD_TABLE[r.value] & 0xFFFFFF3B) | RegF.HALF_CARRY_FLAG);
+        z80.F.value = ((SZ53N_ADD_TABLE[r.value] & 0xFFFFFF3B) | RegF.HALF_CARRY_FLAG);
         if (zeroFlag) {
             z80.F.value |= RegF.P_V_FLAG | BIT_3 | BIT_5;
         }

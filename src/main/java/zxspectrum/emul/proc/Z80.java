@@ -22,6 +22,7 @@ import zxspectrum.emul.proc.reg.RegF;
 import zxspectrum.emul.proc.reg.RegH;
 import zxspectrum.emul.proc.reg.RegHL;
 import zxspectrum.emul.proc.reg.RegI;
+import zxspectrum.emul.proc.reg.RegIR;
 import zxspectrum.emul.proc.reg.RegIX;
 import zxspectrum.emul.proc.reg.RegIY;
 import zxspectrum.emul.proc.reg.RegL;
@@ -68,7 +69,6 @@ public class Z80 implements Resettable {
 
     public final RegDE altDE = new RegDE(altE, altD);
 
-
     public final RegH H = new RegH();
 
     public final RegL L = new RegL();
@@ -85,6 +85,8 @@ public class Z80 implements Resettable {
 
     public final RegR R = new RegR();
 
+    public final RegIR IR = new RegIR(R, I);
+
     public final RegPC PC = new RegPC();
 
     public final RegIX IX = new RegIX();
@@ -93,9 +95,17 @@ public class Z80 implements Resettable {
 
     public final RegSP SP = new RegSP();
 
-    public boolean IFF1 = false;
+    public final RegPC MEM_PTR = new RegPC();
 
-    public boolean IFF2 = false;
+    public boolean iff1 = false;
+
+    public boolean iff2 = false;
+
+    @Getter
+    private boolean signalNMI;
+
+    @Getter
+    private boolean signalINT;
 
     @Getter
     @Setter
@@ -155,9 +165,10 @@ public class Z80 implements Resettable {
 
     @Override
     public void reset() {
-        IFF1 = false;
-        IFF2 = false;
+        iff1 = false;
+        iff2 = false;
         PC.setValue(0);
+        MEM_PTR.setValue(0);
         SP.setValue(0xFFFF);
         A.setValue(0xFF);
         altA.setValue(0xFF);
@@ -175,8 +186,9 @@ public class Z80 implements Resettable {
         altF.setValue(0xFF);
         IX.setValue(0xFFFF);
         IY.setValue(0xFFFF);
-        R.setValue(0);
-        I.setValue(0xFF);
+        IR.setValue(0xFF00);
+        signalINT = false;
+        signalNMI = false;
         halt = false;
         if (memory != null) {
             memory.reset();

@@ -4,7 +4,7 @@ import lombok.NonNull;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.proc.Z80;
 
-public class LogicalProcessor implements Const {
+public class LogicalProcessor extends Processor implements Const {
     private final Z80 z80;
 
     private MemoryControl memory;
@@ -21,7 +21,7 @@ public class LogicalProcessor implements Const {
             r.value |= BIT_0;
         }
         r.value &= 0xFF;
-        z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
+        z80.F.value = SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
         return r.value;
     }
@@ -34,7 +34,7 @@ public class LogicalProcessor implements Const {
             r.value |= BIT_0;
         }
         r.value &= 0xFF;
-        z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
+        z80.F.value = SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
         return r.value;
     }
@@ -43,7 +43,7 @@ public class LogicalProcessor implements Const {
         final boolean carryFlag = r.value > 0x7F;
         r.value <<= 1;
         r.value &= 0xFE;
-        z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
+        z80.F.value = SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
         return r.value;
     }
@@ -53,7 +53,7 @@ public class LogicalProcessor implements Const {
         r.value <<= 1;
         r.value |= BIT_0;
         r.value &= 0xFF;
-        z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
+        z80.F.value = SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
         return r.value;
     }
@@ -64,7 +64,7 @@ public class LogicalProcessor implements Const {
         if (carryFlag) {
             r.value |= BIT_7;
         }
-        z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
+        z80.F.value = SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
         return r.value;
     }
@@ -76,7 +76,7 @@ public class LogicalProcessor implements Const {
         if (carry) {
             r.value |= BIT_7;
         }
-        z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
+        z80.F.value = SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
         return r.value;
     }
@@ -87,7 +87,7 @@ public class LogicalProcessor implements Const {
         z80.A.value = ((z80.A.value & 0xF0) | (memHL & 0x0F));
         //this.MemIoImpl.contendedStates(regHL, 4);
         this.memory.poke8(z80.HL, memHL >>> 4 | value);
-        z80.F.value = z80.F.SZ53PN_ADD_TABLE[z80.A.value];
+        z80.F.value = SZ53PN_ADD_TABLE[z80.A.value];
     }
 
 
@@ -97,14 +97,14 @@ public class LogicalProcessor implements Const {
         z80.A.value = ((z80.A.value & 0xF0) | memHL >>> 4);
         //this.MemIoImpl.contendedStates(regHL, 4);
         this.memory.poke8(z80.HL, (memHL << 4 | value) & 0xFF);
-        z80.F.value = z80.F.SZ53PN_ADD_TABLE[z80.A.value];
+        z80.F.value = SZ53PN_ADD_TABLE[z80.A.value];
     }
 
     public int sra(@NonNull final Reg8 r) {
         final int tmp = r.value & BIT_7;
         final boolean carryFlag = ((r.value & BIT_0) != 0x00);
         r.value = (r.value >> 1 | tmp);
-        z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
+        z80.F.value = SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
         return r.value;
     }
@@ -112,7 +112,7 @@ public class LogicalProcessor implements Const {
     public int srl(@NonNull final Reg8 r) {
         final boolean carryFlag = ((r.value & BIT_0) != 0x00);
         r.value >>>= 1;
-        z80.F.value = z80.F.SZ53PN_ADD_TABLE[r.value];
+        z80.F.value = SZ53PN_ADD_TABLE[r.value];
         z80.F.setCarry(carryFlag);
         return r.value;
     }
@@ -120,21 +120,21 @@ public class LogicalProcessor implements Const {
     public void and(@NonNull final Reg8 r) {
         z80.A.value &= r.value;
         final boolean carryFlag = false;
-        z80.F.value = (z80.F.SZ53PN_ADD_TABLE[z80.A.value] | RegF.HALF_CARRY_FLAG);
+        z80.F.value = (SZ53PN_ADD_TABLE[z80.A.value] | RegF.HALF_CARRY_FLAG);
         z80.F.setCarry(carryFlag);
     }
 
     public final void xor(@NonNull final Reg8 r) {
         z80.A.value ^= r.value;
         final boolean carryFlag = false;
-        z80.F.value = z80.F.SZ53PN_ADD_TABLE[z80.A.value];
+        z80.F.value = SZ53PN_ADD_TABLE[z80.A.value];
         z80.F.setCarry(carryFlag);
     }
 
     public void or(@NonNull final Reg8 r) {
         z80.A.value |= r.value;
         final boolean carryFlag = false;
-        z80.F.value = z80.F.SZ53PN_ADD_TABLE[z80.A.value];
+        z80.F.value = SZ53PN_ADD_TABLE[z80.A.value];
         z80.F.setCarry(carryFlag);
     }
 }

@@ -4,7 +4,7 @@ import lombok.NonNull;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.proc.Z80;
 
-public class ArithmeticProcessor implements Const {
+public class ArithmeticProcessor extends Processor implements Const {
     private final Z80 z80;
 
     private final MemoryControl memory;
@@ -16,7 +16,7 @@ public class ArithmeticProcessor implements Const {
 
     public int inc8(@NonNull final Reg8 r) {
         r.value = ++r.value & 0xFF;
-        z80.F.value = RegF.SZ53N_ADD_TABLE[r.value];
+        z80.F.value = SZ53N_ADD_TABLE[r.value];
 
         if ((r.value & 0x0F) == 0x00) {
             z80.F.setHalfCarry(true);
@@ -29,7 +29,7 @@ public class ArithmeticProcessor implements Const {
 
     public int dec8(@NonNull final Reg8 r) {
         r.value = (--r.value & 0xFF);
-        z80.F.value = RegF.SZ53N_SUB_TABLE[r.value];
+        z80.F.value = SZ53N_SUB_TABLE[r.value];
         if ((r.value & 0x0F) == 0x0F) {
             z80.F.setHalfCarry(true);
         }
@@ -47,7 +47,7 @@ public class ArithmeticProcessor implements Const {
         int res = z80.A.value - value;
         final boolean carryFlag = ((res & 0x100) != 0x00);
         res &= 0xFF;
-        z80.F.value = RegF.SZ53N_SUB_TABLE[res];
+        z80.F.value = SZ53N_SUB_TABLE[res];
         if ((res & 0x0F) > (z80.A.value & 0x0F)) {
             z80.F.setHalfCarry(true);
         }
@@ -63,7 +63,7 @@ public class ArithmeticProcessor implements Const {
         int res = z80.A.value - value - carry;
         final boolean carryFlag = ((res & 0x100) != 0x00);
         res &= 0xFF;
-        z80.F.value = RegF.SZ53N_SUB_TABLE[res];
+        z80.F.value = SZ53N_SUB_TABLE[res];
         if (((z80.A.value & 0x0F) - (value & 0x0F) - carry & BIT_4) != 0x00) {
             z80.F.setHalfCarry(true);
         }
@@ -86,7 +86,7 @@ public class ArithmeticProcessor implements Const {
         final boolean carryFlag = ((res & 0x10000) != 0x00);
         res &= 0xFFFF;
         z80.HL.setValue(res);
-        z80.F.value = RegF.SZ53N_SUB_TABLE[z80.H.value];
+        z80.F.value = SZ53N_SUB_TABLE[z80.H.value];
         if (res != 0) {
             z80.F.value &= 0xFFFFFFBF;
         }
@@ -107,7 +107,7 @@ public class ArithmeticProcessor implements Const {
         int res = z80.A.value + value;
         final boolean carryFlag = (res > 0xFF);
         res &= 0xFF;
-        z80.F.value = RegF.SZ53N_ADD_TABLE[res];
+        z80.F.value = SZ53N_ADD_TABLE[res];
         if ((res & 0x0F) < (z80.A.value & 0x0F)) {
             z80.F.setHalfCarry(true);
         }
@@ -123,7 +123,7 @@ public class ArithmeticProcessor implements Const {
         int res = z80.A.value + value + carry;
         final boolean carryFlag = (res > 0xFF);
         res &= 0xFF;
-        z80.F.value = RegF.SZ53N_ADD_TABLE[res];
+        z80.F.value = SZ53N_ADD_TABLE[res];
         if ((z80.A.value & 0x0F) + (value & 0x0F) + carry > 0x0F) {
             z80.F.setHalfCarry(true);
         }
@@ -146,7 +146,7 @@ public class ArithmeticProcessor implements Const {
         final boolean carryFlag = (res > 0xFFFF);
         res &= 0xFFFF;
         z80.HL.setValue(res);
-        z80.F.value = RegF.SZ53PN_ADD_TABLE[z80.H.value];
+        z80.F.value = SZ53PN_ADD_TABLE[z80.H.value];
         if (res != 0) {
             z80.F.value &= 0xFFFFFFBF;
         }
@@ -173,10 +173,10 @@ public class ArithmeticProcessor implements Const {
         }
         if (z80.F.isN()) {
             this.sub(summa);
-            z80.F.value = ((z80.F.value & RegF.HALF_CARRY_FLAG) | RegF.SZ53PN_SUB_TABLE[z80.A.value]);
+            z80.F.value = ((z80.F.value & RegF.HALF_CARRY_FLAG) | SZ53PN_SUB_TABLE[z80.A.value]);
         } else {
             this.add(summa);
-            z80.F.value = ((z80.F.value & RegF.HALF_CARRY_FLAG) | RegF.SZ53PN_SUB_TABLE[z80.A.value]);
+            z80.F.value = ((z80.F.value & RegF.HALF_CARRY_FLAG) | SZ53PN_SUB_TABLE[z80.A.value]);
         }
         z80.F.setCarry(carry);
     }
@@ -189,7 +189,7 @@ public class ArithmeticProcessor implements Const {
         int res = z80.A.value - value;
         final boolean carryFlag = ((res & 0x100) != 0x00);
         res &= 0xFF;
-        z80.F.value = ((RegF.SZ53N_ADD_TABLE[value] & 0x28) | (RegF.SZ53N_SUB_TABLE[res] & 0xD2));
+        z80.F.value = ((SZ53N_ADD_TABLE[value] & 0x28) | (SZ53N_SUB_TABLE[res] & 0xD2));
         if ((res & 0x0F) > (z80.A.value & 0x0F)) {
             z80.F.setHalfCarry(true);
         }
