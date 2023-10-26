@@ -1,8 +1,8 @@
 package zxspectrum.emul.io.mem;
 
 import lombok.NonNull;
-import zxspectrum.emul.proc.reg.Reg16;
-import zxspectrum.emul.proc.reg.Reg8;
+import zxspectrum.emul.cpu.reg.Reg16;
+import zxspectrum.emul.cpu.reg.Reg8;
 
 /**
  * Memory.

@@ -2,7 +2,7 @@ package zxspectrum.emul.io.mem;
 
 import lombok.NonNull;
 import zxspectrum.emul.Resettable;
-import zxspectrum.emul.proc.reg.RegSP;
+import zxspectrum.emul.cpu.reg.RegSP;
 
 /**
  * MemoryControl.

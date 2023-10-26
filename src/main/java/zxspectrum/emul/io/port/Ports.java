@@ -9,9 +9,6 @@ import zxspectrum.emul.io.port.impl.PortPlus2;
 import zxspectrum.emul.io.port.impl.PortPlus2A;
 import zxspectrum.emul.io.port.impl.PortPlus3;
 import zxspectrum.emul.machine.MachineModel;
-import zxspectrum.emul.proc.Z80;
-
-import java.io.IOException;
 
 public class Ports {
     private Ports() {
@@ -31,8 +28,8 @@ public class Ports {
     private final static PortPlus3 PORT_PLUS_3 = new PortPlus3();
 
 
-    public static final Port getInstance(@NonNull Speccy speccy) {
-        return switch (speccy.getMachineModel()) {
+    public static final Port getInstance(@NonNull MachineModel model) {
+        return switch (model) {
             case SPECTRUM16K -> PORT_16_K;
 
             case SPECTRUM48K -> PORT_48_K;

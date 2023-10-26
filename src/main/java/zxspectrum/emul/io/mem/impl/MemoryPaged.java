@@ -5,9 +5,9 @@ import java.util.Arrays;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import zxspectrum.emul.io.mem.MemoryControl;
-import zxspectrum.emul.proc.reg.Reg16;
-import zxspectrum.emul.proc.reg.Reg8;
-import zxspectrum.emul.proc.reg.RegSP;
+import zxspectrum.emul.cpu.reg.Reg16;
+import zxspectrum.emul.cpu.reg.Reg8;
+import zxspectrum.emul.cpu.reg.RegSP;
 
 /**
  * MemoryPaged.
