@@ -18,13 +18,24 @@ class ZXSpectrum128K extends CommonZXSpectrum {
   }
 
   @Override
+  protected void createPortIO() {
+    portIO = new PortIO128k();
+  }
+
+  @Override
+  protected void createSoundChip() {
+    soundChip = SoundChipFactory.getInstance(machineModel);
+  }
+
+  @Override
   protected void initPortIO() {
-    portIO = new PortIO128k(ula, memory, soundChip);
+    ((PortIO128k) portIO).setUla(ula);
+    ((PortIO128k) portIO).setMemory(memory);
+    ((PortIO128k) portIO).setSoundChip(soundChip);
   }
 
   @Override
   protected void initSoundChip() {
-    soundChip = SoundChipFactory.getInstance(machineModel);
   }
 
   @Override

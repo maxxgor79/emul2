@@ -28,8 +28,34 @@ abstract class CommonZXSpectrum implements ZXSpectrum {
 
   protected CommonZXSpectrum(@NonNull MachineModel model) {
     this.machineModel = model;
+    create();
     init();
   }
+
+  protected void create() {
+    createMemory();
+    createPortIO();
+    createUla();
+    createCpu();
+    createSoundChip();
+  }
+
+  protected void createMemory() {
+    this.memory = MemoryFactory.getInstance(machineModel);
+  }
+
+  protected abstract void createPortIO();
+
+  protected void createUla() {
+    this.ula = ChipsetFactory.getInstance(machineModel);
+  }
+
+  protected void createCpu() {
+    this.cpu = CpuFactory.getInstance(machineModel);
+  }
+
+  protected abstract void createSoundChip();
+
 
   protected void init() {
     initMemory();
@@ -40,25 +66,20 @@ abstract class CommonZXSpectrum implements ZXSpectrum {
   }
 
   protected void initMemory() {
-    this.memory = MemoryFactory.getInstance(machineModel);
   }
 
   protected abstract void initPortIO();
 
   protected void initUla() {
-    this.ula = ChipsetFactory.getInstance(machineModel);
     this.ula.setMemory(this.memory);
-    this.ula.setPortIO(this.portIO);
   }
 
   protected void initCpu() {
-    this.cpu = CpuFactory.getInstance(machineModel);
     this.cpu.setMemory(this.memory);
     this.cpu.setPortIO(this.portIO);
   }
 
-  protected void initSoundChip() {
-  }
+  protected abstract void initSoundChip();
 
   @Override
   public String getName() {

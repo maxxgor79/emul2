@@ -15,8 +15,23 @@ class ZXSpectrum48K extends CommonZXSpectrum {
   }
 
   @Override
+  protected void createPortIO() {
+    portIO = new PortIO48k();
+  }
+
+  @Override
+  protected void createSoundChip() {
+
+  }
+
+  @Override
   protected void initPortIO() {
-    portIO = new PortIO48k(ula);
+    ((PortIO48k) portIO).setUla(ula);
+  }
+
+  @Override
+  protected void initSoundChip() {
+
   }
 
   @Override

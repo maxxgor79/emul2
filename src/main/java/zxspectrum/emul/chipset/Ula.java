@@ -15,7 +15,4 @@ public interface Ula extends Resettable {
 
   MemoryControl getMemory();
 
-  void setPortIO(PortIO portIO);
-
-  PortIO getPortIO();
 }

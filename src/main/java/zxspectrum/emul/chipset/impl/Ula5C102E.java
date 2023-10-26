@@ -27,13 +27,4 @@ public class Ula5C102E implements Ula {
     return null;
   }
 
-  @Override
-  public void setPortIO(@NonNull PortIO port) {
-
-  }
-
-  @Override
-  public PortIO getPortIO() {
-    return null;
-  }
 }

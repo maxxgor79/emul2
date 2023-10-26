@@ -19,7 +19,22 @@ class ZXSpectrum16K extends CommonZXSpectrum {
   }
 
   @Override
+  protected void createPortIO() {
+    portIO = new PortIO16k();
+  }
+
+  @Override
+  protected void createSoundChip() {
+
+  }
+
+  @Override
   protected void initPortIO() {
-    portIO = new PortIO16k(ula);
+    ((PortIO16k) portIO).setUla(ula);
+  }
+
+  @Override
+  protected void initSoundChip() {
+
   }
 }

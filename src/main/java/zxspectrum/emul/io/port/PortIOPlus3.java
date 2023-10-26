@@ -1,23 +1,8 @@
 package zxspectrum.emul.io.port;
 
 import java.io.IOException;
-import lombok.NonNull;
-import zxspectrum.emul.chipset.Ula;
-import zxspectrum.emul.io.mem.MemoryControl;
-import zxspectrum.emul.io.sound.SoundChip;
 
 public class PortIOPlus3 extends ExtendedPortIO {
-
-  private PortIOPlus3() {
-
-  }
-
-  public PortIOPlus3(@NonNull Ula ula, @NonNull MemoryControl memory,
-      @NonNull SoundChip soundChip) {
-    this.ula = ula;
-    this.memory = memory;
-    this.soundChip = soundChip;
-  }
 
   @Override
   public int read(int port) throws IOException {
