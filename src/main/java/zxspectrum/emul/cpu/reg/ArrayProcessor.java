@@ -3,7 +3,7 @@ package zxspectrum.emul.cpu.reg;
 import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.io.mem.MemoryControl;
-import zxspectrum.emul.io.port.Port;
+import zxspectrum.emul.io.port.PortIO;
 
 import java.io.IOException;
 
@@ -12,12 +12,12 @@ public class ArrayProcessor extends Processor implements Const {
 
     private MemoryControl memory;
 
-    private final Port port;
+    private final PortIO port;
 
     public ArrayProcessor(@NonNull final Cpu cpu) {
         this.cpu = cpu;
         this.memory = cpu.getMemory();
-        this.port = cpu.getPort();
+        this.port = cpu.getPortIO();
     }
 
     public void ldi() {

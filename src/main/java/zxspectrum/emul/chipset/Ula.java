@@ -2,7 +2,7 @@ package zxspectrum.emul.chipset;
 
 import zxspectrum.emul.Resettable;
 import zxspectrum.emul.io.mem.MemoryControl;
-import zxspectrum.emul.io.port.Port;
+import zxspectrum.emul.io.port.PortIO;
 
 /**
  * Ula.
@@ -15,7 +15,7 @@ public interface Ula extends Resettable {
 
   MemoryControl getMemory();
 
-  void setPort(Port port);
+  void setPortIO(PortIO portIO);
 
-  Port getPort();
+  PortIO getPortIO();
 }

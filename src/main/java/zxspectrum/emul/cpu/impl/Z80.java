@@ -5,7 +5,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.io.mem.MemoryControl;
-import zxspectrum.emul.io.port.Port;
+import zxspectrum.emul.io.port.PortIO;
 import zxspectrum.emul.cpu.reg.ArithmeticProcessor;
 import zxspectrum.emul.cpu.reg.ArrayProcessor;
 import zxspectrum.emul.cpu.reg.LogicalProcessor;
@@ -27,7 +27,7 @@ public class Z80 extends Cpu {
   private MemoryControl memory;
 
   @Getter
-  private Port port;
+  private PortIO portIO;
 
   private ArithmeticProcessor arithmeticProcessor;
 
@@ -56,8 +56,13 @@ public class Z80 extends Cpu {
   }
 
   @Override
-  public void setPort(@NonNull Port port) {
-    this.port = port;
+  public void setPortIO(@NonNull PortIO portIO) {
+    this.portIO = portIO;
+  }
+
+  @Override
+  public PortIO getPortIO() {
+    return portIO;
   }
 
   @Override
@@ -90,8 +95,8 @@ public class Z80 extends Cpu {
     if (memory != null) {
       memory.reset();
     }
-    if (port != null) {
-      port.reset();
+    if (portIO != null) {
+      portIO.reset();
     }
   }
 }

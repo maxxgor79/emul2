@@ -23,7 +23,7 @@ import zxspectrum.emul.cpu.reg.RegPC;
 import zxspectrum.emul.cpu.reg.RegR;
 import zxspectrum.emul.cpu.reg.RegSP;
 import zxspectrum.emul.io.mem.MemoryControl;
-import zxspectrum.emul.io.port.Port;
+import zxspectrum.emul.io.port.PortIO;
 
 /**
  * Cpu.
@@ -104,7 +104,7 @@ public abstract class Cpu implements Resettable {
 
   public abstract MemoryControl getMemory();
 
-  public abstract void setPort(Port port);
+  public abstract void setPortIO(PortIO port);
 
-  public abstract Port getPort();
+  public abstract PortIO getPortIO();
 }

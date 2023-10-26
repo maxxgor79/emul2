@@ -3,7 +3,7 @@ package zxspectrum.emul.chipset.impl;
 import lombok.NonNull;
 import zxspectrum.emul.chipset.Ula;
 import zxspectrum.emul.io.mem.MemoryControl;
-import zxspectrum.emul.io.port.Port;
+import zxspectrum.emul.io.port.PortIO;
 
 /**
  * ULA5C102E.
@@ -28,12 +28,12 @@ public class Ula5C102E implements Ula {
   }
 
   @Override
-  public void setPort(@NonNull Port port) {
+  public void setPortIO(@NonNull PortIO port) {
 
   }
 
   @Override
-  public Port getPort() {
+  public PortIO getPortIO() {
     return null;
   }
 }

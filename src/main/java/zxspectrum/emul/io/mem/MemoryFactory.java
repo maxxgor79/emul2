@@ -15,7 +15,7 @@ import zxspectrum.emul.machine.MachineModel;
  *
  * @author Maxim Gorin
  */
-public final class Memory {
+public final class MemoryFactory {
 
   private static final Memory16K M16K = new Memory16K();
 
@@ -31,7 +31,7 @@ public final class Memory {
 
   private static final MemoryDummy DUMMY = new MemoryDummy();
 
-  private Memory() {
+  private MemoryFactory() {
 
   }
 
