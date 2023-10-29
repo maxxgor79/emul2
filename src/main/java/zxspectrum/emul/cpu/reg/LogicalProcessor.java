@@ -28,7 +28,7 @@ public class LogicalProcessor extends Processor implements Const {
   }
 
   private int rl(@NonNull final Reg8 r) {
-    final boolean carry = cpu.F.isCarry();
+    final boolean carry = cpu.F.isCarrySet();
     boolean carryFlag = (r.value > 0x7F);
     r.value <<= 1;
     if (carry) {
@@ -71,7 +71,7 @@ public class LogicalProcessor extends Processor implements Const {
   }
 
   public int rr(@NonNull final Reg8 r) {
-    final boolean carry = cpu.F.isCarry();
+    final boolean carry = cpu.F.isCarrySet();
     boolean carryFlag = ((r.value & BIT_0) != 0x00);
     r.value >>>= 1;
     if (carry) {

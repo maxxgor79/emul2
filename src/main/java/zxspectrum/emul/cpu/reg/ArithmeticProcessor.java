@@ -60,7 +60,7 @@ public class ArithmeticProcessor extends Processor implements Const {
   }
 
   public void sbc(final int value) {
-    final int carry = cpu.F.isCarry() ? 1 : 0;
+    final int carry = cpu.F.isCarrySet() ? 1 : 0;
     int res = cpu.A.value - value - carry;
     final boolean carryFlag = ((res & 0x100) != 0x00);
     res &= 0xFF;
@@ -80,7 +80,7 @@ public class ArithmeticProcessor extends Processor implements Const {
   }
 
   public void sbc16(@NonNull final Reg16 r) {
-    final int carry = cpu.F.isCarry() ? 1 : 0;
+    final int carry = cpu.F.isCarrySet() ? 1 : 0;
     final int regHL = cpu.HL.getValue();
     final int value = r.getValue();
     int res = regHL - value - carry;
@@ -120,7 +120,7 @@ public class ArithmeticProcessor extends Processor implements Const {
   }
 
   public void adc(final int value) {
-    final int carry = cpu.F.isCarry() ? 1 : 0;
+    final int carry = cpu.F.isCarrySet() ? 1 : 0;
     int res = cpu.A.value + value + carry;
     final boolean carryFlag = (res > 0xFF);
     res &= 0xFF;
@@ -140,7 +140,7 @@ public class ArithmeticProcessor extends Processor implements Const {
   }
 
   public void adc16(@NonNull final Reg16 r) {
-    final int carry = cpu.F.isCarry() ? 1 : 0;
+    final int carry = cpu.F.isCarrySet() ? 1 : 0;
     final int regHL = cpu.HL.getValue();
     final int value = r.getValue();
     int res = regHL + value + carry;
@@ -162,8 +162,8 @@ public class ArithmeticProcessor extends Processor implements Const {
 
   public void daa() {
     int summa = 0;
-    boolean carry = cpu.F.isCarry();
-    if (cpu.F.isHalfCarry() || (cpu.A.value & 0x0F) > 0x09) {
+    boolean carry = cpu.F.isCarrySet();
+    if (cpu.F.isHalfCarrySet() || (cpu.A.value & 0x0F) > 0x09) {
       summa = 0x06;
     }
     if (carry || cpu.A.value > 153) {
@@ -172,7 +172,7 @@ public class ArithmeticProcessor extends Processor implements Const {
     if (cpu.A.value > 153) {
       carry = true;
     }
-    if (cpu.F.isN()) {
+    if (cpu.F.isNSet()) {
       this.sub(summa);
       cpu.F.value = ((cpu.F.value & RegF.HALF_CARRY_FLAG) | SZ53PN_SUB_TABLE[cpu.A.value]);
     } else {
@@ -202,13 +202,13 @@ public class ArithmeticProcessor extends Processor implements Const {
 
   public void cpi() {
     int memHL = this.memory.peek8(cpu.HL);
-    final boolean carry = this.cpu.F.isCarry();
+    final boolean carry = this.cpu.F.isCarrySet();
     this.cp(memHL);
     //this.MemIoImpl.contendedStates(regHL, 5);
     cpu.F.setCarry(carry);
     cpu.HL.inc();
     cpu.BC.dec();
-    memHL = cpu.A.value - memHL - (cpu.F.isHalfCarry() ? 1 : 0);
+    memHL = cpu.A.value - memHL - (cpu.F.isHalfCarrySet() ? 1 : 0);
     cpu.F.value = ((cpu.F.value & 0xD2) | (memHL & BIT_3));
     if ((memHL & BIT_1) != 0x00) {
       cpu.F.set5Bit(true);
@@ -221,13 +221,13 @@ public class ArithmeticProcessor extends Processor implements Const {
 
   public void cpd() {
     int memHL = this.memory.peek8(cpu.HL);
-    final boolean carry = cpu.F.isCarry();
+    final boolean carry = cpu.F.isCarrySet();
     this.cp(memHL);
     //this.MemIoImpl.contendedStates(regHL, 5);
     cpu.F.setCarry(carry);
     cpu.HL.dec();
     cpu.BC.dec();
-    memHL = cpu.A.value - memHL - (cpu.F.isHalfCarry() ? 1 : 0);
+    memHL = cpu.A.value - memHL - (cpu.F.isHalfCarrySet() ? 1 : 0);
     cpu.F.value = ((cpu.F.value & 0xD2) | (memHL & BIT_3));
     if ((memHL & BIT_1) != 0x00) {
       cpu.F.set5Bit(true);

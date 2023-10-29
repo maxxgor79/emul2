@@ -30,7 +30,7 @@ public class RegF extends Reg8 implements Const, Resettable {
     }
   }
 
-  public boolean isSign() {
+  public boolean isSignSet() {
     return (value & SIGN_FLAG) != 0;
   }
 
@@ -43,7 +43,7 @@ public class RegF extends Reg8 implements Const, Resettable {
     }
   }
 
-  public boolean isZero() {
+  public boolean isZeroSet() {
     return (value & ZERO_FLAG) != 0;
   }
 
@@ -55,7 +55,7 @@ public class RegF extends Reg8 implements Const, Resettable {
     }
   }
 
-  public boolean isHalfCarry() {
+  public boolean isHalfCarrySet() {
     return (value & HALF_CARRY_FLAG) != 0;
   }
 
@@ -67,7 +67,7 @@ public class RegF extends Reg8 implements Const, Resettable {
     }
   }
 
-  public boolean isParityOverflow() {
+  public boolean isParityOverflowSet() {
     return (value & P_V_FLAG) != 0;
   }
 
@@ -79,7 +79,7 @@ public class RegF extends Reg8 implements Const, Resettable {
     }
   }
 
-  public boolean isAddSubstract() {
+  public boolean isAddSubstractSet() {
     return (value & N_FLAG) != 0;
   }
 
@@ -91,7 +91,7 @@ public class RegF extends Reg8 implements Const, Resettable {
     }
   }
 
-  public boolean isN() {
+  public boolean isNSet() {
     return (value & N_FLAG) != 0;
   }
 
@@ -103,7 +103,7 @@ public class RegF extends Reg8 implements Const, Resettable {
     }
   }
 
-  public boolean isCarry() {
+  public boolean isCarrySet() {
     return (value & CARRY_FLAG) != 0;
   }
 
@@ -111,7 +111,7 @@ public class RegF extends Reg8 implements Const, Resettable {
     return value & CARRY_FLAG;
   }
 
-  public boolean is5Bit() {
+  public boolean is5BitSet() {
     return (value & BIT_5) != 0;
   }
 
@@ -123,7 +123,7 @@ public class RegF extends Reg8 implements Const, Resettable {
     }
   }
 
-  public boolean is3Bit() {
+  public boolean is3BitSet() {
     return (value & BIT_3) != 0;
   }
 

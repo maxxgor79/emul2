@@ -20,22 +20,22 @@ public class TestReg {
   void testFlag() {
     Z80 cpu = new Z80();
     cpu.F.setCarry(true);
-    Assertions.assertEquals(cpu.F.isCarry(), true);
+    Assertions.assertEquals(cpu.F.isCarrySet(), true);
     Assertions.assertEquals(cpu.F.getValue() & 0b0000_0001, 0b0000_0001);
     cpu.F.setSign(true);
-    Assertions.assertEquals(cpu.F.isSign(), true);
+    Assertions.assertEquals(cpu.F.isSignSet(), true);
     Assertions.assertEquals(cpu.F.getValue() & 0b1000_0000, 0b1000_0000);
     cpu.F.setAddSubstract(true);
-    Assertions.assertEquals(cpu.F.isAddSubstract(), true);
+    Assertions.assertEquals(cpu.F.isAddSubstractSet(), true);
     Assertions.assertEquals(cpu.F.getValue() & 0b0000_0010, 0b0000_0010);
     cpu.F.setHalfCarry(true);
-    Assertions.assertEquals(cpu.F.isHalfCarry(), true);
+    Assertions.assertEquals(cpu.F.isHalfCarrySet(), true);
     Assertions.assertEquals(cpu.F.getValue() & 0b0001_0000, 0b0001_0000);
     cpu.F.setParityOverflow(true);
-    Assertions.assertEquals(cpu.F.isParityOverflow(), true);
+    Assertions.assertEquals(cpu.F.isParityOverflowSet(), true);
     Assertions.assertEquals(cpu.F.getValue() & 0b0000_0100, 0b0000_0100);
     cpu.F.setZero(true);
-    Assertions.assertEquals(cpu.F.isZero(), true);
+    Assertions.assertEquals(cpu.F.isZeroSet(), true);
     Assertions.assertEquals(cpu.F.getValue() & 0b0100_0000, 0b0100_0000);
   }
 
