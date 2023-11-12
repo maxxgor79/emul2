@@ -1,5 +1,8 @@
 package zxspectrum.emul.cpu.reg;
 
+import java.sql.Ref;
+import java.util.Arrays;
+
 public interface FlagTable {
     int[] SZP_FLAGS =
 
@@ -282,4 +285,50 @@ public interface FlagTable {
                     0x8a9b, 0x8b9f, 0x8c9b, 0x8d9f, 0x8e9f, 0x8f9b, 0x9087, 0x9183,
                     0x9283, 0x9387, 0x9483, 0x9587, 0x9687, 0x9783, 0x988b, 0x998f
             };
+    int[] SZ53N_ADD_TABLE = new int[256];
+
+    int[] SZ53PN_ADD_TABLE = new int[256];
+
+    int[] SZ53N_SUB_TABLE = new int[256];
+
+    int[] SZ53PN_SUB_TABLE = new int[256];
+
+    default void initTables() {
+        for (int idx = 0; idx < 256; ++idx) {
+            if (idx > 0x7F) {
+                final int[] sz53nAddTable2 = SZ53N_ADD_TABLE;
+                final int n = idx;
+                sz53nAddTable2[n] |= RegF.SIGN_FLAG;
+            }
+            boolean evenBits = true;
+            for (int mask = 1; mask < 256; mask <<= 1) {
+                if ((idx & mask) != 0x00) {
+                    evenBits = !evenBits;
+                }
+            }
+            final int[] sz53nAddTable3 = SZ53N_ADD_TABLE;
+            final int n2 = idx;
+            sz53nAddTable3[n2] |= (idx & (RegF.BIT_3 | RegF.BIT_5));
+            SZ53N_SUB_TABLE[idx] = (SZ53N_ADD_TABLE[idx] | RegF.N_FLAG);
+            if (evenBits) {
+                SZ53PN_ADD_TABLE[idx] = (SZ53N_ADD_TABLE[idx] | RegF.P_V_FLAG);
+                SZ53PN_SUB_TABLE[idx] = (SZ53N_SUB_TABLE[idx] | RegF.P_V_FLAG);
+            } else {
+                SZ53PN_ADD_TABLE[idx] = SZ53N_ADD_TABLE[idx];
+                SZ53PN_SUB_TABLE[idx] = SZ53N_SUB_TABLE[idx];
+            }
+        }
+        final int[] sz53nAddTable4 = SZ53N_ADD_TABLE;
+        final int n3 = 0x00;
+        sz53nAddTable4[n3] |= RegF.ZERO_FLAG;
+        final int[] sz53pn_addTable2 = SZ53PN_ADD_TABLE;
+        final int n4 = 0x00;
+        sz53pn_addTable2[n4] |= RegF.ZERO_FLAG;
+        final int[] sz53n_subTable2 = SZ53N_SUB_TABLE;
+        final int n5 = 0x00;
+        sz53n_subTable2[n5] |= RegF.ZERO_FLAG;
+        final int[] sz53pn_subTable2 = SZ53PN_SUB_TABLE;
+        final int n6 = 0x00;
+        sz53pn_subTable2[n6] |= RegF.ZERO_FLAG;
+    }
 }

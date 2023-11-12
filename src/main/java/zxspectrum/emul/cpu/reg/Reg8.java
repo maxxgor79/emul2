@@ -15,19 +15,71 @@ public abstract class Reg8 {
     @Getter
     protected volatile int value;
 
-    public void setValue(int value) {
+    public int setValue(int value) {
         this.value = value & 0xFF;
+        return value;
     }
 
-    public void ld(@NonNull Reg8 r) {
+    public int ld(@NonNull Reg8 r) {
         this.value = r.value;
+        return value;
     }
 
-    public void dec() {
+    public int dec() {
         value = --value & 0xFF;
+        return value;
     }
 
-    public void inc() {
+    public int inc() {
         value = ++value & 0xFF;
+        return value;
+    }
+
+    public int not() {
+        value = ~value & 0xFF;
+        return value;
+    }
+
+    public int and(int val) {
+        val &= 0xFF;
+        this.value &= val;
+        return value;
+    }
+
+    public int and(@NonNull Reg8 r) {
+        this.value &= r.value;
+        return value;
+    }
+
+    public int or(int val) {
+        val &= 0xFF;
+        this.value |= val;
+        return value;
+    }
+
+    public int or(@NonNull Reg8 r) {
+        this.value |= r.value;
+        return value;
+    }
+
+    public int xor(int val) {
+        val &= 0xFF;
+        this.value ^= val;
+        return value;
+    }
+
+    public int xor(@NonNull Reg8 r) {
+        this.value ^= r.value;
+        return value;
+    }
+
+    public int rShift() {
+        return value >>>= 1;
+    }
+
+    public int lShift() {
+        value <<= 1;
+        value &= 0xFF;
+        return value;
     }
 }

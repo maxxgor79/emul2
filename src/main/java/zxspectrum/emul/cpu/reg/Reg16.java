@@ -44,37 +44,62 @@ public abstract class Reg16 {
     }
 
     public void ld(@NonNull Reg16 r) {
-        this.lo.value = r.lo.value;
-        this.hi.value = r.hi.value;
+        if (r.lo != null && r.hi != null) {
+            this.lo.value = r.lo.value;
+            this.hi.value = r.hi.value;
+        } else {
+            int value = r.getValue();
+            this.lo.value = value & 0xFF;
+            this.hi.value = value >>> 8;
+        }
     }
 
-    public void inc() {
+    public int inc() {
         ++this.lo.value;
         if (this.lo.value < 0x100) {
-            return;
+            return getValue();
         }
         this.lo.value = 0x00;
         ++this.hi.value;
         if (this.hi.value < 0x100) {
-            return;
+            return getValue();
         }
         this.hi.value = 0x00;
+        return getValue();
     }
 
-    public void dec() {
+    public int dec() {
         --this.lo.value;
         if (this.lo.value >= 0x00) {
-            return;
+            return getValue();
         }
         this.lo.value = 0xFF;
         --this.hi.value;
         if (this.hi.value >= 0x00) {
-            return;
+            return getValue();
         }
         this.hi.value = 0xFF;
+        return getValue();
     }
 
     public boolean isZero() {
         return hi.value == 0 && lo.value == 0;
+    }
+
+    public void swap(@NonNull Reg16 r) {
+        int tmp;
+        if (r.lo != null && r.hi != null) {
+            tmp = r.lo.value;
+            r.lo.value = lo.value;
+            lo.value = tmp;
+            tmp = r.hi.value;
+            r.hi.value = hi.value;
+            hi.value = tmp;
+        } else {
+            tmp = r.getValue();
+            r.setValue(getValue());
+            lo.value = tmp & 0xFF;
+            hi.value = tmp >>> 8;
+        }
     }
 }

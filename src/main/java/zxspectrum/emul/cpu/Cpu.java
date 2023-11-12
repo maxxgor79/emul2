@@ -4,6 +4,8 @@ package zxspectrum.emul.cpu;
 import zxspectrum.emul.Resettable;
 import zxspectrum.emul.cpu.interruption.IFF;
 import zxspectrum.emul.cpu.reg.AtomicReg16;
+import zxspectrum.emul.cpu.reg.Reg16;
+import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.cpu.reg.RegA;
 import zxspectrum.emul.cpu.reg.RegAF;
 import zxspectrum.emul.cpu.reg.RegB;
@@ -25,6 +27,8 @@ import zxspectrum.emul.cpu.reg.RegR;
 import zxspectrum.emul.cpu.reg.RegSP;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.port.PortIO;
+
+import java.io.IOException;
 
 /**
  * Cpu.
@@ -110,4 +114,5 @@ public abstract class Cpu implements Resettable {
     public abstract void setPortIO(PortIO port);
 
     public abstract PortIO getPortIO();
+
 }

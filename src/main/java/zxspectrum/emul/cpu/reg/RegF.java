@@ -1,5 +1,7 @@
 package zxspectrum.emul.cpu.reg;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import zxspectrum.emul.Resettable;
 
 /**
@@ -7,6 +9,9 @@ import zxspectrum.emul.Resettable;
  *
  * @author Maxim Gorin
  */
+
+@EqualsAndHashCode
+@ToString
 public class RegF extends Reg8 implements Const, Resettable {
 
   public static final int SIGN_FLAG = BIT_7;
