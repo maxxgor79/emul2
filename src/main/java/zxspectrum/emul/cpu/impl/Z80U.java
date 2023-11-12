@@ -9,6 +9,7 @@ import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.cpu.reg.RegA;
 import zxspectrum.emul.cpu.reg.RegBC;
+import zxspectrum.emul.cpu.reg.RegDE;
 import zxspectrum.emul.cpu.reg.RegF;
 import zxspectrum.emul.cpu.reg.RegHL;
 import zxspectrum.emul.cpu.reg.RegI;
@@ -16,6 +17,8 @@ import zxspectrum.emul.cpu.reg.RegR;
 import zxspectrum.emul.io.mem.MemoryAccess;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.mem.address.Address;
+import zxspectrum.emul.io.mem.address.IAddress;
+import zxspectrum.emul.io.mem.address.RpAddress;
 import zxspectrum.emul.io.port.PortIO;
 
 import java.io.IOException;
@@ -98,14 +101,67 @@ public class Z80U implements CpuU, FlagTable {
     }
 
     @Override
-    public void ld(@NonNull Address address, final Reg16 r) {
+    public void ld(RegA a, @NonNull RpAddress address) {
         cpu.WZ.setValue(address.getAddress() + 1);
+        address.peek(a);
+    }
+
+    @Override
+    public void ld(@NonNull RpAddress address, RegA a) {
+        cpu.WZ.setValue(((address.getAddress() + 1) & 0xFF) | (a.getValue() << 8));
+        address.poke(a);
+    }
+
+    @Override
+    public void ld(@NonNull Address address, RegBC bc) {
+        cpu.WZ.setValue(address.getAddress() + 1);
+        address.poke(bc);
+    }
+
+    @Override
+    public void ld(@NonNull Address address, RegDE de) {
+        cpu.WZ.setValue(address.getAddress() + 1);
+        address.poke(de);
+    }
+
+    @Override
+    public void ld(@NonNull RegBC bc, Address address) {
+        cpu.WZ.setValue(address.getAddress() + 1);
+        address.peek(bc);
+    }
+
+    @Override
+    public void ld(@NonNull RegDE de, Address address) {
+        cpu.WZ.setValue(address.getAddress() + 1);
+        address.peek(de);
+    }
+
+    @Override
+    public void ld(Reg8 r, @NonNull IAddress address) {
+        cpu.WZ.setValue(address.getAddress());
+        address.peek(r);
+    }
+
+    @Override
+    public void ld(@NonNull IAddress address, Reg8 r) {
+        cpu.WZ.setValue(address.getAddress());
+        address.poke(r);
+    }
+
+    @Override
+    public void ld(@NonNull IAddress address, int n) {
+        cpu.WZ.setValue(address.getAddress());
+        tmpReg.setValue(n);
+        address.poke(tmpReg);
+    }
+
+    @Override
+    public void ld(@NonNull Address address, final Reg16 r) {
         address.poke(r);
     }
 
     @Override
     public void ld(final RegHL hl, @NonNull final Address address) {
-        cpu.WZ.setValue(address.getAddress() + 1);
         address.peek(hl);
     }
 
@@ -139,6 +195,22 @@ public class Z80U implements CpuU, FlagTable {
     }
 
     @Override
+    public void ex(@NonNull Address address, RegBC bc) {
+        address.peek(tmpReg);
+        address.poke(bc);
+        bc.ld(tmpReg);
+        cpu.WZ.setValue(address.getAddress());
+    }
+
+    @Override
+    public void ex(@NonNull Address address, RegDE de) {
+        address.peek(tmpReg);
+        address.poke(de);
+        de.ld(tmpReg);
+        cpu.WZ.setValue(address.getAddress());
+    }
+
+    @Override
     public void in(@NonNull final RegA a, int n) throws IOException {
         n &= 0xFF;
         int a1 = a.getValue();
@@ -152,15 +224,13 @@ public class Z80U implements CpuU, FlagTable {
         int value = portIO.read(bc.getValue());
         cpu.F.setValue(SZP_FLAGS[value] | (cpu.F.getValue() & RegF.CARRY_FLAG));
         r.setValue(value);
-        cpu.WZ.setValue(bc.getValue());
-        cpu.WZ.inc();
+        cpu.WZ.setValue(bc.getValue() + 1);
     }
 
     @Override
     public void out(@NonNull final RegBC bc, @NonNull final Reg8 r) throws IOException {
         portIO.write(bc.getValue(), r.getValue());
-        cpu.WZ.setValue(bc.getValue());
-        cpu.WZ.inc();
+        cpu.WZ.setValue(bc.getValue() + 1);
     }
 
     @Override
@@ -178,14 +248,17 @@ public class Z80U implements CpuU, FlagTable {
         this.memory.poke8(cpu.DE, b);
         cpu.HL.dec();
         cpu.DE.dec();
-        cpu.BC.dec();
+        int bcValue = cpu.BC.dec();
         b += cpu.A.getValue();
         int flagValue = (cpu.F.getValue() & 0xC0) | (b & RegF.BIT_3);
         if ((b & RegF.BIT_1) != 0x00) {
             flagValue |= RegF.BIT_5;
         }
-        if (!cpu.BC.isZero()) {
+        if (bcValue != 0) {
             flagValue |= RegF.P_V_FLAG;
+        }
+        if (bcValue != 1) {
+            cpu.WZ.setValue(cpu.PC.getValue() + 1);
         }
         cpu.F.setValue(flagValue);
     }
@@ -196,14 +269,17 @@ public class Z80U implements CpuU, FlagTable {
         this.memory.poke8(cpu.DE, b);
         cpu.HL.inc();
         cpu.DE.inc();
-        cpu.BC.dec();
+        int bcValue = cpu.BC.dec();
         b += cpu.A.getValue();
         int flagValue = (cpu.F.getValue() & 0xC0) | (b & RegF.BIT_3);
         if ((b & RegF.BIT_1) != 0x00) {
             flagValue |= RegF.BIT_5;
         }
-        if (!cpu.BC.isZero()) {
+        if (bcValue != 0) {
             flagValue |= RegF.P_V_FLAG;
+        }
+        if (bcValue != 1) {
+            cpu.WZ.setValue(cpu.PC.getValue() + 1);
         }
         cpu.F.setValue(flagValue);
     }
@@ -291,7 +367,6 @@ public class Z80U implements CpuU, FlagTable {
         final int b = portIO.read(cpu.AF.getValue());
         memory.poke8(cpu.HL, b);
         cpu.WZ.setValue(cpu.BC.getValue() + 1);
-        cpu.B.dec();
         cpu.HL.inc();
         int regB = cpu.B.getValue();
         int flagValue = SZ53PN_ADD_TABLE[regB];

@@ -11,7 +11,7 @@ import zxspectrum.emul.cpu.reg.RegF;
 import zxspectrum.emul.io.mem.MemoryAccess;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.mem.address.Address;
-import zxspectrum.emul.io.port.PortIO;
+import zxspectrum.emul.io.mem.address.IAddress;
 
 public class AluZ80 implements Alu, FlagTable {
     private Cpu cpu;
@@ -102,6 +102,12 @@ public class AluZ80 implements Alu, FlagTable {
         int result = inc(tmpReg);
         address.poke(tmpReg);
         return result;
+    }
+
+    @Override
+    public int inc(IAddress address) {
+        cpu.WZ.setValue(address.getAddress());
+        return inc(address);
     }
 
     @Override
@@ -217,6 +223,12 @@ public class AluZ80 implements Alu, FlagTable {
     }
 
     @Override
+    public int rlc(IAddress address) {
+        cpu.WZ.setValue(address.getAddress());
+        return rlc(address);
+    }
+
+    @Override
     public int rld() {
         int a = cpu.A.getValue();
         final int val = a & 0x0F;
@@ -224,8 +236,7 @@ public class AluZ80 implements Alu, FlagTable {
         a = cpu.A.setValue((a & 0xF0) | memHL >>> 4);
         memory.poke8(cpu.HL, (memHL << 4 | val) & 0xFF);
         cpu.F.setValue(SZ53PN_ADD_TABLE[a]);
-        cpu.WZ.setValue(cpu.HL.getValue());
-        cpu.WZ.inc();
+        cpu.WZ.setValue(cpu.HL.getValue() + 1);
         return a;
     }
 
@@ -237,8 +248,7 @@ public class AluZ80 implements Alu, FlagTable {
         a = cpu.A.setValue((a & 0xF0) | (memHL & 0x0F));
         memory.poke8(cpu.HL, memHL >>> 4 | val);
         cpu.F.setValue(SZ53PN_ADD_TABLE[a]);
-        cpu.WZ.setValue(cpu.HL.getValue());
-        cpu.WZ.inc();
+        cpu.WZ.setValue(cpu.HL.getValue() + 1);
         return a;
     }
 
@@ -477,6 +487,12 @@ public class AluZ80 implements Alu, FlagTable {
     }
 
     @Override
+    public void bit(int mask, IAddress address) {
+        cpu.WZ.setValue(address.getAddress());
+        bit(mask, address);
+    }
+
+    @Override
     public int res(int mask, @NonNull final Reg8 r) {
         return r.and(~mask);
     }
@@ -492,6 +508,12 @@ public class AluZ80 implements Alu, FlagTable {
         int result = set(mask, tmpReg);
         address.poke(tmpReg);
         return result;
+    }
+
+    @Override
+    public int set(int mask, IAddress address) {
+        cpu.WZ.setValue(address.getAddress());
+        return set(mask, address);
     }
 
     @Override

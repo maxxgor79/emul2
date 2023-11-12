@@ -5,11 +5,14 @@ import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.cpu.reg.RegA;
 import zxspectrum.emul.cpu.reg.RegBC;
+import zxspectrum.emul.cpu.reg.RegDE;
 import zxspectrum.emul.cpu.reg.RegHL;
 import zxspectrum.emul.cpu.reg.RegI;
 import zxspectrum.emul.cpu.reg.RegR;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.mem.address.Address;
+import zxspectrum.emul.io.mem.address.IAddress;
+import zxspectrum.emul.io.mem.address.RpAddress;
 import zxspectrum.emul.io.port.PortIO;
 
 import java.io.IOException;
@@ -31,6 +34,25 @@ public interface CpuU {
 
     void ld(Address address, RegA a);
 
+    void ld(RegA a, RpAddress address);
+
+    void ld(RpAddress address, RegA a);
+
+    void ld(Address address, RegBC bc);
+
+    void ld(Address address, RegDE de);
+
+    void ld(RegBC bc, Address address);
+
+    void ld(RegDE de, Address address);
+
+    void ld(Reg8 r, IAddress address);
+
+    void ld(IAddress address, Reg8 r);
+
+    void ld(IAddress address, int n);
+
+
     void ld(Address address, Reg16 hl);
 
     void ld(RegHL hl, Address address);
@@ -44,6 +66,10 @@ public interface CpuU {
     void ex(Reg16 r1, Reg16 r2);
 
     void ex(Address address, Reg16 r);
+
+    void ex(Address address, RegBC bc);
+
+    void ex(Address address, RegDE de);
 
     void in(Reg8 r, RegBC bc) throws IOException;
 
