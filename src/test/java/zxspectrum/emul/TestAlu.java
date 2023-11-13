@@ -493,4 +493,30 @@ public class TestAlu {
         addressing.HL.peek(cpu1.L);
         Assertions.assertEquals(cpu1.L.getValue(), 0b1111_0111);
     }
+
+    @Test
+    void testCpi() {
+        cpu1.A.setValue(0x3B);
+        addressing.HL.setAddress(0x6000).poke(cpu1.A);
+        cpu1.HL.setValue(0x6000);
+        cpu1.BC.setValue(1);
+        alu.cpi();
+        Assertions.assertEquals(cpu1.HL.getValue(), 0x6001);
+        Assertions.assertEquals(cpu1.BC.getValue(), 0);
+        Assertions.assertEquals(cpu1.F.isZeroSet(), true);
+        Assertions.assertEquals(cpu1.F.isParityOverflowSet(), false);
+    }
+
+    @Test
+    void testCpd() {
+        cpu1.A.setValue(0x2B);
+        addressing.HL.setAddress(0x6001).poke(cpu1.A);
+        cpu1.HL.setValue(0x6001);
+        cpu1.BC.setValue(1);
+        alu.cpd();
+        Assertions.assertEquals(cpu1.HL.getValue(), 0x6000);
+        Assertions.assertEquals(cpu1.BC.getValue(), 0);
+        Assertions.assertEquals(cpu1.F.isZeroSet(), true);
+        Assertions.assertEquals(cpu1.F.isParityOverflowSet(), false);
+    }
 }

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import zxspectrum.emul.cpu.CpuU;
+import zxspectrum.emul.cpu.alu.Alu;
+import zxspectrum.emul.cpu.alu.impl.AluZ80;
 import zxspectrum.emul.cpu.impl.Z80;
 import zxspectrum.emul.cpu.impl.Z80U;
 import zxspectrum.emul.io.mem.address.Addressing;
@@ -48,7 +50,6 @@ public class TestCpu {
     int outPort;
 
     private final CpuU cpuU = new Z80U(cpu);
-
     private final Addressing addressing = new Addressing(cpu);
 
     @Test
@@ -106,6 +107,39 @@ public class TestCpu {
         Assertions.assertEquals(outValue, 0x59);
         Assertions.assertEquals(cpu.B.getValue(), 0x0F);
         Assertions.assertEquals(outPort, (0x10 << 8) | 0x07);
+    }
 
+    @Test
+    void testLdd() {
+        cpu.A.setValue(0x88);
+        cpu.HL.setValue(0x7000);
+        addressing.HL.poke(cpu.A);
+        cpu.A.setValue(0x66);
+        cpu.DE.setValue(0x6000);
+        addressing.DE.poke(cpu.A);
+        cpu.BC.setValue(0x07);
+        cpuU.ldd();
+        Assertions.assertEquals(cpu.HL.getValue(), 0x6FFF);
+        Assertions.assertEquals(cpu.DE.getValue(), 0x5FFF);
+        addressing.DE.setAddress(0x6000).peek(cpu.A);
+        Assertions.assertEquals(cpu.A.getValue(), 0x88);
+        Assertions.assertEquals(cpu.BC.getValue(), 0x06);
+    }
+
+    @Test
+    void testLdi() {
+        cpu.A.setValue(0x88);
+        cpu.HL.setValue(0x7000);
+        addressing.HL.poke(cpu.A);
+        cpu.A.setValue(0x66);
+        cpu.DE.setValue(0x6000);
+        addressing.DE.poke(cpu.A);
+        cpu.BC.setValue(0x07);
+        cpuU.ldi();
+        Assertions.assertEquals(cpu.HL.getValue(), 0x7001);
+        Assertions.assertEquals(cpu.DE.getValue(), 0x6001);
+        addressing.DE.setAddress(0x6000).peek(cpu.A);
+        Assertions.assertEquals(cpu.A.getValue(), 0x88);
+        Assertions.assertEquals(cpu.BC.getValue(), 0x06);
     }
 }

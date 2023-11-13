@@ -307,8 +307,8 @@ public class Z80U implements CpuU, FlagTable {
         cpu.B.dec();
         cpu.HL.dec();
         int flagValue;
-        int regL = cpu.L.getValue();
-        int regB = cpu.B.getValue();
+        final int regL = cpu.L.getValue();
+        final int regB = cpu.B.getValue();
         if (b > 0x7F) {
             flagValue = SZ53N_SUB_TABLE[regB];
         } else {
@@ -360,7 +360,7 @@ public class Z80U implements CpuU, FlagTable {
         memory.poke8(cpu.HL, b);
         cpu.B.dec();
         cpu.HL.dec();
-        int regB = cpu.B.getValue();
+        final int regB = cpu.B.getValue();
         int flagValue = SZ53PN_ADD_TABLE[regB];
         if (b > 0x7F) {
             flagValue |= RegF.N_FLAG;
