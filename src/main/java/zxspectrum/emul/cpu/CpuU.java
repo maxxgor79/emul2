@@ -73,9 +73,15 @@ public interface CpuU {
 
     void in(Reg8 r, RegBC bc) throws IOException;
 
+    //undocumented
+    void in(RegBC bc) throws IOException;
+
     void in(RegA a, int n) throws IOException;
 
-    public void out(RegBC bc, Reg8 r) throws IOException;
+    void out(RegBC bc, Reg8 r) throws IOException;
+
+    //undocumented
+    void out(RegBC bc) throws IOException;
 
     void out(int n, RegA a) throws IOException;
 

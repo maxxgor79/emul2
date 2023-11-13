@@ -21,7 +21,7 @@ import zxspectrum.emul.io.port.PortIO;
 
 import java.io.IOException;
 
-public class Z80 extends Cpu implements FlagTable {
+public class Z80 extends Cpu {
 
     @Getter
     private boolean signalNMI;
@@ -50,7 +50,6 @@ public class Z80 extends Cpu implements FlagTable {
     }
 
     private void init() {
-        initTables();
         alu = new AluZ80(this);
         cpuU = new Z80U(this);
         reset();

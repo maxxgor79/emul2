@@ -515,7 +515,7 @@ public class TestAlu {
         Assertions.assertEquals(cpu1.F.is5BitSet(), cpu2.F.is5BitSet());
     }
 
-    //@Test
+    @Test
     void testOutd() throws IOException {
         cpu1.HL.setValue(20000);
         cpu1.BC.setValue(256);
@@ -523,6 +523,7 @@ public class TestAlu {
 
         cpu2.HL.setValue(20000);
         cpu2.BC.setValue(256);
+        cpu2.getCpuU().outd();
         Assertions.assertEquals(cpu1.HL, cpu2.HL);
         Assertions.assertEquals(cpu1.BC, cpu2.BC);
         Assertions.assertEquals(cpu1.F.isNSet(), cpu2.F.isNSet());
