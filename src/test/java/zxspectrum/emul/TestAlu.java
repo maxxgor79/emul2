@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import zxspectrum.emul.cpu.alu.Alu;
 import zxspectrum.emul.cpu.alu.impl.AluZ80;
 import zxspectrum.emul.cpu.impl.Z80;
+import zxspectrum.emul.cpu.reg.Const;
 import zxspectrum.emul.io.mem.address.Addressing;
 import zxspectrum.emul.io.mem.impl.Memory48K;
 import zxspectrum.emul.io.port.PortIO48k;
@@ -445,5 +446,51 @@ public class TestAlu {
         addressing.HL.peek(cpu1.B);
         Assertions.assertEquals(cpu1.A.getValue(), 0b1000_0000);
         Assertions.assertEquals(cpu1.B.getValue(), 0b0100_0010);
+    }
+
+    @Test
+    void testBit() {
+        cpu1.F.reset();
+        cpu1.B.setValue(0b1111_1011);
+        cpu1.getAlu().bit(Const.BIT_2, cpu1.B);
+        Assertions.assertEquals(cpu1.F.isZeroSet(), true);
+        Assertions.assertEquals(cpu1.F.isHalfCarrySet(), true);
+        Assertions.assertEquals(cpu1.F.isNSet(), false);
+
+
+        cpu1.F.reset();
+        cpu1.B.setValue(0b1000_0000);
+        addressing.HL.setAddress(0x8010).poke(cpu1.B);
+        cpu1.getAlu().bit(Const.BIT_7, addressing.HL);
+
+        Assertions.assertEquals(cpu1.F.isZeroSet(), false);
+        Assertions.assertEquals(cpu1.F.isHalfCarrySet(), true);
+        Assertions.assertEquals(cpu1.F.isNSet(), false);
+    }
+
+    @Test
+    void testSet() {
+        cpu1.L.setValue(0b0000_0000);
+        cpu1.getAlu().set(Const.BIT_2, cpu1.L);
+        Assertions.assertEquals(cpu1.L.getValue(), 0b0000_0100);
+
+        cpu1.B.setValue(0b0000_0000);
+        addressing.HL.setAddress(0x8011).poke(cpu1.B);
+        cpu1.getAlu().set(Const.BIT_5, addressing.HL);
+        addressing.HL.peek(cpu1.L);
+        Assertions.assertEquals(cpu1.L.getValue(), 0b0010_0000);
+    }
+
+    @Test
+    void testRes() {
+        cpu1.L.setValue(0xFF);
+        cpu1.getAlu().res(Const.BIT_4, cpu1.L);
+        Assertions.assertEquals(cpu1.L.getValue(), 0b1110_1111);
+
+        cpu1.B.setValue(0xFF);
+        addressing.HL.setAddress(0x8011).poke(cpu1.B);
+        cpu1.getAlu().res(Const.BIT_3, addressing.HL);
+        addressing.HL.peek(cpu1.L);
+        Assertions.assertEquals(cpu1.L.getValue(), 0b1111_0111);
     }
 }

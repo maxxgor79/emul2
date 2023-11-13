@@ -169,6 +169,8 @@ public interface Alu {
 
     int res(int mask, Reg8 r);
 
+    int res(int mask, Address address);
+
     int res(Reg8 r, int mask, IAddress address);//undocumented
 
     int set(int mask, Reg8 r);

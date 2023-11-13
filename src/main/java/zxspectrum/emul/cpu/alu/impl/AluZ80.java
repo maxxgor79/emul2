@@ -715,6 +715,14 @@ public class AluZ80 implements Alu, FlagTable {
         return r.and(~mask);
     }
 
+    @Override
+    public int res(int mask, @NonNull Address address) {
+        address.peek(tmpReg);
+        int result = res(mask, tmpReg);
+        address.poke(tmpReg);
+        return result;
+    }
+
     //undocumented
     @Override
     public int res(Reg8 r, int mask, @NonNull IAddress address) {

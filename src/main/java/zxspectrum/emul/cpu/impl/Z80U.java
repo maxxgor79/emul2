@@ -301,10 +301,10 @@ public class Z80U implements CpuU, FlagTable {
 
     @Override
     public void outd() throws IOException {
-        cpu.B.dec();
         final int bcValue = cpu.BC.getValue();
         final int b = memory.peek8(cpu.HL);
         portIO.write(bcValue, b);
+        cpu.B.dec();
         cpu.HL.dec();
         int flagValue;
         int regL = cpu.L.getValue();
@@ -328,10 +328,10 @@ public class Z80U implements CpuU, FlagTable {
 
     @Override
     public void outi() throws IOException {
-        cpu.B.dec();
         final int bcValue = cpu.BC.getValue();
         final int b = this.memory.peek8(cpu.HL);
         portIO.write(bcValue, b);
+        cpu.B.dec();
         cpu.HL.inc();
         int flagValue;
         int regL = cpu.L.getValue();
@@ -382,9 +382,10 @@ public class Z80U implements CpuU, FlagTable {
 
     @Override
     public void ini() throws IOException {
-        final int b = portIO.read(cpu.AF.getValue());
-        memory.poke8(cpu.HL, b);
         final int bcValue = cpu.BC.getValue();
+        final int b = portIO.read(bcValue);
+        memory.poke8(cpu.HL, b);
+        cpu.B.dec();
         cpu.HL.inc();
         int regB = cpu.B.getValue();
         int flagValue = SZ53PN_ADD_TABLE[regB];
