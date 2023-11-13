@@ -36,20 +36,30 @@ public interface Alu {
 
     int dec(Reg8 r);
 
+    int dec(Address address);
+
     int srl(Reg8 r);
+
+    int srl(Address address);
 
     int srl(Reg8 r, IAddress address);//undocumented
 
     int sra(Reg8 r);
+
+    int sra(Address address);
 
     //undocumented
     int sra(Reg8 r, IAddress address);
 
     int rr(Reg8 r);
 
+    int rr(Address address);
+
     int rr(Reg8 r, IAddress address);//undocumented
 
     int rrc(Reg8 r);
+
+    int rrc(Address address);
 
     //undocumented
     int rrc(Reg8 r, IAddress address);
@@ -65,6 +75,8 @@ public interface Alu {
 
     int sla(Reg8 r);
 
+    int sla(Address address);
+
     //undocumented
     int sla(Reg8 r, IAddress address);
 
@@ -75,6 +87,8 @@ public interface Alu {
     int sl1(Reg8 r, IAddress address);
 
     int rl(Reg8 r);
+
+    int rl(Address address);
 
     int rl(Reg8 r, IAddress address); //undocumented
 
@@ -97,25 +111,45 @@ public interface Alu {
 
     void cp(int n);
 
+    void cp(Address address);
+
     int or(Reg8 r);
+
+    int or(int n);
+
+    int or(Address address);
 
     int xor(Reg8 r);
 
+    int xor(int n);
+
+    int xor(Address address);
+
     int and(Reg8 r);
+
+    int and(int n);
+
+    int and(Address address);
 
     int sbc(Reg8 r);
 
     int sbc(int n);
 
+    int sbc(Address address);
+
     int sbc(Reg16 r1, Reg16 r2);
 
     int sub(Reg8 r);
 
-    int sub8(int a, int b);
+    int sub(Address address);
+
+    int sub8(int b);
 
     int adc(Reg8 r);
 
     int adc(int n);
+
+    int adc(Address address);
 
     int adc(Reg16 r1, Reg16 r2);
 

@@ -20,6 +20,10 @@ public abstract class Reg8 {
         return value;
     }
 
+    public void reset() {
+        this.value = 0;
+    }
+
     public int ld(@NonNull Reg8 r) {
         this.value = r.value;
         return value;
@@ -40,9 +44,8 @@ public abstract class Reg8 {
         return value;
     }
 
-    public int and(int val) {
-        val &= 0xFF;
-        this.value &= val;
+    public int and(int n) {
+        this.value &= n & 0xFF;
         return value;
     }
 
@@ -62,9 +65,8 @@ public abstract class Reg8 {
         return value;
     }
 
-    public int xor(int val) {
-        val &= 0xFF;
-        this.value ^= val;
+    public int xor(int n) {
+        this.value ^= n & 0xFF;
         return value;
     }
 

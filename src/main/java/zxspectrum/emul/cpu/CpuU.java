@@ -9,6 +9,7 @@ import zxspectrum.emul.cpu.reg.RegDE;
 import zxspectrum.emul.cpu.reg.RegHL;
 import zxspectrum.emul.cpu.reg.RegI;
 import zxspectrum.emul.cpu.reg.RegR;
+import zxspectrum.emul.io.mem.MemoryAccess;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.mem.address.Address;
 import zxspectrum.emul.io.mem.address.IAddress;
@@ -97,7 +98,7 @@ public interface CpuU {
 
     void ini() throws IOException;
 
-    void setMemory(MemoryControl memory);
+    void setMemory(MemoryAccess memory);
 
     void setPortIO(PortIO portIO);
 }

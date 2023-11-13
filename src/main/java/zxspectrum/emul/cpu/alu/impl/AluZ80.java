@@ -7,13 +7,7 @@ import zxspectrum.emul.cpu.reg.FlagTable;
 import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.cpu.reg.RegA;
-import zxspectrum.emul.cpu.reg.RegB;
-import zxspectrum.emul.cpu.reg.RegC;
-import zxspectrum.emul.cpu.reg.RegD;
-import zxspectrum.emul.cpu.reg.RegE;
 import zxspectrum.emul.cpu.reg.RegF;
-import zxspectrum.emul.cpu.reg.RegH;
-import zxspectrum.emul.cpu.reg.RegL;
 import zxspectrum.emul.io.mem.MemoryAccess;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.mem.address.Address;
@@ -131,11 +125,27 @@ public class AluZ80 implements Alu, FlagTable {
     }
 
     @Override
+    public int dec(@NonNull Address address) {
+        address.peek(tmpReg);
+        int result = dec(tmpReg);
+        address.poke(tmpReg);
+        return result;
+    }
+
+    @Override
     public int srl(@NonNull Reg8 r) {
         final boolean carryFlag = ((r.getValue() & 0x01) != 0x00);
         int result = r.rShift();
         cpu.F.setValue(SZ53PN_ADD_TABLE[result]);
         cpu.F.setCarry(carryFlag);
+        return result;
+    }
+
+    @Override
+    public int srl(@NonNull Address address) {
+        address.peek(tmpReg);
+        int result = srl(tmpReg);
+        address.poke(tmpReg);
         return result;
     }
 
@@ -157,6 +167,14 @@ public class AluZ80 implements Alu, FlagTable {
         result = r.or(tmp);
         cpu.F.setValue(SZ53PN_ADD_TABLE[result]);
         cpu.F.setCarry(carryFlag);
+        return result;
+    }
+
+    @Override
+    public int sra(@NonNull Address address) {
+        address.peek(tmpReg);
+        int result = sra(tmpReg);
+        address.poke(tmpReg);
         return result;
     }
 
@@ -182,6 +200,14 @@ public class AluZ80 implements Alu, FlagTable {
         return result;
     }
 
+    @Override
+    public int rr(@NonNull Address address) {
+        address.peek(tmpReg);
+        int result = rr(tmpReg);
+        address.poke(tmpReg);
+        return result;
+    }
+
     //undocumented
     @Override
     public int rr(Reg8 r, @NonNull IAddress address) {
@@ -193,13 +219,21 @@ public class AluZ80 implements Alu, FlagTable {
 
     @Override
     public int rrc(@NonNull Reg8 r) {
-        final boolean carryFlag = ((r.getValue() & 0x01) != RegF.CARRY_FLAG);
+        final boolean carryFlag = ((r.getValue() & 0x01) != 0);
         int result = r.rShift();
         if (carryFlag) {
             result = r.or(RegF.SIGN_FLAG);
         }
         cpu.F.setValue(SZ53PN_ADD_TABLE[result]);
         cpu.F.setCarry(carryFlag);
+        return result;
+    }
+
+    @Override
+    public int rrc(@NonNull Address address) {
+        address.peek(tmpReg);
+        int result = rrc(tmpReg);
+        address.poke(tmpReg);
         return result;
     }
 
@@ -250,6 +284,14 @@ public class AluZ80 implements Alu, FlagTable {
         return result;
     }
 
+    @Override
+    public int sla(@NonNull Address address) {
+        address.peek(tmpReg);
+        int result = sla(tmpReg);
+        address.poke(tmpReg);
+        return result;
+    }
+
     //undocumented
     @Override
     public int sla(Reg8 r, @NonNull IAddress address) {
@@ -289,6 +331,14 @@ public class AluZ80 implements Alu, FlagTable {
         }
         cpu.F.setValue(SZ53PN_ADD_TABLE[result]);
         cpu.F.setCarry(carryFlag);
+        return result;
+    }
+
+    @Override
+    public int rl(@NonNull Address address) {
+        address.peek(tmpReg);
+        int result = rl(tmpReg);
+        address.poke(tmpReg);
         return result;
     }
 
@@ -362,7 +412,9 @@ public class AluZ80 implements Alu, FlagTable {
 
     @Override
     public int neg() {
-        return cpu.A.setValue(sub8(0, cpu.A.getValue()));
+        tmpReg.ld(cpu.A);
+        cpu.A.setValue(0);
+        return sub8(tmpReg.getValue());
     }
 
     @Override
@@ -388,24 +440,63 @@ public class AluZ80 implements Alu, FlagTable {
     }
 
     @Override
-    public int or(@NonNull Reg8 r2) {
-        int result = cpu.A.or(r2);
+    public void cp(@NonNull Address address) {
+        address.peek(tmpReg);
+        cp(tmpReg.getValue());
+    }
+
+    @Override
+    public int or(@NonNull Reg8 r) {
+        return or(r.getValue());
+    }
+
+    @Override
+    public int or(int n) {
+        int result = cpu.A.or(n);
         cpu.F.setValue(SZP_FLAGS[result]);
         return result;
+    }
+
+    @Override
+    public int or(@NonNull Address address) {
+        address.peek(tmpReg);
+        return or(tmpReg.getValue());
     }
 
     @Override
     public int xor(@NonNull Reg8 r) {
-        int result = cpu.A.xor(r);
+        return xor(r.getValue());
+    }
+
+    @Override
+    public int xor(int n) {
+        int result = cpu.A.xor(n);
         cpu.F.setValue(SZP_FLAGS[result]);
         return result;
     }
 
     @Override
+    public int xor(@NonNull Address address) {
+        address.peek(tmpReg);
+        return xor(tmpReg.getValue());
+    }
+
+    @Override
     public int and(@NonNull Reg8 r) {
-        int result = cpu.A.and(r);
+        return and(r.getValue());
+    }
+
+    @Override
+    public int and(int n) {
+        int result = cpu.A.and(n);
         cpu.F.setValue(RegF.HALF_CARRY_FLAG | SZP_FLAGS[result]);
         return result;
+    }
+
+    @Override
+    public int and(@NonNull Address address) {
+        address.peek(tmpReg);
+        return and(tmpReg);
     }
 
     @Override
@@ -433,6 +524,12 @@ public class AluZ80 implements Alu, FlagTable {
     }
 
     @Override
+    public int sbc(@NonNull Address address) {
+        address.peek(tmpReg);
+        return sbc(tmpReg.getValue());
+    }
+
+    @Override
     public int sbc(@NonNull Reg16 r1, @NonNull Reg16 r2) {
         final int carry = cpu.F.isCarrySet() ? 1 : 0;
         final int arg1 = r1.getValue();
@@ -453,16 +550,24 @@ public class AluZ80 implements Alu, FlagTable {
         }
         r1.setValue(res);
         cpu.F.setCarry(carryFlag);
+        cpu.WZ.setValue(arg1 + 1);
         return res;
     }
 
     @Override
     public int sub(@NonNull Reg8 r) {
-        return cpu.A.setValue(sub8(cpu.A.getValue(), r.getValue()));
+        return cpu.A.setValue(sub8(r.getValue()));
     }
 
     @Override
-    public int sub8(int a, int b) {
+    public int sub(@NonNull Address address) {
+        address.peek(tmpReg);
+        return sub8(tmpReg.getValue());
+    }
+
+    @Override
+    public int sub8(int b) {
+        final int a = cpu.A.getValue();
         int res = a - b;
         final boolean carryFlag = ((res & 0x100) != 0x00);
         res &= 0xFF;
@@ -474,6 +579,7 @@ public class AluZ80 implements Alu, FlagTable {
             cpu.F.or(RegF.P_V_FLAG);
         }
         cpu.F.setCarry(carryFlag);
+        cpu.A.setValue(res);
         return res;
     }
 
@@ -503,6 +609,12 @@ public class AluZ80 implements Alu, FlagTable {
     }
 
     @Override
+    public int adc(@NonNull Address address) {
+        address.peek(tmpReg);
+        return adc(tmpReg.getValue());
+    }
+
+    @Override
     public int adc(@NonNull Reg16 r1, @NonNull Reg16 r2) {
         final int carry = cpu.F.isCarrySet() ? 1 : 0;
         final int arg1 = r1.getValue();
@@ -523,6 +635,7 @@ public class AluZ80 implements Alu, FlagTable {
         }
         r1.setValue(res);
         cpu.F.setCarry(carryFlag);
+        cpu.WZ.setValue(arg1 + 1);
         return res;
     }
 
@@ -538,7 +651,6 @@ public class AluZ80 implements Alu, FlagTable {
         }
         r1.setValue(res);
         cpu.WZ.setValue(arg1 + 1);
-        cpu.WZ.inc();
         return res;
     }
 
@@ -569,9 +681,7 @@ public class AluZ80 implements Alu, FlagTable {
     @Override
     public int add(@NonNull Address address) {
         address.peek(tmpReg);
-        int result = add(tmpReg);
-        address.poke(tmpReg);
-        return result;
+        return add(tmpReg.getValue());
     }
 
     @Override
@@ -596,8 +706,8 @@ public class AluZ80 implements Alu, FlagTable {
 
     @Override
     public void bit(int mask, IAddress address) {
-        cpu.WZ.setValue(address.getAddress());
         bit(mask, address);
+        cpu.WZ.setValue(address.getAddress());
     }
 
     @Override
@@ -629,17 +739,18 @@ public class AluZ80 implements Alu, FlagTable {
 
     @Override
     public int set(int mask, IAddress address) {
+        int result = set(mask, address);
         cpu.WZ.setValue(address.getAddress());
-        return set(mask, address);
+        return result;
     }
 
     //undocumented
     @Override
     public int set(Reg8 r, int mask, @NonNull IAddress address) {
-        cpu.WZ.setValue(address.getAddress());
         address.peek(r);
         int result = set(mask, r);
         address.poke(r);
+        cpu.WZ.setValue(address.getAddress());
         return result;
     }
 

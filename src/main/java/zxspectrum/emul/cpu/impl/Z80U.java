@@ -15,7 +15,6 @@ import zxspectrum.emul.cpu.reg.RegHL;
 import zxspectrum.emul.cpu.reg.RegI;
 import zxspectrum.emul.cpu.reg.RegR;
 import zxspectrum.emul.io.mem.MemoryAccess;
-import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.mem.address.Address;
 import zxspectrum.emul.io.mem.address.IAddress;
 import zxspectrum.emul.io.mem.address.RpAddress;
@@ -408,7 +407,7 @@ public class Z80U implements CpuU, FlagTable {
     }
 
     @Override
-    public void setMemory(@NonNull MemoryControl memory) {
+    public void setMemory(@NonNull MemoryAccess memory) {
         this.memory = memory;
     }
 
