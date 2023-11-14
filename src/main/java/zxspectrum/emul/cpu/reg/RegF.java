@@ -139,9 +139,4 @@ public class RegF extends Reg8 implements Const, Resettable {
       value &= ~BIT_3;
     }
   }
-
-  @Override
-  public void reset() {
-    value = 0;
-  }
 }

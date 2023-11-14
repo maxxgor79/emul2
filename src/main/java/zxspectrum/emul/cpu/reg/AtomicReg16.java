@@ -77,4 +77,8 @@ public class AtomicReg16 extends Reg16 {
         value = tmp;
     }
 
+    @Override
+    public void reset() {
+        this.value = 0;
+    }
 }

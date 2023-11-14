@@ -21,7 +21,6 @@ public class RegPC extends AtomicReg16 {
   }
 
   public void add(int d) {
-    this.value += d;
-    this.value &= 0xFFFF;
+    this.value = (this.value + d) & 0xFFFF;
   }
 }

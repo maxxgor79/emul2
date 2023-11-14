@@ -1,16 +1,15 @@
 package zxspectrum.emul;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import zxspectrum.emul.cpu.CpuU;
-import zxspectrum.emul.cpu.alu.Alu;
-import zxspectrum.emul.cpu.alu.impl.AluZ80;
+import zxspectrum.emul.cpu.unit.CpuControl;
+import zxspectrum.emul.cpu.unit.LoadIO;
 import zxspectrum.emul.cpu.impl.Z80;
-import zxspectrum.emul.cpu.impl.Z80U;
+import zxspectrum.emul.cpu.unit.impl.CpuControlZ80;
+import zxspectrum.emul.cpu.unit.impl.LoadIOZ80;
 import zxspectrum.emul.io.mem.address.Addressing;
 import zxspectrum.emul.io.mem.impl.Memory48K;
 import zxspectrum.emul.io.port.PortIO48k;
@@ -49,7 +48,10 @@ public class TestCpu {
 
     int outPort;
 
-    private final CpuU cpuU = new Z80U(cpu);
+    private final LoadIO loadIO = new LoadIOZ80(cpu);
+
+    private final CpuControl cpuControl = new CpuControlZ80(cpu);
+
     private final Addressing addressing = new Addressing(cpu);
 
     @Test
@@ -58,7 +60,7 @@ public class TestCpu {
         cpu.C.setValue(0x07);
         cpu.B.setValue(0x10);
         cpu.HL.setValue(0x9000);
-        cpuU.ini();
+        loadIO.ini();
         Assertions.assertEquals(cpu.HL.getValue(), 0x9001);
         addressing.HL.setAddress(0x9000).peek(cpu.E);
         Assertions.assertEquals(cpu.E.getValue(), 0x7B);
@@ -72,7 +74,7 @@ public class TestCpu {
         cpu.C.setValue(0x08);//port
         cpu.B.setValue(0x10);
         cpu.HL.setValue(0x9100);
-        cpuU.ind();
+        loadIO.ind();
         Assertions.assertEquals(cpu.HL.getValue(), 0x90FF);
         addressing.HL.setAddress(0x9100).peek(cpu.E);
         Assertions.assertEquals(cpu.E.getValue(), 0x8B);
@@ -87,7 +89,7 @@ public class TestCpu {
         cpu.HL.setValue(0x9101);
         cpu.E.setValue(0x59);
         addressing.HL.setAddress(0x9101).poke(cpu.E);
-        cpuU.outi();
+        loadIO.outi();
         Assertions.assertEquals(cpu.HL.getValue(), 0x9102);
         Assertions.assertEquals(outValue, 0x59);
         Assertions.assertEquals(cpu.B.getValue(), 0x0F);
@@ -102,7 +104,7 @@ public class TestCpu {
         cpu.HL.setValue(0x9101);
         cpu.E.setValue(0x59);
         addressing.HL.setAddress(0x9201).poke(cpu.E);
-        cpuU.outd();
+        loadIO.outd();
         Assertions.assertEquals(cpu.HL.getValue(), 0x9200);
         Assertions.assertEquals(outValue, 0x59);
         Assertions.assertEquals(cpu.B.getValue(), 0x0F);
@@ -118,7 +120,7 @@ public class TestCpu {
         cpu.DE.setValue(0x6000);
         addressing.DE.poke(cpu.A);
         cpu.BC.setValue(0x07);
-        cpuU.ldd();
+        loadIO.ldd();
         Assertions.assertEquals(cpu.HL.getValue(), 0x6FFF);
         Assertions.assertEquals(cpu.DE.getValue(), 0x5FFF);
         addressing.DE.setAddress(0x6000).peek(cpu.A);
@@ -135,11 +137,32 @@ public class TestCpu {
         cpu.DE.setValue(0x6000);
         addressing.DE.poke(cpu.A);
         cpu.BC.setValue(0x07);
-        cpuU.ldi();
+        loadIO.ldi();
         Assertions.assertEquals(cpu.HL.getValue(), 0x7001);
         Assertions.assertEquals(cpu.DE.getValue(), 0x6001);
         addressing.DE.setAddress(0x6000).peek(cpu.A);
         Assertions.assertEquals(cpu.A.getValue(), 0x88);
         Assertions.assertEquals(cpu.BC.getValue(), 0x06);
+    }
+
+    @Test
+    void testCpl() {
+        cpu.A.setValue(0b1011_0100);
+        cpuControl.cpl();
+        Assertions.assertEquals(cpu.A.getValue(), 0b0100_1011);
+    }
+
+    @Test
+    void testCcf() {
+        cpu.F.setCarry(true);
+        cpuControl.ccf();
+        Assertions.assertEquals(cpu.F.isCarrySet(), false);
+    }
+
+    @Test
+    void testScf() {
+        cpu.F.setCarry(false);
+        cpuControl.scf();
+        Assertions.assertEquals(cpu.F.isCarrySet(), true);
     }
 }

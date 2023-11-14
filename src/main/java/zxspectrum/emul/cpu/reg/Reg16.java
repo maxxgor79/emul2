@@ -2,6 +2,7 @@ package zxspectrum.emul.cpu.reg;
 
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import zxspectrum.emul.Resettable;
 
 /**
  * Reg16.
@@ -9,7 +10,7 @@ import lombok.NonNull;
  * @author Maxim Gorin
  */
 @NoArgsConstructor
-public abstract class Reg16 {
+public abstract class Reg16 implements Resettable, Const {
 
     protected Reg8 lo;
 
@@ -101,5 +102,11 @@ public abstract class Reg16 {
             lo.value = tmp & 0xFF;
             hi.value = tmp >>> 8;
         }
+    }
+
+    @Override
+    public void reset() {
+        this.lo.reset();
+        this.hi.reset();
     }
 }

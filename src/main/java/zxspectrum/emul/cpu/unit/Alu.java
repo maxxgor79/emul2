@@ -1,28 +1,13 @@
-package zxspectrum.emul.cpu.alu;
+package zxspectrum.emul.cpu.unit;
 
 import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
-import zxspectrum.emul.cpu.reg.RegA;
-import zxspectrum.emul.cpu.reg.RegB;
-import zxspectrum.emul.cpu.reg.RegC;
-import zxspectrum.emul.cpu.reg.RegD;
-import zxspectrum.emul.cpu.reg.RegE;
-import zxspectrum.emul.cpu.reg.RegF;
-import zxspectrum.emul.cpu.reg.RegH;
-import zxspectrum.emul.cpu.reg.RegL;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.mem.address.Address;
 import zxspectrum.emul.io.mem.address.IAddress;
-import zxspectrum.emul.io.port.PortIO;
 
 public interface Alu {
     int daa();
-
-    int cpl();
-
-    int ccf();
-
-    int scf();
 
     int inc(Reg16 r);
 

@@ -14,7 +14,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-public class IFF {
+public class Trigger {
 
   @Setter
   @Getter

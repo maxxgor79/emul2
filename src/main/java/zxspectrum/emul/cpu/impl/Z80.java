@@ -4,22 +4,18 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import zxspectrum.emul.cpu.Cpu;
-import zxspectrum.emul.cpu.CpuU;
-import zxspectrum.emul.cpu.alu.Alu;
-import zxspectrum.emul.cpu.alu.impl.AluZ80;
-import zxspectrum.emul.cpu.reg.FlagTable;
-import zxspectrum.emul.cpu.reg.Reg16;
-import zxspectrum.emul.cpu.reg.Reg8;
-import zxspectrum.emul.cpu.reg.RegA;
-import zxspectrum.emul.cpu.reg.RegBC;
-import zxspectrum.emul.cpu.reg.RegF;
-import zxspectrum.emul.cpu.reg.RegHL;
-import zxspectrum.emul.cpu.reg.RegI;
-import zxspectrum.emul.cpu.reg.RegR;
+import zxspectrum.emul.cpu.unit.CallReturn;
+import zxspectrum.emul.cpu.unit.CpuControl;
+import zxspectrum.emul.cpu.unit.Jump;
+import zxspectrum.emul.cpu.unit.LoadIO;
+import zxspectrum.emul.cpu.unit.Alu;
+import zxspectrum.emul.cpu.unit.impl.AluZ80;
+import zxspectrum.emul.cpu.unit.impl.CallReturnZ80;
+import zxspectrum.emul.cpu.unit.impl.CpuControlZ80;
+import zxspectrum.emul.cpu.unit.impl.JumpZ80;
+import zxspectrum.emul.cpu.unit.impl.LoadIOZ80;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.port.PortIO;
-
-import java.io.IOException;
 
 public class Z80 extends Cpu {
 
@@ -43,7 +39,16 @@ public class Z80 extends Cpu {
     private Alu alu;
 
     @Getter
-    private CpuU cpuU;
+    private LoadIO loadIO;
+
+    @Getter
+    private CpuControl cpuControl;
+
+    @Getter
+    private Jump jump;
+
+    @Getter
+    private CallReturn callReturn;
 
     public Z80() {
         init();
@@ -51,7 +56,10 @@ public class Z80 extends Cpu {
 
     private void init() {
         alu = new AluZ80(this);
-        cpuU = new Z80U(this);
+        loadIO = new LoadIOZ80(this);
+        cpuControl = new CpuControlZ80(this);
+        jump = new JumpZ80(this);
+        callReturn = new CallReturnZ80(this);
         reset();
     }
 
@@ -59,14 +67,14 @@ public class Z80 extends Cpu {
     public void setMemory(@NonNull MemoryControl memory) {
         this.memory = memory;
         this.memory.setSP(SP);
-        cpuU.setMemory(memory);
+        loadIO.setMemory(memory);
         alu.setMemory(memory);
     }
 
     @Override
     public void setPortIO(@NonNull PortIO portIO) {
         this.portIO = portIO;
-        cpuU.setPortIO(portIO);
+        loadIO.setPortIO(portIO);
     }
 
     @Override

@@ -3,6 +3,7 @@ package zxspectrum.emul.cpu.reg;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import zxspectrum.emul.Resettable;
 
 /**
  * Reg8.
@@ -10,7 +11,7 @@ import lombok.NonNull;
  * @author Maxim Gorin
  */
 @NoArgsConstructor
-public abstract class Reg8 {
+public abstract class Reg8 implements Resettable, Const {
 
     @Getter
     protected volatile int value;

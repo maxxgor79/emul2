@@ -1,6 +1,5 @@
-package zxspectrum.emul.cpu;
+package zxspectrum.emul.cpu.unit;
 
-import lombok.NonNull;
 import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.cpu.reg.RegA;
@@ -10,7 +9,6 @@ import zxspectrum.emul.cpu.reg.RegHL;
 import zxspectrum.emul.cpu.reg.RegI;
 import zxspectrum.emul.cpu.reg.RegR;
 import zxspectrum.emul.io.mem.MemoryAccess;
-import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.mem.address.Address;
 import zxspectrum.emul.io.mem.address.IAddress;
 import zxspectrum.emul.io.mem.address.RpAddress;
@@ -18,7 +16,7 @@ import zxspectrum.emul.io.port.PortIO;
 
 import java.io.IOException;
 
-public interface CpuU {
+public interface LoadIO {
     void ld(RegI i, RegA a);
 
     void ld(RegR r, RegA a);

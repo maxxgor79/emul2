@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import zxspectrum.emul.cpu.alu.Alu;
-import zxspectrum.emul.cpu.alu.impl.AluZ80;
+import zxspectrum.emul.cpu.unit.Alu;
+import zxspectrum.emul.cpu.unit.impl.AluZ80;
 import zxspectrum.emul.cpu.impl.Z80;
 import zxspectrum.emul.cpu.reg.Const;
 import zxspectrum.emul.io.mem.address.Addressing;
@@ -217,27 +217,6 @@ public class TestAlu {
         cpu1.getAlu().add(5);
         cpu1.getAlu().daa();
         Assertions.assertEquals(cpu1.A.getValue(), 0b0001_0101);
-    }
-
-    @Test
-    void testCpl() {
-        cpu1.A.setValue(0b1011_0100);
-        cpu1.getAlu().cpl();
-        Assertions.assertEquals(cpu1.A.getValue(), 0b0100_1011);
-    }
-
-    @Test
-    void testCcf() {
-        cpu1.F.setCarry(true);
-        cpu1.getAlu().ccf();
-        Assertions.assertEquals(cpu1.F.isCarrySet(), false);
-    }
-
-    @Test
-    void testScf() {
-        cpu1.F.setCarry(false);
-        cpu1.getAlu().scf();
-        Assertions.assertEquals(cpu1.F.isCarrySet(), true);
     }
 
     @Test

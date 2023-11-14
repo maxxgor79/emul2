@@ -1,8 +1,8 @@
-package zxspectrum.emul.cpu.impl;
+package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;
-import zxspectrum.emul.cpu.CpuU;
+import zxspectrum.emul.cpu.unit.LoadIO;
 import zxspectrum.emul.cpu.reg.AtomicReg16;
 import zxspectrum.emul.cpu.reg.FlagTable;
 import zxspectrum.emul.cpu.reg.Reg16;
@@ -22,7 +22,7 @@ import zxspectrum.emul.io.port.PortIO;
 
 import java.io.IOException;
 
-public class Z80U implements CpuU, FlagTable {
+public class LoadIOZ80 implements LoadIO, FlagTable {
     private final Cpu cpu;
 
     private MemoryAccess memory;
@@ -31,7 +31,7 @@ public class Z80U implements CpuU, FlagTable {
 
     private final Reg16 tmpReg = new AtomicReg16();
 
-    public Z80U(@NonNull Cpu cpu) {
+    public LoadIOZ80(@NonNull final Cpu cpu) {
         this.cpu = cpu;
         this.memory = cpu.getMemory();
         this.portIO = cpu.getPortIO();
@@ -90,73 +90,73 @@ public class Z80U implements CpuU, FlagTable {
 
     @Override
     public void ld(final RegA a, @NonNull final Address address) {
-        cpu.WZ.setValue(address.getAddress() + 1);
         address.peek(a);
+        cpu.WZ.setValue(address.getAddress() + 1);
     }
 
     @Override
     public void ld(@NonNull final Address address, final RegA a) {
-        cpu.WZ.setValue(((address.getAddress() + 1) & 0xFF) | (a.getValue() << 8));
         address.poke(a);
+        cpu.WZ.setValue(((address.getAddress() + 1) & 0xFF) | (a.getValue() << 8));
     }
 
     @Override
-    public void ld(RegA a, @NonNull RpAddress address) {
-        cpu.WZ.setValue(address.getAddress() + 1);
+    public void ld(final RegA a, @NonNull final RpAddress address) {
         address.peek(a);
+        cpu.WZ.setValue(address.getAddress() + 1);
     }
 
     @Override
-    public void ld(@NonNull RpAddress address, RegA a) {
-        cpu.WZ.setValue(((address.getAddress() + 1) & 0xFF) | (a.getValue() << 8));
+    public void ld(@NonNull final RpAddress address, final RegA a) {
         address.poke(a);
+        cpu.WZ.setValue(((address.getAddress() + 1) & 0xFF) | (a.getValue() << 8));
     }
 
     @Override
-    public void ld(@NonNull Address address, RegBC bc) {
-        cpu.WZ.setValue(address.getAddress() + 1);
+    public void ld(@NonNull final Address address, final RegBC bc) {
         address.poke(bc);
+        cpu.WZ.setValue(address.getAddress() + 1);
     }
 
     @Override
-    public void ld(@NonNull Address address, RegDE de) {
-        cpu.WZ.setValue(address.getAddress() + 1);
+    public void ld(@NonNull final Address address, final RegDE de) {
         address.poke(de);
+        cpu.WZ.setValue(address.getAddress() + 1);
     }
 
     @Override
-    public void ld(@NonNull RegBC bc, Address address) {
-        cpu.WZ.setValue(address.getAddress() + 1);
+    public void ld(@NonNull final RegBC bc, final Address address) {
         address.peek(bc);
-    }
-
-    @Override
-    public void ld(@NonNull RegDE de, Address address) {
         cpu.WZ.setValue(address.getAddress() + 1);
+    }
+
+    @Override
+    public void ld(@NonNull final RegDE de, final Address address) {
         address.peek(de);
+        cpu.WZ.setValue(address.getAddress() + 1);
     }
 
     @Override
-    public void ld(Reg8 r, @NonNull IAddress address) {
-        cpu.WZ.setValue(address.getAddress());
+    public void ld(final Reg8 r, @NonNull final IAddress address) {
         address.peek(r);
+        cpu.WZ.setValue(address.getAddress());
     }
 
     @Override
-    public void ld(@NonNull IAddress address, Reg8 r) {
+    public void ld(@NonNull final IAddress address, final Reg8 r) {
         address.poke(r);
         cpu.WZ.setValue(address.getAddress());
     }
 
     @Override
-    public void ld(@NonNull IAddress address, int n) {
+    public void ld(@NonNull final IAddress address, final int n) {
         tmpReg.setValue(n);
         address.poke(tmpReg);
         cpu.WZ.setValue(address.getAddress());
     }
 
     @Override
-    public void ld(@NonNull Address address, final Reg16 r) {
+    public void ld(@NonNull final Address address, final Reg16 r) {
         address.poke(r);
     }
 
@@ -183,7 +183,7 @@ public class Z80U implements CpuU, FlagTable {
     }
 
     @Override
-    public void ex(@NonNull Reg16 r1, @NonNull Reg16 r2) {
+    public void ex(@NonNull final Reg16 r1, @NonNull final Reg16 r2) {
         r1.swap(r2);
     }
 
@@ -195,7 +195,7 @@ public class Z80U implements CpuU, FlagTable {
     }
 
     @Override
-    public void ex(@NonNull Address address, RegBC bc) {
+    public void ex(@NonNull final Address address, final RegBC bc) {
         address.peek(tmpReg);
         address.poke(bc);
         bc.ld(tmpReg);
@@ -203,7 +203,7 @@ public class Z80U implements CpuU, FlagTable {
     }
 
     @Override
-    public void ex(@NonNull Address address, RegDE de) {
+    public void ex(@NonNull final Address address, final RegDE de) {
         address.peek(tmpReg);
         address.poke(de);
         de.ld(tmpReg);
@@ -229,7 +229,7 @@ public class Z80U implements CpuU, FlagTable {
 
     //undocumented
     @Override
-    public void in(@NonNull RegBC bc) throws IOException {
+    public void in(@NonNull final RegBC bc) throws IOException {
         int value = portIO.read(bc.getValue());
         cpu.F.setValue(SZP_FLAGS[value] | (cpu.F.getValue() & RegF.CARRY_FLAG));
         cpu.WZ.setValue(bc.getValue() + 1);
@@ -243,7 +243,7 @@ public class Z80U implements CpuU, FlagTable {
 
     //undocumented
     @Override
-    public void out(@NonNull RegBC bc) throws IOException {
+    public void out(@NonNull final RegBC bc) throws IOException {
         portIO.write(bc.getValue(), 0);
         cpu.WZ.setValue(bc.getValue() + 1);
     }
@@ -408,12 +408,12 @@ public class Z80U implements CpuU, FlagTable {
     }
 
     @Override
-    public void setMemory(@NonNull MemoryAccess memory) {
+    public void setMemory(@NonNull final MemoryAccess memory) {
         this.memory = memory;
     }
 
     @Override
-    public void setPortIO(@NonNull PortIO portIO) {
+    public void setPortIO(@NonNull final PortIO portIO) {
         this.portIO = portIO;
     }
 }
