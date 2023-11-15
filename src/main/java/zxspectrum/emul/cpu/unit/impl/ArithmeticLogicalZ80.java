@@ -2,7 +2,7 @@ package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;
-import zxspectrum.emul.cpu.unit.Alu;
+import zxspectrum.emul.cpu.unit.ArithmeticLogical;
 import zxspectrum.emul.cpu.reg.FlagTable;
 import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
@@ -11,16 +11,16 @@ import zxspectrum.emul.cpu.reg.RegF;
 import zxspectrum.emul.io.mem.MemoryAccess;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.mem.address.Address;
-import zxspectrum.emul.io.mem.address.IAddress;
+import zxspectrum.emul.io.mem.address.IdxAddress;
 
-public class AluZ80 implements Alu, FlagTable {
+public class ArithmeticLogicalZ80 implements ArithmeticLogical, FlagTable {
     private final Cpu cpu;
 
     private MemoryAccess memory;
 
     private final Reg8 tmpReg = new RegA();
 
-    public AluZ80(@NonNull Cpu cpu) {
+    public ArithmeticLogicalZ80(@NonNull Cpu cpu) {
         initTables();
         this.cpu = cpu;
         this.memory = cpu.getMemory();
@@ -76,7 +76,7 @@ public class AluZ80 implements Alu, FlagTable {
     }
 
     @Override
-    public int inc(final IAddress address) {
+    public int inc(final IdxAddress address) {
         int result = inc(address);
         cpu.WZ.setValue(address.getAddress());
         return result;
@@ -122,7 +122,7 @@ public class AluZ80 implements Alu, FlagTable {
 
     //undocumented
     @Override
-    public int srl(Reg8 r, @NonNull final IAddress address) {
+    public int srl(Reg8 r, @NonNull final IdxAddress address) {
         address.peek(r);
         int result = srl(r);
         address.poke(r);
@@ -151,7 +151,7 @@ public class AluZ80 implements Alu, FlagTable {
 
     //undocumented
     @Override
-    public int sra(Reg8 r, @NonNull final IAddress address) {
+    public int sra(Reg8 r, @NonNull final IdxAddress address) {
         address.peek(r);
         int result = sra(r);
         address.poke(r);
@@ -181,7 +181,7 @@ public class AluZ80 implements Alu, FlagTable {
 
     //undocumented
     @Override
-    public int rr(Reg8 r, @NonNull final IAddress address) {
+    public int rr(Reg8 r, @NonNull final IdxAddress address) {
         address.peek(r);
         int result = rr(r);
         address.poke(r);
@@ -210,7 +210,7 @@ public class AluZ80 implements Alu, FlagTable {
 
     //undocumented
     @Override
-    public int rrc(Reg8 r, @NonNull final IAddress address) {
+    public int rrc(Reg8 r, @NonNull final IdxAddress address) {
         address.peek(r);
         int result = rrc(r);
         address.poke(r);
@@ -238,7 +238,7 @@ public class AluZ80 implements Alu, FlagTable {
 
     //undocumented
     @Override
-    public int sll(Reg8 r, @NonNull final IAddress address) {
+    public int sll(Reg8 r, @NonNull final IdxAddress address) {
         address.peek(r);
         int result = sll(r);
         address.poke(r);
@@ -265,7 +265,7 @@ public class AluZ80 implements Alu, FlagTable {
 
     //undocumented
     @Override
-    public int sla(Reg8 r, @NonNull final IAddress address) {
+    public int sla(Reg8 r, @NonNull final IdxAddress address) {
         address.peek(r);
         int result = sla(r);
         address.poke(r);
@@ -283,9 +283,17 @@ public class AluZ80 implements Alu, FlagTable {
         return result;
     }
 
+    @Override
+    public int sl1(@NonNull Address address) {
+        address.peek(tmpReg);
+        int result = sl1(tmpReg);
+        address.poke(tmpReg);
+        return result;
+    }
+
     //undocumented
     @Override
-    public int sl1(Reg8 r, @NonNull final IAddress address) {
+    public int sl1(Reg8 r, @NonNull final IdxAddress address) {
         address.peek(r);
         int result = sl1(r);
         address.poke(r);
@@ -315,7 +323,7 @@ public class AluZ80 implements Alu, FlagTable {
 
     //undocumented
     @Override
-    public int rl(Reg8 r, @NonNull final IAddress address) {
+    public int rl(Reg8 r, @NonNull final IdxAddress address) {
         address.peek(r);
         int result = rl(r);
         address.poke(r);
@@ -343,14 +351,14 @@ public class AluZ80 implements Alu, FlagTable {
     }
 
     @Override
-    public int rlc(@NonNull final IAddress address) {
+    public int rlc(@NonNull final IdxAddress address) {
         cpu.WZ.setValue(address.getAddress());
         return rlc(address);
     }
 
     //undocumented
     @Override
-    public int rlc(Reg8 r, @NonNull final IAddress address) {
+    public int rlc(Reg8 r, @NonNull final IdxAddress address) {
         address.peek(r);
         int result = rlc(r);
         address.peek(r);
@@ -678,7 +686,7 @@ public class AluZ80 implements Alu, FlagTable {
     }
 
     @Override
-    public void bit(final int mask, final IAddress address) {
+    public void bit(final int mask, final IdxAddress address) {
         bit(mask, address);
         cpu.WZ.setValue(address.getAddress());
     }
@@ -698,7 +706,7 @@ public class AluZ80 implements Alu, FlagTable {
 
     //undocumented
     @Override
-    public int res(final Reg8 r, final int mask, @NonNull final IAddress address) {
+    public int res(final Reg8 r, final int mask, @NonNull final IdxAddress address) {
         address.peek(r);
         int result = res(mask, r);
         address.poke(r);
@@ -719,7 +727,7 @@ public class AluZ80 implements Alu, FlagTable {
     }
 
     @Override
-    public int set(final int mask, final IAddress address) {
+    public int set(final int mask, final IdxAddress address) {
         int result = set(mask, address);
         cpu.WZ.setValue(address.getAddress());
         return result;
@@ -727,7 +735,7 @@ public class AluZ80 implements Alu, FlagTable {
 
     //undocumented
     @Override
-    public int set(final Reg8 r, final int mask, @NonNull final IAddress address) {
+    public int set(final Reg8 r, final int mask, @NonNull final IdxAddress address) {
         address.peek(r);
         int result = set(mask, r);
         address.poke(r);
@@ -756,6 +764,12 @@ public class AluZ80 implements Alu, FlagTable {
     }
 
     @Override
+    public boolean cpdr() {
+        //TODO implement
+        return false;
+    }
+
+    @Override
     public void cpi() {
         int memHL = this.memory.peek8(cpu.HL);
         final boolean carry = cpu.F.isCarrySet();
@@ -773,6 +787,12 @@ public class AluZ80 implements Alu, FlagTable {
         }
         cpu.F.setValue(flagValue);
         cpu.WZ.inc();
+    }
+
+    @Override
+    public boolean cpir() {
+        //TODO implement
+        return false;
     }
 
     @Override

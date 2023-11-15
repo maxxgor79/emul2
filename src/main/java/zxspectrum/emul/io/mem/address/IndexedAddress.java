@@ -5,39 +5,39 @@ import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.io.mem.MemoryAccess;
 
-class IndexedAddress extends RegisteredAddress implements IAddress {
+final class IndexedAddress extends RegisteredAddress implements IdxAddress {
     private int offset;
 
-    IndexedAddress(@NonNull MemoryAccess memoryAccess, @NonNull Reg16 address) {
-        super(memoryAccess, address);
+    IndexedAddress(@NonNull Reg16 address) {
+        super(address);
     }
 
     @Override
-    public IAddress peek(Reg8 r) {
-        memoryAccess.peek(address.getValue() + offset, r);
+    public IndexedAddress peek(Reg8 r) {
+        memory.peek(address.getValue() + offset, r);
         return this;
     }
 
     @Override
-    public IAddress peek(Reg16 r) {
-        memoryAccess.peek(address.getValue() + offset, r);
+    public IndexedAddress peek(Reg16 r) {
+        memory.peek(address.getValue() + offset, r);
         return this;
     }
 
     @Override
-    public IAddress poke(Reg8 r) {
-        memoryAccess.poke(address.getValue() + offset, r);
+    public IndexedAddress poke(Reg8 r) {
+        memory.poke(address.getValue() + offset, r);
         return this;
     }
 
     @Override
-    public IAddress poke(Reg16 r) {
-        memoryAccess.poke(address.getValue() + offset, r);
+    public IndexedAddress poke(Reg16 r) {
+        memory.poke(address.getValue() + offset, r);
         return this;
     }
 
     @Override
-    public IAddress setAddress(int value) {
+    public IndexedAddress setAddress(int value) {
         address.setValue(value);
         return this;
     }
@@ -48,7 +48,13 @@ class IndexedAddress extends RegisteredAddress implements IAddress {
     }
 
     @Override
-    public IAddress setOffset(int offset) {
+    public IdxAddress noOffset() {
+        offset = 0;
+        return this;
+    }
+
+    @Override
+    public IdxAddress setOffset(int offset) {
         this.offset = (byte) offset;
         return this;
     }
@@ -56,5 +62,10 @@ class IndexedAddress extends RegisteredAddress implements IAddress {
     @Override
     public int getOffset() {
         return offset;
+    }
+
+    @Override
+    public void setMemory(@NonNull MemoryAccess memory) {
+        this.memory = memory;
     }
 }

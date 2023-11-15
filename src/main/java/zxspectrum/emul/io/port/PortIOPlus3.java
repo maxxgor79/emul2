@@ -5,12 +5,12 @@ import java.io.IOException;
 public class PortIOPlus3 extends ExtendedPortIO {
 
   @Override
-  public int read(int port) throws IOException {
+  public int read(int port) {
     return 0;
   }
 
   @Override
-  public void write(int port, int value) throws IOException {
+  public void write(int port, int value) {
 
   }
 

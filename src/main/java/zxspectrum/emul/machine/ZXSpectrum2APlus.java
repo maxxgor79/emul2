@@ -12,41 +12,43 @@ import zxspectrum.emul.io.sound.SoundChipFactory;
  */
 class ZXSpectrum2APlus extends CommonZXSpectrum {
 
-  protected SoundChip soundChip;
+    protected SoundChip soundChip;
 
-  ZXSpectrum2APlus() {
-    super(MachineModel.SPECTRUMPLUS2A);
-  }
+    private PortIOPlus2A portInstance;
 
-  @Override
-  protected void createPortIO() {
-    this.portIO = new PortIOPlus2A();
-  }
+    ZXSpectrum2APlus() {
+        super(MachineModel.SPECTRUMPLUS2A);
+    }
 
-  @Override
-  protected void createSoundChip() {
-    soundChip = SoundChipFactory.getInstance(machineModel);
-  }
+    @Override
+    protected void createPortIO() {
+        this.portIO = portInstance = new PortIOPlus2A();
+    }
 
-  @Override
-  protected void initPortIO() {
-    ((PortIOPlus2A) portIO).setUla(ula);
-    ((PortIOPlus2A) portIO).setMemory(memory);
-    ((PortIOPlus2A) portIO).setSoundChip(soundChip);
-  }
+    @Override
+    protected void createSoundChip() {
+        soundChip = SoundChipFactory.getInstance(machineModel);
+    }
 
-  @Override
-  protected void initSoundChip() {
-  }
+    @Override
+    protected void initPortIO() {
+        portInstance.setUla(ula);
+        portInstance.setMemory(memory);
+        portInstance.setSoundChip(soundChip);
+    }
 
-  @Override
-  public void reset() {
-    super.reset();
-    soundChip.reset();
-  }
+    @Override
+    protected void initSoundChip() {
+    }
 
-  @Override
-  public void run() {
+    @Override
+    public void reset() {
+        super.reset();
+        soundChip.reset();
+    }
 
-  }
+    @Override
+    public void run() {
+
+    }
 }

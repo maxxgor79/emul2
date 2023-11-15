@@ -1,5 +1,7 @@
 package zxspectrum.emul.cpu.unit;
 
+import zxspectrum.emul.io.mem.MemoryControl;
+
 public interface CallReturn {
     void call(int address);
 
@@ -21,9 +23,9 @@ public interface CallReturn {
 
     void ret();
 
-    void reti();
+    void retI();
 
-    void retn();
+    void retN();
 
     boolean retZ();
 
@@ -56,4 +58,6 @@ public interface CallReturn {
     void rst30();
 
     void rst38();
+
+    void setMemory(MemoryControl memory);
 }

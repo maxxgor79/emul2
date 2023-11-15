@@ -5,43 +5,42 @@ import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.io.mem.MemoryAccess;
 
-class RegisteredAddress implements Address {
+public class RegisteredAddress implements Address {
 
-    protected MemoryAccess memoryAccess;
+    protected MemoryAccess memory;
 
     protected Reg16 address;
 
-    RegisteredAddress(@NonNull MemoryAccess memoryAccess, @NonNull Reg16 address) {
-        this.memoryAccess = memoryAccess;
+    RegisteredAddress(@NonNull Reg16 address) {
         this.address = address;
     }
 
     @Override
-    public Address peek(Reg8 r) {
-        memoryAccess.peek(address.getValue(), r);
+    public RegisteredAddress peek(Reg8 r) {
+        memory.peek(address.getValue(), r);
         return this;
     }
 
     @Override
-    public Address peek(Reg16 r) {
-        memoryAccess.peek(address.getValue(), r);
+    public RegisteredAddress peek(Reg16 r) {
+        memory.peek(address.getValue(), r);
         return this;
     }
 
     @Override
-    public Address poke(Reg8 r) {
-        memoryAccess.poke(address.getValue(), r);
+    public RegisteredAddress poke(Reg8 r) {
+        memory.poke(address.getValue(), r);
         return this;
     }
 
     @Override
-    public Address poke(Reg16 r) {
-        memoryAccess.poke(address.getValue(), r);
+    public RegisteredAddress poke(Reg16 r) {
+        memory.poke(address.getValue(), r);
         return this;
     }
 
     @Override
-    public Address setAddress(int value) {
+    public RegisteredAddress setAddress(int value) {
         address.setValue(value);
         return this;
     }
@@ -49,5 +48,10 @@ class RegisteredAddress implements Address {
     @Override
     public int getAddress() {
         return address.getValue();
+    }
+
+    @Override
+    public void setMemory(@NonNull MemoryAccess memory) {
+        this.memory = memory;
     }
 }

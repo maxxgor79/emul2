@@ -18,7 +18,11 @@ import zxspectrum.emul.cpu.reg.RegHL;
 import zxspectrum.emul.cpu.reg.RegI;
 import zxspectrum.emul.cpu.reg.RegIR;
 import zxspectrum.emul.cpu.reg.RegIX;
+import zxspectrum.emul.cpu.reg.RegIXH;
+import zxspectrum.emul.cpu.reg.RegIXL;
 import zxspectrum.emul.cpu.reg.RegIY;
+import zxspectrum.emul.cpu.reg.RegIYH;
+import zxspectrum.emul.cpu.reg.RegIYL;
 import zxspectrum.emul.cpu.reg.RegL;
 import zxspectrum.emul.cpu.reg.RegPC;
 import zxspectrum.emul.cpu.reg.RegR;
@@ -89,9 +93,17 @@ public abstract class Cpu implements Resettable {
 
     public final RegPC PC = new RegPC();
 
-    public final RegIX IX = new RegIX();
+    public final RegIXH IXH = new RegIXH();
 
-    public final RegIY IY = new RegIY();
+    public final RegIXL IXL = new RegIXL();
+
+    public final RegIX IX = new RegIX(IXL, IXH);
+
+    public final RegIYH IYH = new RegIYH();
+
+    public final RegIYL IYL = new RegIYL();
+
+    public final RegIY IY = new RegIY(IYL, IYH);
 
     public final RegSP SP = new RegSP();
 
@@ -104,6 +116,10 @@ public abstract class Cpu implements Resettable {
     public final Trigger IFF2 = new Trigger();
 
     public final Trigger HALT = new Trigger();
+
+    public final Trigger SIGNAL_NMI = new Trigger();
+
+    public final Trigger SIGNAL_INT = new Trigger();
 
     public abstract void setMemory(MemoryControl memory);
 

@@ -4,11 +4,12 @@ import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.unit.CallReturn;
 import zxspectrum.emul.io.mem.MemoryAccess;
+import zxspectrum.emul.io.mem.MemoryControl;
 
 public class CallReturnZ80 implements CallReturn {
     private final Cpu cpu;
 
-    private final MemoryAccess memory;
+    private MemoryAccess memory;
 
     public CallReturnZ80(@NonNull final Cpu cpu) {
         this.cpu = cpu;
@@ -117,14 +118,14 @@ public class CallReturnZ80 implements CallReturn {
     }
 
     @Override
-    public void reti() {
+    public void retI() {
         cpu.IFF1.setValue(cpu.IFF2.isValue());
         memory.pop(cpu.PC);
         cpu.WZ.ld(cpu.PC);
     }
 
     @Override
-    public void retn() {
+    public void retN() {
         cpu.IFF1.setValue(cpu.IFF2.isValue());
         memory.pop(cpu.PC);
         cpu.WZ.ld(cpu.PC);
@@ -248,5 +249,10 @@ public class CallReturnZ80 implements CallReturn {
     @Override
     public void rst38() {
         call(0x38);
+    }
+
+    @Override
+    public void setMemory(@NonNull MemoryControl memory) {
+        this.memory = memory;
     }
 }

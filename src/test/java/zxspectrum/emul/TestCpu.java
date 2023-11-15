@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import zxspectrum.emul.cpu.unit.CpuControl;
-import zxspectrum.emul.cpu.unit.LoadIO;
+import zxspectrum.emul.cpu.unit.LdIO;
 import zxspectrum.emul.cpu.impl.Z80;
 import zxspectrum.emul.cpu.unit.impl.CpuControlZ80;
-import zxspectrum.emul.cpu.unit.impl.LoadIOZ80;
+import zxspectrum.emul.cpu.unit.impl.LdIOZ80;
 import zxspectrum.emul.io.mem.address.Addressing;
 import zxspectrum.emul.io.mem.impl.Memory48K;
 import zxspectrum.emul.io.port.PortIO48k;
@@ -27,13 +27,13 @@ public class TestCpu {
         cpu.setMemory(mem);
         cpu.setPortIO(new PortIO48k() {
             @Override
-            public int read(int port) throws IOException {
+            public int read(int port) {
                 inPort = port;
                 return inValue;
             }
 
             @Override
-            public void write(int port, int value) throws IOException {
+            public void write(int port, int value) {
                 outValue = value;
                 outPort = port;
             }
@@ -48,7 +48,7 @@ public class TestCpu {
 
     int outPort;
 
-    private final LoadIO loadIO = new LoadIOZ80(cpu);
+    private final LdIO ldIO = new LdIOZ80(cpu);
 
     private final CpuControl cpuControl = new CpuControlZ80(cpu);
 
@@ -60,7 +60,7 @@ public class TestCpu {
         cpu.C.setValue(0x07);
         cpu.B.setValue(0x10);
         cpu.HL.setValue(0x9000);
-        loadIO.ini();
+        ldIO.ini();
         Assertions.assertEquals(cpu.HL.getValue(), 0x9001);
         addressing.HL.setAddress(0x9000).peek(cpu.E);
         Assertions.assertEquals(cpu.E.getValue(), 0x7B);
@@ -74,7 +74,7 @@ public class TestCpu {
         cpu.C.setValue(0x08);//port
         cpu.B.setValue(0x10);
         cpu.HL.setValue(0x9100);
-        loadIO.ind();
+        ldIO.ind();
         Assertions.assertEquals(cpu.HL.getValue(), 0x90FF);
         addressing.HL.setAddress(0x9100).peek(cpu.E);
         Assertions.assertEquals(cpu.E.getValue(), 0x8B);
@@ -89,7 +89,7 @@ public class TestCpu {
         cpu.HL.setValue(0x9101);
         cpu.E.setValue(0x59);
         addressing.HL.setAddress(0x9101).poke(cpu.E);
-        loadIO.outi();
+        ldIO.outi();
         Assertions.assertEquals(cpu.HL.getValue(), 0x9102);
         Assertions.assertEquals(outValue, 0x59);
         Assertions.assertEquals(cpu.B.getValue(), 0x0F);
@@ -104,7 +104,7 @@ public class TestCpu {
         cpu.HL.setValue(0x9101);
         cpu.E.setValue(0x59);
         addressing.HL.setAddress(0x9201).poke(cpu.E);
-        loadIO.outd();
+        ldIO.outd();
         Assertions.assertEquals(cpu.HL.getValue(), 0x9200);
         Assertions.assertEquals(outValue, 0x59);
         Assertions.assertEquals(cpu.B.getValue(), 0x0F);
@@ -120,7 +120,7 @@ public class TestCpu {
         cpu.DE.setValue(0x6000);
         addressing.DE.poke(cpu.A);
         cpu.BC.setValue(0x07);
-        loadIO.ldd();
+        ldIO.ldd();
         Assertions.assertEquals(cpu.HL.getValue(), 0x6FFF);
         Assertions.assertEquals(cpu.DE.getValue(), 0x5FFF);
         addressing.DE.setAddress(0x6000).peek(cpu.A);
@@ -137,7 +137,7 @@ public class TestCpu {
         cpu.DE.setValue(0x6000);
         addressing.DE.poke(cpu.A);
         cpu.BC.setValue(0x07);
-        loadIO.ldi();
+        ldIO.ldi();
         Assertions.assertEquals(cpu.HL.getValue(), 0x7001);
         Assertions.assertEquals(cpu.DE.getValue(), 0x6001);
         addressing.DE.setAddress(0x6000).peek(cpu.A);

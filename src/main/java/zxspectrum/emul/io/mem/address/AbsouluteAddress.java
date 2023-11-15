@@ -5,13 +5,12 @@ import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.io.mem.MemoryAccess;
 
-class AbsouluteAddress implements Address {
+public class AbsouluteAddress implements Address {
     private MemoryAccess memory;
 
     private int address;
 
-    public AbsouluteAddress(@NonNull MemoryAccess memory, int address) {
-        this.memory = memory;
+    public AbsouluteAddress(int address) {
         this.address = address;
     }
 
@@ -48,5 +47,10 @@ class AbsouluteAddress implements Address {
     @Override
     public int getAddress() {
         return address;
+    }
+
+    @Override
+    public void setMemory(@NonNull MemoryAccess memory) {
+        this.memory = memory;
     }
 }

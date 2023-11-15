@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import zxspectrum.emul.cpu.unit.Alu;
-import zxspectrum.emul.cpu.unit.impl.AluZ80;
+import zxspectrum.emul.cpu.unit.ArithmeticLogical;
+import zxspectrum.emul.cpu.unit.impl.ArithmeticLogicalZ80;
 import zxspectrum.emul.cpu.impl.Z80;
 import zxspectrum.emul.cpu.reg.Const;
 import zxspectrum.emul.io.mem.address.Addressing;
@@ -15,7 +15,7 @@ import zxspectrum.emul.io.port.PortIO48k;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-public class TestAlu {
+public class TestAL {
     private final Z80 cpu1 = new Z80();
 
     private final Memory48K mem1 = new Memory48K();
@@ -26,7 +26,7 @@ public class TestAlu {
     }
 
 
-    private Alu alu = new AluZ80(cpu1);
+    private ArithmeticLogical arithmeticLogical = new ArithmeticLogicalZ80(cpu1);
 
     private Addressing addressing = new Addressing(cpu1);
 
@@ -34,18 +34,18 @@ public class TestAlu {
     void testAdd() {
         cpu1.A.setValue(0x44);
         cpu1.C.setValue(0x11);
-        cpu1.getAlu().add(cpu1.C);
+        cpu1.getArithmeticLogical().add(cpu1.C);
         Assertions.assertEquals(cpu1.A.getValue(), 0x55);
 
         cpu1.A.setValue(0x23);
-        cpu1.getAlu().add(0x33);
+        arithmeticLogical.add(0x33);
         Assertions.assertEquals(cpu1.A.getValue(), 0x56);
 
         addressing.HL.setAddress(0x8000);
         cpu1.B.setValue(0x08);
         addressing.HL.poke(cpu1.B);
         cpu1.A.setValue(0xA0);
-        cpu1.getAlu().add(addressing.HL);
+        arithmeticLogical.add(addressing.HL);
         Assertions.assertEquals(cpu1.A.getValue(), 0xA8);
 
         cpu1.A.setValue(0x11);
@@ -53,7 +53,7 @@ public class TestAlu {
         addressing.IX.setOffset(0x05);
         cpu1.B.setValue(0x22);
         addressing.IX.poke(cpu1.B);
-        cpu1.getAlu().add(addressing.IX);
+        arithmeticLogical.add(addressing.IX);
         Assertions.assertEquals(cpu1.A.getValue(), 0x33);
     }
 
@@ -62,7 +62,7 @@ public class TestAlu {
         cpu1.F.setCarry(false);
         cpu1.A.setValue(0x20);
         cpu1.C.setValue(0x20);
-        cpu1.getAlu().adc(cpu1.C);
+        arithmeticLogical.adc(cpu1.C);
         Assertions.assertEquals(cpu1.A.getValue(), 0x40);
 
         cpu1.A.setValue(0x16);
@@ -70,7 +70,7 @@ public class TestAlu {
         addressing.HL.setAddress(0x6666);
         cpu1.B.setValue(0x10);
         addressing.HL.poke(cpu1.B);
-        cpu1.getAlu().adc(addressing.HL);
+        arithmeticLogical.adc(addressing.HL);
         Assertions.assertEquals(cpu1.A.getValue(), 0x27);
     }
 
@@ -80,13 +80,13 @@ public class TestAlu {
         cpu1.B.setValue(0x08);
         addressing.HL.poke(cpu1.B);
         cpu1.A.setValue(0x09);
-        cpu1.getAlu().sub(addressing.HL);
+        arithmeticLogical.sub(addressing.HL);
         Assertions.assertEquals(cpu1.A.getValue(), 0x01);
 
 
         cpu1.A.setValue(0x29);
         cpu1.D.setValue(0x11);
-        cpu1.getAlu().sub(cpu1.D);
+        arithmeticLogical.sub(cpu1.D);
         Assertions.assertEquals(cpu1.A.getValue(), 0x18);
     }
 
@@ -97,14 +97,14 @@ public class TestAlu {
         addressing.HL.setAddress(0x5000);
         cpu1.B.setValue(0x05);
         addressing.HL.poke(cpu1.B);
-        cpu1.getAlu().sbc(addressing.HL);
+        arithmeticLogical.sbc(addressing.HL);
         Assertions.assertEquals(cpu1.A.getValue(), 0x10);
     }
 
     @Test
     void testNeg() {
         cpu1.A.setValue(0b1001_1000);
-        cpu1.getAlu().neg();
+        arithmeticLogical.neg();
         Assertions.assertEquals(cpu1.A.getValue(), 0b0110_1000);
     }
 
@@ -114,13 +114,13 @@ public class TestAlu {
         cpu1.B.setValue(0x7B);
         addressing.HL.setAddress(0x8000);
         addressing.HL.poke(cpu1.B);
-        cpu1.getAlu().and(addressing.HL);
+        arithmeticLogical.and(addressing.HL);
         Assertions.assertEquals(cpu1.A.getValue(), 0x43);
 
 
         cpu1.A.setValue(0xC3);
         cpu1.B.setValue(0x7B);
-        cpu1.getAlu().and(cpu1.B);
+        arithmeticLogical.and(cpu1.B);
         Assertions.assertEquals(cpu1.A.getValue(), 0x43);
     }
 
@@ -130,30 +130,30 @@ public class TestAlu {
         cpu1.B.setValue(0xF0);
         addressing.HL.setAddress(0x8000);
         addressing.HL.poke(cpu1.B);
-        cpu1.getAlu().or(addressing.HL);
+        arithmeticLogical.or(addressing.HL);
         Assertions.assertEquals(cpu1.A.getValue(), 0xFF);
 
         cpu1.A.setValue(0x12);
         cpu1.H.setValue(0x48);
-        cpu1.getAlu().or(cpu1.H);
+        arithmeticLogical.or(cpu1.H);
         Assertions.assertEquals(cpu1.A.getValue(), 0x5A);
 
         cpu1.A.setValue(0x12);
-        cpu1.getAlu().or(0x48);
+        arithmeticLogical.or(0x48);
         Assertions.assertEquals(cpu1.A.getValue(), 0x5A);
     }
 
     @Test
     void testXor() {
         cpu1.A.setValue(0x96);
-        cpu1.getAlu().xor(0x5D);
+        arithmeticLogical.xor(0x5D);
         Assertions.assertEquals(cpu1.A.getValue(), 0xCB);
 
         cpu1.A.setValue(0x96);
         cpu1.B.setValue(0x5D);
         addressing.HL.setAddress(0x8000);
         addressing.HL.poke(cpu1.B);
-        cpu1.getAlu().xor(addressing.HL);
+        arithmeticLogical.xor(addressing.HL);
         Assertions.assertEquals(cpu1.A.getValue(), 0xCB);
     }
 
@@ -164,20 +164,20 @@ public class TestAlu {
         cpu1.B.setValue(0x60);
         addressing.HL.setAddress(0x8000);
         addressing.HL.poke(cpu1.B);
-        cpu1.getAlu().cp(addressing.HL);
+        arithmeticLogical.cp(addressing.HL);
         Assertions.assertEquals(cpu1.F.isNSet(), true);
         Assertions.assertEquals(cpu1.F.isParityOverflowSet(), false);
 
         cpu1.F.reset();
         cpu1.A.setValue(0x63);
         cpu1.E.setValue(0x60);
-        cpu1.getAlu().cp(cpu1.E);
+        arithmeticLogical.cp(cpu1.E);
         Assertions.assertEquals(cpu1.F.isNSet(), true);
         Assertions.assertEquals(cpu1.F.isParityOverflowSet(), false);
 
         cpu1.F.reset();
         cpu1.A.setValue(0x63);
-        cpu1.getAlu().cp(0x60);
+        arithmeticLogical.cp(0x60);
         Assertions.assertEquals(cpu1.F.isNSet(), true);
         Assertions.assertEquals(cpu1.F.isParityOverflowSet(), false);
     }
@@ -185,13 +185,13 @@ public class TestAlu {
     @Test
     void testInc() {
         cpu1.D.setValue(0x28);
-        cpu1.getAlu().inc(cpu1.D);
+        arithmeticLogical.inc(cpu1.D);
         Assertions.assertEquals(cpu1.D.getValue(), 0x29);
 
         cpu1.B.setValue(0x82);
         addressing.HL.setAddress(0x8001);
         addressing.HL.poke(cpu1.B);
-        cpu1.getAlu().inc(addressing.HL);
+        arithmeticLogical.inc(addressing.HL);
         addressing.HL.peek(cpu1.A);
         Assertions.assertEquals(cpu1.A.getValue(), 0x83);
 
@@ -200,13 +200,13 @@ public class TestAlu {
     @Test
     void testDec() {
         cpu1.D.setValue(0x2A);
-        cpu1.getAlu().dec(cpu1.D);
+        arithmeticLogical.dec(cpu1.D);
         Assertions.assertEquals(cpu1.D.getValue(), 0x29);
 
         cpu1.B.setValue(0x84);
         addressing.HL.setAddress(0x8002);
         addressing.HL.poke(cpu1.B);
-        cpu1.getAlu().dec(addressing.HL);
+        arithmeticLogical.dec(addressing.HL);
         addressing.HL.peek(cpu1.A);
         Assertions.assertEquals(cpu1.A.getValue(), 0x83);
     }
@@ -214,8 +214,8 @@ public class TestAlu {
     @Test
     void testDaa() {
         cpu1.A.setValue(10);
-        cpu1.getAlu().add(5);
-        cpu1.getAlu().daa();
+        arithmeticLogical.add(5);
+        arithmeticLogical.daa();
         Assertions.assertEquals(cpu1.A.getValue(), 0b0001_0101);
     }
 
@@ -223,7 +223,7 @@ public class TestAlu {
     void testAdd16() {
         cpu1.HL.setValue(0x4242);
         cpu1.DE.setValue(0x1111);
-        cpu1.getAlu().add(cpu1.HL, cpu1.DE);
+        arithmeticLogical.add(cpu1.HL, cpu1.DE);
         Assertions.assertEquals(cpu1.HL.getValue(), 0x5353);
     }
 
@@ -232,7 +232,7 @@ public class TestAlu {
         cpu1.BC.setValue(0x2222);
         cpu1.HL.setValue(0x5437);
         cpu1.F.setCarry(true);
-        cpu1.getAlu().adc(cpu1.HL, cpu1.BC);
+        arithmeticLogical.adc(cpu1.HL, cpu1.BC);
         Assertions.assertEquals(cpu1.HL.getValue(), 0x765A);
     }
 
@@ -241,7 +241,7 @@ public class TestAlu {
         cpu1.F.setCarry(true);
         cpu1.HL.setValue(0x9999);
         cpu1.DE.setValue(0x1111);
-        cpu1.getAlu().sbc(cpu1.HL, cpu1.DE);
+        arithmeticLogical.sbc(cpu1.HL, cpu1.DE);
         Assertions.assertEquals(cpu1.HL.getValue(), 0x8887);
     }
 
@@ -249,33 +249,33 @@ public class TestAlu {
     void testAddIXIY() {
         cpu1.IX.setValue(0x3333);
         cpu1.BC.setValue(0x5555);
-        cpu1.getAlu().add(cpu1.IX, cpu1.BC);
+        arithmeticLogical.add(cpu1.IX, cpu1.BC);
         Assertions.assertEquals(cpu1.IX.getValue(), 0x8888);
         cpu1.IY.setValue(0x2222);
         cpu1.BC.setValue(0x5555);
-        cpu1.getAlu().add(cpu1.IY, cpu1.BC);
+        arithmeticLogical.add(cpu1.IY, cpu1.BC);
         Assertions.assertEquals(cpu1.IY.getValue(), 0x7777);
     }
 
     @Test
     void testInc16() {
         cpu1.HL.setValue(0x1000);
-        cpu1.getAlu().inc(cpu1.HL);
+        arithmeticLogical.inc(cpu1.HL);
         Assertions.assertEquals(cpu1.HL.getValue(), 0x1001);
 
         cpu1.IX.setValue(0x2000);
-        cpu1.getAlu().inc(cpu1.IX);
+        arithmeticLogical.inc(cpu1.IX);
         Assertions.assertEquals(cpu1.IX.getValue(), 0x2001);
     }
 
     @Test
     void testDec16() {
         cpu1.HL.setValue(0x1001);
-        cpu1.getAlu().dec(cpu1.HL);
+        arithmeticLogical.dec(cpu1.HL);
         Assertions.assertEquals(cpu1.HL.getValue(), 0x1000);
 
         cpu1.IX.setValue(0x2001);
-        cpu1.getAlu().dec(cpu1.IX);
+        arithmeticLogical.dec(cpu1.IX);
         Assertions.assertEquals(cpu1.IX.getValue(), 0x2000);
     }
 
@@ -283,7 +283,7 @@ public class TestAlu {
     void testRlc() {
         cpu1.F.reset();
         cpu1.A.setValue(0b1000_1000);
-        cpu1.getAlu().rlc(cpu1.A);
+        arithmeticLogical.rlc(cpu1.A);
         Assertions.assertEquals(cpu1.A.getValue(), 0b0001_0001);
         Assertions.assertEquals(cpu1.F.isCarrySet(), true);
 
@@ -291,7 +291,7 @@ public class TestAlu {
         cpu1.A.setValue(0b1000_1000);
         addressing.HL.setAddress(0x8003);
         addressing.HL.poke(cpu1.A);
-        cpu1.getAlu().rlc(addressing.HL);
+        arithmeticLogical.rlc(addressing.HL);
         addressing.HL.peek(cpu1.B);
         Assertions.assertEquals(cpu1.B.getValue(), 0b0001_0001);
         Assertions.assertEquals(cpu1.F.isCarrySet(), true);
@@ -301,7 +301,7 @@ public class TestAlu {
     void testRl() {
         cpu1.F.setCarry(true);
         cpu1.A.setValue(0b0111_0110);
-        cpu1.getAlu().rl(cpu1.A);
+        arithmeticLogical.rl(cpu1.A);
         Assertions.assertEquals(cpu1.A.getValue(), 0b1110_1101);
         Assertions.assertEquals(cpu1.F.isCarrySet(), false);
 
@@ -309,7 +309,7 @@ public class TestAlu {
         cpu1.A.setValue(0b0111_0110);
         addressing.HL.setAddress(0x8004);
         addressing.HL.poke(cpu1.A);
-        cpu1.getAlu().rl(addressing.HL);
+        arithmeticLogical.rl(addressing.HL);
         addressing.HL.peek(cpu1.B);
         Assertions.assertEquals(cpu1.B.getValue(), 0b1110_1101);
         Assertions.assertEquals(cpu1.F.isCarrySet(), false);
@@ -319,7 +319,7 @@ public class TestAlu {
     void testRrc() {
         cpu1.F.reset();
         cpu1.A.setValue(0b0001_0001);
-        cpu1.getAlu().rrc(cpu1.A);
+        arithmeticLogical.rrc(cpu1.A);
         Assertions.assertEquals(cpu1.A.getValue(), 0b1000_1000);
         Assertions.assertEquals(cpu1.F.isCarrySet(), true);
 
@@ -327,7 +327,7 @@ public class TestAlu {
         cpu1.A.setValue(0b0001_0001);
         addressing.HL.setAddress(0x8005);
         addressing.HL.poke(cpu1.A);
-        cpu1.getAlu().rrc(addressing.HL);
+        arithmeticLogical.rrc(addressing.HL);
         addressing.HL.peek(cpu1.B);
         Assertions.assertEquals(cpu1.B.getValue(), 0b1000_1000);
         Assertions.assertEquals(cpu1.F.isCarrySet(), true);
@@ -337,7 +337,7 @@ public class TestAlu {
     void testRr() {
         cpu1.F.setCarry(false);
         cpu1.A.setValue(0b1110_0001);
-        cpu1.getAlu().rr(cpu1.A);
+        arithmeticLogical.rr(cpu1.A);
         Assertions.assertEquals(cpu1.A.getValue(), 0b0111_0000);
         Assertions.assertEquals(cpu1.F.isCarrySet(), true);
 
@@ -345,7 +345,7 @@ public class TestAlu {
         cpu1.A.setValue(0b1101_1101);
         addressing.HL.setAddress(0x8005);
         addressing.HL.poke(cpu1.A);
-        cpu1.getAlu().rr(addressing.HL);
+        arithmeticLogical.rr(addressing.HL);
         addressing.HL.peek(cpu1.B);
         Assertions.assertEquals(cpu1.B.getValue(), 0b0110_1110);
         Assertions.assertEquals(cpu1.F.isCarrySet(), true);
@@ -355,7 +355,7 @@ public class TestAlu {
     void testSla() {
         cpu1.F.reset();
         cpu1.L.setValue(0b1011_0001);
-        cpu1.getAlu().sla(cpu1.L);
+        arithmeticLogical.sla(cpu1.L);
         Assertions.assertEquals(cpu1.L.getValue(), 0b0110_0010);
         Assertions.assertEquals(cpu1.F.isCarrySet(), true);
 
@@ -363,7 +363,7 @@ public class TestAlu {
         cpu1.A.setValue(0b1011_0001);
         addressing.HL.setAddress(0x8006);
         addressing.HL.poke(cpu1.A);
-        cpu1.getAlu().sla(addressing.HL);
+        arithmeticLogical.sla(addressing.HL);
         addressing.HL.peek(cpu1.B);
         Assertions.assertEquals(cpu1.B.getValue(), 0b0110_0010);
         Assertions.assertEquals(cpu1.F.isCarrySet(), true);
@@ -373,14 +373,14 @@ public class TestAlu {
     void testSra() {
         cpu1.F.reset();
         cpu1.L.setValue(0b1011_1000);
-        cpu1.getAlu().sra(cpu1.L);
+        arithmeticLogical.sra(cpu1.L);
         Assertions.assertEquals(cpu1.L.getValue(), 0b1101_1100);
         Assertions.assertEquals(cpu1.F.isCarrySet(), false);
 
         cpu1.F.reset();
         cpu1.A.setValue(0b1011_1000);
         addressing.IX.setAddress(0x8000).setOffset(7).poke(cpu1.A);
-        cpu1.getAlu().sra(addressing.IX);
+        arithmeticLogical.sra(addressing.IX);
         addressing.IX.peek(cpu1.B);
         Assertions.assertEquals(cpu1.B.getValue(), 0b1101_1100);
         Assertions.assertEquals(cpu1.F.isCarrySet(), false);
@@ -390,14 +390,14 @@ public class TestAlu {
     void testSrl() {
         cpu1.F.reset();
         cpu1.B.setValue(0b1000_1111);
-        cpu1.getAlu().srl(cpu1.B);
+        arithmeticLogical.srl(cpu1.B);
         Assertions.assertEquals(cpu1.B.getValue(), 0b0100_0111);
         Assertions.assertEquals(cpu1.F.isCarrySet(), true);
 
         cpu1.F.reset();
         cpu1.A.setValue(0b1000_1111);
         addressing.IX.setAddress(0x8000).setOffset(8).poke(cpu1.A);
-        cpu1.getAlu().srl(addressing.IX);
+        arithmeticLogical.srl(addressing.IX);
         addressing.IX.peek(cpu1.B);
         Assertions.assertEquals(cpu1.B.getValue(), 0b0100_0111);
         Assertions.assertEquals(cpu1.F.isCarrySet(), true);
@@ -409,7 +409,7 @@ public class TestAlu {
         cpu1.B.setValue(0b0011_0001);
         addressing.HL.setAddress(0x8500);
         addressing.HL.poke(cpu1.B);
-        cpu1.getAlu().rld();
+        arithmeticLogical.rld();
         addressing.HL.peek(cpu1.B);
         Assertions.assertEquals(cpu1.A.getValue(), 0b0111_0011);
         Assertions.assertEquals(cpu1.B.getValue(), 0b0001_1010);
@@ -421,7 +421,7 @@ public class TestAlu {
         cpu1.B.setValue(0b0010_0000);
         addressing.HL.setAddress(0x8600);
         addressing.HL.poke(cpu1.B);
-        cpu1.getAlu().rrd();
+        arithmeticLogical.rrd();
         addressing.HL.peek(cpu1.B);
         Assertions.assertEquals(cpu1.A.getValue(), 0b1000_0000);
         Assertions.assertEquals(cpu1.B.getValue(), 0b0100_0010);
@@ -431,7 +431,7 @@ public class TestAlu {
     void testBit() {
         cpu1.F.reset();
         cpu1.B.setValue(0b1111_1011);
-        cpu1.getAlu().bit(Const.BIT_2, cpu1.B);
+        arithmeticLogical.bit(Const.BIT_2, cpu1.B);
         Assertions.assertEquals(cpu1.F.isZeroSet(), true);
         Assertions.assertEquals(cpu1.F.isHalfCarrySet(), true);
         Assertions.assertEquals(cpu1.F.isNSet(), false);
@@ -440,7 +440,7 @@ public class TestAlu {
         cpu1.F.reset();
         cpu1.B.setValue(0b1000_0000);
         addressing.HL.setAddress(0x8010).poke(cpu1.B);
-        cpu1.getAlu().bit(Const.BIT_7, addressing.HL);
+        arithmeticLogical.bit(Const.BIT_7, addressing.HL);
 
         Assertions.assertEquals(cpu1.F.isZeroSet(), false);
         Assertions.assertEquals(cpu1.F.isHalfCarrySet(), true);
@@ -450,12 +450,12 @@ public class TestAlu {
     @Test
     void testSet() {
         cpu1.L.setValue(0b0000_0000);
-        cpu1.getAlu().set(Const.BIT_2, cpu1.L);
+        arithmeticLogical.set(Const.BIT_2, cpu1.L);
         Assertions.assertEquals(cpu1.L.getValue(), 0b0000_0100);
 
         cpu1.B.setValue(0b0000_0000);
         addressing.HL.setAddress(0x8011).poke(cpu1.B);
-        cpu1.getAlu().set(Const.BIT_5, addressing.HL);
+        arithmeticLogical.set(Const.BIT_5, addressing.HL);
         addressing.HL.peek(cpu1.L);
         Assertions.assertEquals(cpu1.L.getValue(), 0b0010_0000);
     }
@@ -463,12 +463,12 @@ public class TestAlu {
     @Test
     void testRes() {
         cpu1.L.setValue(0xFF);
-        cpu1.getAlu().res(Const.BIT_4, cpu1.L);
+        arithmeticLogical.res(Const.BIT_4, cpu1.L);
         Assertions.assertEquals(cpu1.L.getValue(), 0b1110_1111);
 
         cpu1.B.setValue(0xFF);
         addressing.HL.setAddress(0x8011).poke(cpu1.B);
-        cpu1.getAlu().res(Const.BIT_3, addressing.HL);
+        arithmeticLogical.res(Const.BIT_3, addressing.HL);
         addressing.HL.peek(cpu1.L);
         Assertions.assertEquals(cpu1.L.getValue(), 0b1111_0111);
     }
@@ -479,7 +479,7 @@ public class TestAlu {
         addressing.HL.setAddress(0x6000).poke(cpu1.A);
         cpu1.HL.setValue(0x6000);
         cpu1.BC.setValue(1);
-        alu.cpi();
+        arithmeticLogical.cpi();
         Assertions.assertEquals(cpu1.HL.getValue(), 0x6001);
         Assertions.assertEquals(cpu1.BC.getValue(), 0);
         Assertions.assertEquals(cpu1.F.isZeroSet(), true);
@@ -492,7 +492,7 @@ public class TestAlu {
         addressing.HL.setAddress(0x6001).poke(cpu1.A);
         cpu1.HL.setValue(0x6001);
         cpu1.BC.setValue(1);
-        alu.cpd();
+        arithmeticLogical.cpd();
         Assertions.assertEquals(cpu1.HL.getValue(), 0x6000);
         Assertions.assertEquals(cpu1.BC.getValue(), 0);
         Assertions.assertEquals(cpu1.F.isZeroSet(), true);

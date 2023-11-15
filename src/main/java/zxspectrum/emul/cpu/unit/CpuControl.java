@@ -1,5 +1,7 @@
 package zxspectrum.emul.cpu.unit;
 
+import zxspectrum.emul.io.mem.MemoryControl;
+
 public interface CpuControl {
     void ei();
 
@@ -20,4 +22,6 @@ public interface CpuControl {
     int scf();
 
     void nop();
+
+    void setMemory(MemoryControl memory);
 }

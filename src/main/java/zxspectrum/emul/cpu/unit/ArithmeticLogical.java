@@ -4,9 +4,9 @@ import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.mem.address.Address;
-import zxspectrum.emul.io.mem.address.IAddress;
+import zxspectrum.emul.io.mem.address.IdxAddress;
 
-public interface Alu {
+public interface ArithmeticLogical {
     int daa();
 
     int inc(Reg16 r);
@@ -17,7 +17,7 @@ public interface Alu {
 
     int inc(Address address);
 
-    int inc(IAddress address);
+    int inc(IdxAddress address);
 
     int dec(Reg8 r);
 
@@ -27,27 +27,27 @@ public interface Alu {
 
     int srl(Address address);
 
-    int srl(Reg8 r, IAddress address);//undocumented
+    int srl(Reg8 r, IdxAddress address);//undocumented
 
     int sra(Reg8 r);
 
     int sra(Address address);
 
     //undocumented
-    int sra(Reg8 r, IAddress address);
+    int sra(Reg8 r, IdxAddress address);
 
     int rr(Reg8 r);
 
     int rr(Address address);
 
-    int rr(Reg8 r, IAddress address);//undocumented
+    int rr(Reg8 r, IdxAddress address);//undocumented
 
     int rrc(Reg8 r);
 
     int rrc(Address address);
 
     //undocumented
-    int rrc(Reg8 r, IAddress address);
+    int rrc(Reg8 r, IdxAddress address);
 
 
     int sll(Reg8 r);
@@ -56,35 +56,38 @@ public interface Alu {
     int sll(Reg8 r, Address address);
 
     //undocumented
-    int sll(Reg8 r, IAddress address);
+    int sll(Reg8 r, IdxAddress address);
 
     int sla(Reg8 r);
 
     int sla(Address address);
 
     //undocumented
-    int sla(Reg8 r, IAddress address);
+    int sla(Reg8 r, IdxAddress address);
 
     //undocumented
     int sl1(Reg8 r);
 
     //undocumented
-    int sl1(Reg8 r, IAddress address);
+    int sl1(Address address);
+
+    //undocumented
+    int sl1(Reg8 r, IdxAddress address);
 
     int rl(Reg8 r);
 
     int rl(Address address);
 
-    int rl(Reg8 r, IAddress address); //undocumented
+    int rl(Reg8 r, IdxAddress address); //undocumented
 
     int rlc(Reg8 r);
 
     int rlc(Address address);
 
-    int rlc(IAddress address);
+    int rlc(IdxAddress address);
 
     //undocumented
-    int rlc(Reg8 r, IAddress address);
+    int rlc(Reg8 r, IdxAddress address);
 
     int rld();
 
@@ -150,26 +153,30 @@ public interface Alu {
 
     void bit(int mask, Address address);
 
-    void bit(int mask, IAddress address);
+    void bit(int mask, IdxAddress address);
 
     int res(int mask, Reg8 r);
 
     int res(int mask, Address address);
 
-    int res(Reg8 r, int mask, IAddress address);//undocumented
+    int res(Reg8 r, int mask, IdxAddress address);//undocumented
 
     int set(int mask, Reg8 r);
 
     int set(int mask, Address address);
 
-    int set(int mask, IAddress address);
+    int set(int mask, IdxAddress address);
 
     //undocumented
-    int set(Reg8 r, int mask, IAddress address);
+    int set(Reg8 r, int mask, IdxAddress address);
 
     void cpd();
 
+    boolean cpdr();
+
     void cpi();
+
+    boolean cpir();
 
     void setMemory(MemoryControl memory);
 }

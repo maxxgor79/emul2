@@ -2,6 +2,7 @@ package zxspectrum.emul.io.mem.address;
 
 import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
+import zxspectrum.emul.io.mem.MemoryAccess;
 
 public interface Address {
     Address peek(Reg8 r);
@@ -15,4 +16,6 @@ public interface Address {
     Address setAddress(int value);
 
     int getAddress();
+
+    void setMemory(MemoryAccess memory);
 }

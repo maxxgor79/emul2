@@ -2,64 +2,56 @@ package zxspectrum.emul.cpu.impl;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import zxspectrum.emul.cpu.Cpu;
+import zxspectrum.emul.cpu.decode.IDecoder;
+import zxspectrum.emul.cpu.decode.impl.IDecoderZ80;
 import zxspectrum.emul.cpu.unit.CallReturn;
 import zxspectrum.emul.cpu.unit.CpuControl;
 import zxspectrum.emul.cpu.unit.Jump;
-import zxspectrum.emul.cpu.unit.LoadIO;
-import zxspectrum.emul.cpu.unit.Alu;
-import zxspectrum.emul.cpu.unit.impl.AluZ80;
+import zxspectrum.emul.cpu.unit.LdIO;
+import zxspectrum.emul.cpu.unit.ArithmeticLogical;
+import zxspectrum.emul.cpu.unit.impl.ArithmeticLogicalZ80;
 import zxspectrum.emul.cpu.unit.impl.CallReturnZ80;
 import zxspectrum.emul.cpu.unit.impl.CpuControlZ80;
 import zxspectrum.emul.cpu.unit.impl.JumpZ80;
-import zxspectrum.emul.cpu.unit.impl.LoadIOZ80;
+import zxspectrum.emul.cpu.unit.impl.LdIOZ80;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.port.PortIO;
 
 public class Z80 extends Cpu {
 
-    @Getter
-    private boolean signalNMI;
-
-    @Getter
-    private boolean signalINT;
-
-    @Getter
-    @Setter
-    private boolean halt;
-
-    @Getter
     private MemoryControl memory;
 
-    @Getter
     private PortIO portIO;
 
     @Getter
-    private Alu alu;
+    private final ArithmeticLogical arithmeticLogical;
 
     @Getter
-    private LoadIO loadIO;
+    private final LdIO ldIO;
 
     @Getter
-    private CpuControl cpuControl;
+    private final CpuControl cpuControl;
 
     @Getter
-    private Jump jump;
+    private final Jump jump;
 
     @Getter
-    private CallReturn callReturn;
+    private final CallReturn callReturn;
+
+    private final IDecoder decoder;
 
     public Z80() {
+        arithmeticLogical = new ArithmeticLogicalZ80(this);
+        ldIO = new LdIOZ80(this);
+        cpuControl = new CpuControlZ80(this);
+        jump = new JumpZ80(this);
+        callReturn = new CallReturnZ80(this);
+        decoder = new IDecoderZ80(this, ldIO, arithmeticLogical, jump, callReturn, cpuControl);
         init();
     }
 
     private void init() {
-        alu = new AluZ80(this);
-        loadIO = new LoadIOZ80(this);
-        cpuControl = new CpuControlZ80(this);
-        jump = new JumpZ80(this);
-        callReturn = new CallReturnZ80(this);
         reset();
     }
 
@@ -67,14 +59,22 @@ public class Z80 extends Cpu {
     public void setMemory(@NonNull MemoryControl memory) {
         this.memory = memory;
         this.memory.setSP(SP);
-        loadIO.setMemory(memory);
-        alu.setMemory(memory);
+        ldIO.setMemory(memory);
+        arithmeticLogical.setMemory(memory);
+        callReturn.setMemory(memory);
+        cpuControl.setMemory(memory);
+        decoder.setMemory(memory);
+    }
+
+    @Override
+    public MemoryControl getMemory() {
+        return memory;
     }
 
     @Override
     public void setPortIO(@NonNull PortIO portIO) {
         this.portIO = portIO;
-        loadIO.setPortIO(portIO);
+        ldIO.setPortIO(portIO);
     }
 
     @Override
@@ -106,9 +106,9 @@ public class Z80 extends Cpu {
         IX.setValue(0xFFFF);
         IY.setValue(0xFFFF);
         IR.setValue(0xFF00);
-        signalINT = false;
-        signalNMI = false;
-        halt = false;
+        SIGNAL_INT.setValue(false);
+        SIGNAL_NMI.setValue(false);
+        HALT.setValue(false);
         if (memory != null) {
             memory.reset();
         }

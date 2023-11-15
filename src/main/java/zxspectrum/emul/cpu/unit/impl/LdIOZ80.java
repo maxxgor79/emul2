@@ -2,7 +2,7 @@ package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;
-import zxspectrum.emul.cpu.unit.LoadIO;
+import zxspectrum.emul.cpu.unit.LdIO;
 import zxspectrum.emul.cpu.reg.AtomicReg16;
 import zxspectrum.emul.cpu.reg.FlagTable;
 import zxspectrum.emul.cpu.reg.Reg16;
@@ -15,14 +15,13 @@ import zxspectrum.emul.cpu.reg.RegHL;
 import zxspectrum.emul.cpu.reg.RegI;
 import zxspectrum.emul.cpu.reg.RegR;
 import zxspectrum.emul.io.mem.MemoryAccess;
+import zxspectrum.emul.io.mem.address.AbsouluteAddress;
 import zxspectrum.emul.io.mem.address.Address;
-import zxspectrum.emul.io.mem.address.IAddress;
-import zxspectrum.emul.io.mem.address.RpAddress;
+import zxspectrum.emul.io.mem.address.IdxAddress;
+import zxspectrum.emul.io.mem.address.RpRegisteredAddress;
 import zxspectrum.emul.io.port.PortIO;
 
-import java.io.IOException;
-
-public class LoadIOZ80 implements LoadIO, FlagTable {
+public class LdIOZ80 implements LdIO, FlagTable {
     private final Cpu cpu;
 
     private MemoryAccess memory;
@@ -31,7 +30,7 @@ public class LoadIOZ80 implements LoadIO, FlagTable {
 
     private final Reg16 tmpReg = new AtomicReg16();
 
-    public LoadIOZ80(@NonNull final Cpu cpu) {
+    public LdIOZ80(@NonNull final Cpu cpu) {
         this.cpu = cpu;
         this.memory = cpu.getMemory();
         this.portIO = cpu.getPortIO();
@@ -89,25 +88,25 @@ public class LoadIOZ80 implements LoadIO, FlagTable {
     }
 
     @Override
-    public void ld(final RegA a, @NonNull final Address address) {
+    public void ld(final RegA a, @NonNull final AbsouluteAddress address) {
         address.peek(a);
         cpu.WZ.setValue(address.getAddress() + 1);
     }
 
     @Override
-    public void ld(@NonNull final Address address, final RegA a) {
+    public void ld(@NonNull final AbsouluteAddress address, final RegA a) {
         address.poke(a);
         cpu.WZ.setValue(((address.getAddress() + 1) & 0xFF) | (a.getValue() << 8));
     }
 
     @Override
-    public void ld(final RegA a, @NonNull final RpAddress address) {
+    public void ld(final RegA a, @NonNull final RpRegisteredAddress address) {
         address.peek(a);
         cpu.WZ.setValue(address.getAddress() + 1);
     }
 
     @Override
-    public void ld(@NonNull final RpAddress address, final RegA a) {
+    public void ld(@NonNull final RpRegisteredAddress address, final RegA a) {
         address.poke(a);
         cpu.WZ.setValue(((address.getAddress() + 1) & 0xFF) | (a.getValue() << 8));
     }
@@ -119,37 +118,37 @@ public class LoadIOZ80 implements LoadIO, FlagTable {
     }
 
     @Override
-    public void ld(@NonNull final Address address, final RegDE de) {
+    public void ld(@NonNull final AbsouluteAddress address, final RegDE de) {
         address.poke(de);
         cpu.WZ.setValue(address.getAddress() + 1);
     }
 
     @Override
-    public void ld(@NonNull final RegBC bc, final Address address) {
+    public void ld(@NonNull final RegBC bc, final AbsouluteAddress address) {
         address.peek(bc);
         cpu.WZ.setValue(address.getAddress() + 1);
     }
 
     @Override
-    public void ld(@NonNull final RegDE de, final Address address) {
+    public void ld(@NonNull final RegDE de, final AbsouluteAddress address) {
         address.peek(de);
         cpu.WZ.setValue(address.getAddress() + 1);
     }
 
     @Override
-    public void ld(final Reg8 r, @NonNull final IAddress address) {
+    public void ld(final Reg8 r, @NonNull final IdxAddress address) {
         address.peek(r);
         cpu.WZ.setValue(address.getAddress());
     }
 
     @Override
-    public void ld(@NonNull final IAddress address, final Reg8 r) {
+    public void ld(@NonNull final IdxAddress address, final Reg8 r) {
         address.poke(r);
         cpu.WZ.setValue(address.getAddress());
     }
 
     @Override
-    public void ld(@NonNull final IAddress address, final int n) {
+    public void ld(@NonNull final IdxAddress address, final int n) {
         tmpReg.setValue(n);
         address.poke(tmpReg);
         cpu.WZ.setValue(address.getAddress());
@@ -211,7 +210,7 @@ public class LoadIOZ80 implements LoadIO, FlagTable {
     }
 
     @Override
-    public void in(@NonNull final RegA a, int n) throws IOException {
+    public void in(@NonNull final RegA a, int n) {
         n &= 0xFF;
         final int a1 = a.getValue();
         final int port = n | (a1 << 8);
@@ -220,7 +219,7 @@ public class LoadIOZ80 implements LoadIO, FlagTable {
     }
 
     @Override
-    public void in(@NonNull final Reg8 r, @NonNull final RegBC bc) throws IOException {
+    public void in(@NonNull final Reg8 r, @NonNull final RegBC bc) {
         int value = portIO.read(bc.getValue());
         cpu.F.setValue(SZP_FLAGS[value] | (cpu.F.getValue() & RegF.CARRY_FLAG));
         r.setValue(value);
@@ -229,27 +228,27 @@ public class LoadIOZ80 implements LoadIO, FlagTable {
 
     //undocumented
     @Override
-    public void in(@NonNull final RegBC bc) throws IOException {
+    public void in(@NonNull final RegBC bc) {
         int value = portIO.read(bc.getValue());
         cpu.F.setValue(SZP_FLAGS[value] | (cpu.F.getValue() & RegF.CARRY_FLAG));
         cpu.WZ.setValue(bc.getValue() + 1);
     }
 
     @Override
-    public void out(@NonNull final RegBC bc, @NonNull final Reg8 r) throws IOException {
+    public void out(@NonNull final RegBC bc, @NonNull final Reg8 r) {
         portIO.write(bc.getValue(), r.getValue());
         cpu.WZ.setValue(bc.getValue() + 1);
     }
 
     //undocumented
     @Override
-    public void out(@NonNull final RegBC bc) throws IOException {
+    public void out(@NonNull final RegBC bc) {
         portIO.write(bc.getValue(), 0);
         cpu.WZ.setValue(bc.getValue() + 1);
     }
 
     @Override
-    public void out(int n, @NonNull final RegA a) throws IOException {
+    public void out(int n, @NonNull final RegA a) {
         n &= 0xFF;
         final int a1 = a.getValue();
         final int port = n | (a1 << 8);
@@ -279,6 +278,12 @@ public class LoadIOZ80 implements LoadIO, FlagTable {
     }
 
     @Override
+    public boolean lddr() {
+        //TODO implement
+        return false;
+    }
+
+    @Override
     public void ldi() {
         int b = this.memory.peek8(cpu.HL);
         this.memory.poke8(cpu.DE, b);
@@ -300,7 +305,13 @@ public class LoadIOZ80 implements LoadIO, FlagTable {
     }
 
     @Override
-    public void outd() throws IOException {
+    public boolean ldir() {
+        //TODO implement
+        return false;
+    }
+
+    @Override
+    public void outd() {
         final int bcValue = cpu.BC.getValue();
         final int b = memory.peek8(cpu.HL);
         portIO.write(bcValue, b);
@@ -327,7 +338,13 @@ public class LoadIOZ80 implements LoadIO, FlagTable {
     }
 
     @Override
-    public void outi() throws IOException {
+    public boolean otdr() {
+        //TODO implement
+        return false;
+    }
+
+    @Override
+    public void outi() {
         final int bcValue = cpu.BC.getValue();
         final int b = this.memory.peek8(cpu.HL);
         portIO.write(bcValue, b);
@@ -354,7 +371,13 @@ public class LoadIOZ80 implements LoadIO, FlagTable {
     }
 
     @Override
-    public void ind() throws IOException {
+    public boolean otir() {
+        //TODO implement
+        return false;
+    }
+
+    @Override
+    public void ind() {
         final int bcValue = cpu.BC.getValue();
         final int b = portIO.read(bcValue);
         memory.poke8(cpu.HL, b);
@@ -381,7 +404,13 @@ public class LoadIOZ80 implements LoadIO, FlagTable {
     }
 
     @Override
-    public void ini() throws IOException {
+    public boolean indr() {
+        //TODO implement
+        return false;
+    }
+
+    @Override
+    public void ini() {
         final int bcValue = cpu.BC.getValue();
         final int b = portIO.read(bcValue);
         memory.poke8(cpu.HL, b);
@@ -405,6 +434,12 @@ public class LoadIOZ80 implements LoadIO, FlagTable {
         }
         cpu.F.setValue(flagValue);
         cpu.WZ.setValue(bcValue + 1);
+    }
+
+    @Override
+    public boolean inir() {
+        //TODO implement
+        return false;
     }
 
     @Override

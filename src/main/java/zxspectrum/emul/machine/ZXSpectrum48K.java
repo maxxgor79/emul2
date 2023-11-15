@@ -10,32 +10,34 @@ import zxspectrum.emul.io.port.PortIO48k;
  */
 class ZXSpectrum48K extends CommonZXSpectrum {
 
-  ZXSpectrum48K() {
-    super(MachineModel.SPECTRUM48K);
-  }
+    private PortIO48k portInstance;
 
-  @Override
-  protected void createPortIO() {
-    portIO = new PortIO48k();
-  }
+    ZXSpectrum48K() {
+        super(MachineModel.SPECTRUM48K);
+    }
 
-  @Override
-  protected void createSoundChip() {
+    @Override
+    protected void createPortIO() {
+        portIO = portInstance = new PortIO48k();
+    }
 
-  }
+    @Override
+    protected void createSoundChip() {
 
-  @Override
-  protected void initPortIO() {
-    ((PortIO48k) portIO).setUla(ula);
-  }
+    }
 
-  @Override
-  protected void initSoundChip() {
+    @Override
+    protected void initPortIO() {
+        portInstance.setUla(ula);
+    }
 
-  }
+    @Override
+    protected void initSoundChip() {
 
-  @Override
-  public void run() {
+    }
 
-  }
+    @Override
+    public void run() {
+
+    }
 }

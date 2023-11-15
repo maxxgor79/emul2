@@ -9,6 +9,8 @@ import zxspectrum.emul.io.port.PortIO16k;
  */
 class ZXSpectrum16K extends CommonZXSpectrum {
 
+  private PortIO16k portInstance;
+
   ZXSpectrum16K() {
     super(MachineModel.SPECTRUM16K);
   }
@@ -20,7 +22,7 @@ class ZXSpectrum16K extends CommonZXSpectrum {
 
   @Override
   protected void createPortIO() {
-    portIO = new PortIO16k();
+    portIO = portInstance = new PortIO16k();
   }
 
   @Override
@@ -30,7 +32,7 @@ class ZXSpectrum16K extends CommonZXSpectrum {
 
   @Override
   protected void initPortIO() {
-    ((PortIO16k) portIO).setUla(ula);
+    portInstance.setUla(ula);
   }
 
   @Override

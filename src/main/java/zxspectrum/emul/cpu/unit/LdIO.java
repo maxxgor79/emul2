@@ -9,14 +9,13 @@ import zxspectrum.emul.cpu.reg.RegHL;
 import zxspectrum.emul.cpu.reg.RegI;
 import zxspectrum.emul.cpu.reg.RegR;
 import zxspectrum.emul.io.mem.MemoryAccess;
+import zxspectrum.emul.io.mem.address.AbsouluteAddress;
 import zxspectrum.emul.io.mem.address.Address;
-import zxspectrum.emul.io.mem.address.IAddress;
-import zxspectrum.emul.io.mem.address.RpAddress;
+import zxspectrum.emul.io.mem.address.IdxAddress;
+import zxspectrum.emul.io.mem.address.RpRegisteredAddress;
 import zxspectrum.emul.io.port.PortIO;
 
-import java.io.IOException;
-
-public interface LoadIO {
+public interface LdIO {
     void ld(RegI i, RegA a);
 
     void ld(RegR r, RegA a);
@@ -29,27 +28,27 @@ public interface LoadIO {
 
     void ld(Reg8 r, int n);
 
-    void ld(RegA a, Address address);
+    void ld(RegA a, AbsouluteAddress address);
 
-    void ld(Address address, RegA a);
+    void ld(AbsouluteAddress address, RegA a);
 
-    void ld(RegA a, RpAddress address);
+    void ld(RegA a, RpRegisteredAddress address);
 
-    void ld(RpAddress address, RegA a);
+    void ld(RpRegisteredAddress address, RegA a);
 
-    void ld(Address address, RegBC bc);
+    void ld(Address AbsouluteAddress, RegBC bc);
 
-    void ld(Address address, RegDE de);
+    void ld(AbsouluteAddress address, RegDE de);
 
-    void ld(RegBC bc, Address address);
+    void ld(RegBC bc, AbsouluteAddress address);
 
-    void ld(RegDE de, Address address);
+    void ld(RegDE de, AbsouluteAddress address);
 
-    void ld(Reg8 r, IAddress address);
+    void ld(Reg8 r, IdxAddress address);
 
-    void ld(IAddress address, Reg8 r);
+    void ld(IdxAddress address, Reg8 r);
 
-    void ld(IAddress address, int n);
+    void ld(IdxAddress address, int n);
 
 
     void ld(Address address, Reg16 hl);
@@ -70,31 +69,43 @@ public interface LoadIO {
 
     void ex(Address address, RegDE de);
 
-    void in(Reg8 r, RegBC bc) throws IOException;
+    void in(Reg8 r, RegBC bc);
 
     //undocumented
-    void in(RegBC bc) throws IOException;
+    void in(RegBC bc);
 
-    void in(RegA a, int n) throws IOException;
+    void in(RegA a, int n);
 
-    void out(RegBC bc, Reg8 r) throws IOException;
+    void out(RegBC bc, Reg8 r);
 
     //undocumented
-    void out(RegBC bc) throws IOException;
+    void out(RegBC bc);
 
-    void out(int n, RegA a) throws IOException;
+    void out(int n, RegA a);
 
     void ldd();
 
+    boolean lddr();
+
     void ldi();
 
-    void outd() throws IOException;
+    boolean ldir();
 
-    void outi() throws IOException;
+    void outd();
 
-    void ind() throws IOException;
+    boolean otdr();
 
-    void ini() throws IOException;
+    void outi();
+
+    boolean otir();
+
+    void ind();
+
+    boolean indr();
+
+    void ini();
+
+    boolean inir();
 
     void setMemory(MemoryAccess memory);
 
