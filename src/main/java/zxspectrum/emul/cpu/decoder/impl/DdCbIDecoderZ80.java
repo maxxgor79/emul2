@@ -19,7 +19,7 @@ final class DdCbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
     @Override
     void execute(int code) {
         final IdxAddress address = addressing.IX.setOffset(fetch8());
-        int subCode = fetch8();
+        final int subCode = fetch8();
         switch (subCode) {
             case 0x06:
                 alU.rlc(address);
@@ -66,7 +66,6 @@ final class DdCbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
             case 0x7E:
                 alU.bit(BIT_7, address);
                 break;
-
             case 0x86:
                 alU.res(BIT_0, address);
                 break;
@@ -91,7 +90,6 @@ final class DdCbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
             case 0xBE:
                 alU.res(BIT_7, address);
                 break;
-
             case 0xC6:
                 alU.set(BIT_0, address);
                 break;
@@ -155,6 +153,9 @@ final class DdCbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x30:
                 alU.sll(cpu.B, address);
+                break;
+            case 0x36:
+                alU.sl1(address);
                 break;
             case 0x38:
                 alU.srl(cpu.B, address);

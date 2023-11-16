@@ -224,7 +224,11 @@ public class LdIOZ80 implements LdIO, FlagTable {
 
     @Override
     public boolean lddr() {
-        //TODO implement
+        ldd();
+        if (!cpu.BC.isZero()) {
+            cpu.PC.add(-2);
+            return true;
+        }
         return false;
     }
 
@@ -251,7 +255,11 @@ public class LdIOZ80 implements LdIO, FlagTable {
 
     @Override
     public boolean ldir() {
-        //TODO implement
+        ldi();
+        if (!cpu.BC.isZero()) {
+            cpu.PC.add(-2);
+            return true;
+        }
         return false;
     }
 
@@ -284,7 +292,11 @@ public class LdIOZ80 implements LdIO, FlagTable {
 
     @Override
     public boolean otdr() {
-        //TODO implement
+        outd();
+        if (!cpu.B.isZero()) {
+            cpu.PC.add(-2);
+            return true;
+        }
         return false;
     }
 
@@ -317,7 +329,11 @@ public class LdIOZ80 implements LdIO, FlagTable {
 
     @Override
     public boolean otir() {
-        //TODO implement
+        outi();
+        if (!cpu.B.isZero()) {
+            cpu.PC.add(-2);
+            return true;
+        }
         return false;
     }
 
@@ -350,7 +366,11 @@ public class LdIOZ80 implements LdIO, FlagTable {
 
     @Override
     public boolean indr() {
-        //TODO implement
+        ind();
+        if (!cpu.B.isZero()) {
+            cpu.PC.add(-2);
+            return true;
+        }
         return false;
     }
 
@@ -383,7 +403,11 @@ public class LdIOZ80 implements LdIO, FlagTable {
 
     @Override
     public boolean inir() {
-        //TODO implement
+        ini();
+        if (!cpu.B.isZero()) {
+            cpu.PC.add(-2);
+            return true;
+        }
         return false;
     }
 

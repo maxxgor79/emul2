@@ -19,7 +19,7 @@ final class FdCbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
     @Override
     void execute(int code) {
         final IdxAddress address = addressing.IY.setOffset(fetch8());
-        int subCode = fetch8();
+        final int subCode = fetch8();
         switch (subCode) {
             case 0x06:
                 alU.rlc(address);
@@ -155,6 +155,9 @@ final class FdCbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x30:
                 alU.sll(cpu.B, address);
+                break;
+            case 0x36:
+                alU.sl1(address);
                 break;
             case 0x38:
                 alU.srl(cpu.B, address);

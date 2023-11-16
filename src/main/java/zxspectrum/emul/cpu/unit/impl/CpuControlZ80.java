@@ -5,7 +5,6 @@ import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.reg.RegF;
 import zxspectrum.emul.cpu.unit.CpuControl;
 import zxspectrum.emul.io.mem.MemoryAccess;
-import zxspectrum.emul.io.mem.MemoryControl;
 
 public class CpuControlZ80 implements CpuControl {
     private final Cpu cpu;

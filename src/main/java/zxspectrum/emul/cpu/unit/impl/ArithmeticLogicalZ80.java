@@ -2,14 +2,13 @@ package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;
-import zxspectrum.emul.cpu.unit.ArithmeticLogical;
 import zxspectrum.emul.cpu.reg.FlagTable;
 import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.cpu.reg.RegA;
 import zxspectrum.emul.cpu.reg.RegF;
+import zxspectrum.emul.cpu.unit.ArithmeticLogical;
 import zxspectrum.emul.io.mem.MemoryAccess;
-import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.mem.address.Address;
 import zxspectrum.emul.io.mem.address.IdxAddress;
 
@@ -755,7 +754,11 @@ public class ArithmeticLogicalZ80 implements ArithmeticLogical, FlagTable {
 
     @Override
     public boolean cpdr() {
-        //TODO implement
+        cpd();
+        if (!cpu.BC.isZero() && !cpu.F.isZero()) {
+            cpu.PC.add(-2);
+            return true;
+        }
         return false;
     }
 
@@ -781,7 +784,11 @@ public class ArithmeticLogicalZ80 implements ArithmeticLogical, FlagTable {
 
     @Override
     public boolean cpir() {
-        //TODO implement
+        cpi();
+        if (!cpu.BC.isZero() && !cpu.F.isZero()) {
+            cpu.PC.add(-2);
+            return true;
+        }
         return false;
     }
 

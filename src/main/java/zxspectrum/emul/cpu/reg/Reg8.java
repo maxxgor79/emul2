@@ -85,4 +85,8 @@ public abstract class Reg8 implements Resettable, Const {
         value &= 0xFF;
         return value;
     }
+
+    public boolean isZero() {
+        return value == 0;
+    }
 }

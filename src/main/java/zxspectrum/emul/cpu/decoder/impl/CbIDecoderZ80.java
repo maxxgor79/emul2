@@ -166,30 +166,6 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
             case 0x2F:
                 alU.sra(cpu.A);
                 break;
-            case 0x30:
-                alU.sl1(cpu.B);
-                break;
-            case 0x31:
-                alU.sl1(cpu.C);
-                break;
-            case 0x32:
-                alU.sl1(cpu.D);
-                break;
-            case 0x33:
-                alU.sl1(cpu.E);
-                break;
-            case 0x34:
-                alU.sl1(cpu.H);
-                break;
-            case 0x35:
-                alU.sl1(cpu.L);
-                break;
-            case 0x36:
-                alU.sl1(addressing.HL);
-                break;
-            case 0x37:
-                alU.sl1(cpu.A);
-                break;
             case 0x38:
                 alU.srl(cpu.B);
                 break;
@@ -791,6 +767,30 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 alU.set(BIT_7, cpu.A);
                 break;
 //-------------------------------------Undocumented----------------------------------
+            case 0x30:
+                alU.sl1(cpu.B);
+                break;
+            case 0x31:
+                alU.sl1(cpu.C);
+                break;
+            case 0x32:
+                alU.sl1(cpu.D);
+                break;
+            case 0x33:
+                alU.sl1(cpu.E);
+                break;
+            case 0x34:
+                alU.sl1(cpu.H);
+                break;
+            case 0x35:
+                alU.sl1(cpu.L);
+                break;
+            case 0x36:
+                alU.sl1(addressing.HL);
+                break;
+            case 0x37:
+                alU.sl1(cpu.A);
+                break;
         }
     }
 }

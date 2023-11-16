@@ -4,7 +4,6 @@ import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.unit.CallReturn;
 import zxspectrum.emul.io.mem.MemoryAccess;
-import zxspectrum.emul.io.mem.MemoryControl;
 
 public class CallReturnZ80 implements CallReturn {
     private final Cpu cpu;
