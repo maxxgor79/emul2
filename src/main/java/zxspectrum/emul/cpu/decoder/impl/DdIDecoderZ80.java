@@ -1,4 +1,4 @@
-package zxspectrum.emul.cpu.decode.impl;
+package zxspectrum.emul.cpu.decoder.impl;
 
 import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;
@@ -29,22 +29,22 @@ final class DdIDecoderZ80 extends BaseIDecoderZ80 {
                 alU.add(cpu.IX, cpu.DE);
                 break;
             case 0x21:
-                ldIOU.ld(cpu.IX, fetch16());
+                cpu.IX.setValue(fetch16());
                 break;
             case 0x22:
-                ldIOU.ld(addressing.ABS.setAddress(fetch16()), cpu.IX);
+                addressing.ABS.setAddress(fetch16()).poke(cpu.IX);//ld (nn), IX
                 break;
             case 0x23:
-                alU.inc(cpu.IX);
+                cpu.IX.inc();
                 break;
             case 0x29:
                 alU.add(cpu.IX, cpu.IX);
                 break;
             case 0x2A:
-                ldIOU.ld(cpu.IX, addressing.ABS.setAddress(fetch16()));
+                addressing.ABS.setAddress(fetch16()).peek(cpu.IX);
                 break;
             case 0x2B:
-                alU.dec(cpu.IX);
+                cpu.IX.dec();
                 break;
             case 0x34:
                 alU.inc(addressing.IX.setOffset(fetch8()));
@@ -137,7 +137,7 @@ final class DdIDecoderZ80 extends BaseIDecoderZ80 {
                 memory.push(cpu.IX);
                 break;
             case 0xE9:
-                jumpU.jp(addressing.IX.noOffset());
+                jmpU.jp(addressing.IX.noOffset());
                 break;
             case 0xF9:
                 cpu.SP.ld(cpu.IX);
@@ -150,7 +150,7 @@ final class DdIDecoderZ80 extends BaseIDecoderZ80 {
                 alU.dec(cpu.IXH);
                 break;
             case 0x26:
-                ldIOU.ld(cpu.IXH, fetch8());
+                cpu.IXH.setValue(fetch8());
                 break;
             case 0x2C:
                 alU.inc(cpu.IXL);
@@ -159,7 +159,7 @@ final class DdIDecoderZ80 extends BaseIDecoderZ80 {
                 alU.dec(cpu.IXL);
                 break;
             case 0x2E:
-                ldIOU.ld(cpu.IXL, fetch8());
+                cpu.IXL.setValue(fetch8());
                 break;
             case 0x44:
                 cpu.B.ld(cpu.IXH);
@@ -233,54 +233,22 @@ final class DdIDecoderZ80 extends BaseIDecoderZ80 {
             case 0x7D:
                 cpu.A.ld(cpu.IXL);
                 break;
-            case 0x84:
-                alU.add(cpu.IXH);
-                break;
-            case 0x85:
-                alU.add(cpu.IXL);
-                break;
-            case 0x8C:
-                alU.adc(cpu.IXH);
-                break;
-            case 0x8D:
-                alU.adc(cpu.IXL);
-                break;
-            case 0x94:
-                alU.sub(cpu.IXH);
-                break;
-            case 0x95:
-                alU.sub(cpu.IXL);
-                break;
-            case 0x9C:
-                alU.sbc(cpu.IXH);
-                break;
-            case 0x9D:
-                alU.sbc(cpu.IXL);
-                break;
-            case 0xA4:
-                alU.and(cpu.IXH);
-                break;
-            case 0xA5:
-                alU.and(cpu.IXL);
-                break;
-            case 0xAC:
-                alU.xor(cpu.IXH);
-                break;
-            case 0xAD:
-                alU.xor(cpu.IXL);
-                break;
-            case 0xB4:
-                alU.or(cpu.IXH);
-                break;
-            case 0xB5:
-                alU.or(cpu.IXL);
-                break;
-            case 0xBC:
-                alU.cp(cpu.IXH);
-                break;
-            case 0xBD:
-                alU.cp(cpu.IXL);
-                break;
+            case 0x84: alU.add(cpu.IXH); break;
+            case 0x85: alU.add(cpu.IXL); break;
+            case 0x8C: alU.adc(cpu.IXH); break;
+            case 0x8D: alU.adc(cpu.IXL); break;
+            case 0x94: alU.sub(cpu.IXH); break;
+            case 0x95: alU.sub(cpu.IXL); break;
+            case 0x9C: alU.sbc(cpu.IXH); break;
+            case 0x9D: alU.sbc(cpu.IXL); break;
+            case 0xA4: alU.and(cpu.IXH); break;
+            case 0xA5: alU.and(cpu.IXL); break;
+            case 0xAC: alU.xor(cpu.IXH); break;
+            case 0xAD: alU.xor(cpu.IXL); break;
+            case 0xB4: alU.or(cpu.IXH); break;
+            case 0xB5: alU.or(cpu.IXL); break;
+            case 0xBC: alU.cp(cpu.IXH); break;
+            case 0xBD: alU.cp(cpu.IXL); break;
         }
     }
 

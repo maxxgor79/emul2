@@ -1,6 +1,7 @@
 package zxspectrum.emul.cpu;
 
 
+import zxspectrum.emul.PortIOSetter;
 import zxspectrum.emul.Resettable;
 import zxspectrum.emul.cpu.interruption.Trigger;
 import zxspectrum.emul.cpu.reg.AtomicReg16;
@@ -35,7 +36,7 @@ import zxspectrum.emul.io.port.PortIO;
  *
  * @author Maxim Gorin
  */
-public abstract class Cpu implements Resettable {
+public abstract class Cpu implements Resettable, PortIOSetter {
 
     public final RegA A = new RegA();
 
@@ -124,8 +125,6 @@ public abstract class Cpu implements Resettable {
     public abstract void setMemory(MemoryControl memory);
 
     public abstract MemoryControl getMemory();
-
-    public abstract void setPortIO(PortIO port);
 
     public abstract PortIO getPortIO();
 

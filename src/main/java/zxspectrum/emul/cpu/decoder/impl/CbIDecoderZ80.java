@@ -1,4 +1,4 @@
-package zxspectrum.emul.cpu.decode.impl;
+package zxspectrum.emul.cpu.decoder.impl;
 
 import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;

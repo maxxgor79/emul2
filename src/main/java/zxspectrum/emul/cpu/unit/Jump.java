@@ -42,6 +42,4 @@ public interface Jump {
     boolean jrPO(int offset);
 
     boolean jrPE(int offset);
-
-
 }

@@ -1,10 +1,11 @@
 package zxspectrum.emul.io.mem.address;
 
+import zxspectrum.emul.MemorySetter;
 import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.io.mem.MemoryAccess;
 
-public interface Address {
+public interface Address extends MemorySetter {
     Address peek(Reg8 r);
 
     Address peek(Reg16 r);
@@ -16,6 +17,4 @@ public interface Address {
     Address setAddress(int value);
 
     int getAddress();
-
-    void setMemory(MemoryAccess memory);
 }

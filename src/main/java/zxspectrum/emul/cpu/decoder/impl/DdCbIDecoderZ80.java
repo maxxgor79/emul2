@@ -1,4 +1,4 @@
-package zxspectrum.emul.cpu.decode.impl;
+package zxspectrum.emul.cpu.decoder.impl;
 
 import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;
@@ -10,15 +10,15 @@ import zxspectrum.emul.cpu.unit.Jump;
 import zxspectrum.emul.cpu.unit.LdIO;
 import zxspectrum.emul.io.mem.address.IdxAddress;
 
-final class FdCbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
-    FdCbIDecoderZ80(@NonNull Cpu cpu, @NonNull LdIO ldIO, @NonNull ArithmeticLogical al, @NonNull Jump jump
+final class DdCbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
+    DdCbIDecoderZ80(@NonNull Cpu cpu, @NonNull LdIO ldIO, @NonNull ArithmeticLogical al, @NonNull Jump jump
             , @NonNull CallReturn callReturn, @NonNull CpuControl cpuControl) {
         super(cpu, ldIO, al, jump, callReturn, cpuControl);
     }
 
     @Override
     void execute(int code) {
-        final IdxAddress address = addressing.IY.setOffset(fetch8());
+        final IdxAddress address = addressing.IX.setOffset(fetch8());
         int subCode = fetch8();
         switch (subCode) {
             case 0x06:

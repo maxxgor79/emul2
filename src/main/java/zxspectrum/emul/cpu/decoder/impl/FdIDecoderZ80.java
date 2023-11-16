@@ -1,4 +1,4 @@
-package zxspectrum.emul.cpu.decode.impl;
+package zxspectrum.emul.cpu.decoder.impl;
 
 import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;
@@ -29,22 +29,22 @@ final class FdIDecoderZ80 extends BaseIDecoderZ80 {
                 alU.add(cpu.IY, cpu.DE);
                 break;
             case 0x21:
-                ldIOU.ld(cpu.IY, fetch16());
+                cpu.IY.setValue(fetch16());
                 break;
             case 0x22:
-                ldIOU.ld(addressing.ABS.setAddress(fetch16()), cpu.IY);
+                addressing.ABS.setAddress(fetch16()).poke(cpu.IY);
                 break;
             case 0x23:
-                alU.inc(cpu.IY);
+                cpu.IY.inc();
                 break;
             case 0x29:
                 alU.add(cpu.IY, cpu.IY);
                 break;
             case 0x2A:
-                ldIOU.ld(cpu.IY, addressing.ABS.setAddress(fetch16()));
+                addressing.ABS.setAddress(fetch16()).peek(cpu.IY);
                 break;
             case 0x2B:
-                alU.dec(cpu.IY);
+                cpu.IY.dec();
                 break;
             case 0x34:
                 alU.inc(addressing.IY.setOffset(fetch8()));
@@ -137,7 +137,7 @@ final class FdIDecoderZ80 extends BaseIDecoderZ80 {
                 memory.push(cpu.IY);
                 break;
             case 0xE9:
-                jumpU.jp(addressing.IY.noOffset());
+                jmpU.jp(addressing.IY.noOffset());
                 break;
             case 0xF9:
                 cpu.SP.ld(cpu.IY);
@@ -150,7 +150,7 @@ final class FdIDecoderZ80 extends BaseIDecoderZ80 {
                 alU.dec(cpu.IYH);
                 break;
             case 0x26:
-                ldIOU.ld(cpu.IYH, fetch8());
+                cpu.IYH.setValue(fetch8());
                 break;
             case 0x2C:
                 alU.inc(cpu.IYL);
@@ -159,7 +159,7 @@ final class FdIDecoderZ80 extends BaseIDecoderZ80 {
                 alU.dec(cpu.IYL);
                 break;
             case 0x2E:
-                ldIOU.ld(cpu.IYL, fetch8());
+                cpu.IYL.setValue(fetch8());
                 break;
             case 0x44:
                 cpu.B.ld(cpu.IYH);

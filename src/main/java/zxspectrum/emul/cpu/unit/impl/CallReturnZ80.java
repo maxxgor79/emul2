@@ -252,7 +252,7 @@ public class CallReturnZ80 implements CallReturn {
     }
 
     @Override
-    public void setMemory(@NonNull MemoryControl memory) {
+    public void setMemory(@NonNull MemoryAccess memory) {
         this.memory = memory;
     }
 }

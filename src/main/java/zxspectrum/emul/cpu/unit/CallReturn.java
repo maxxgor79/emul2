@@ -1,8 +1,9 @@
 package zxspectrum.emul.cpu.unit;
 
+import zxspectrum.emul.MemorySetter;
 import zxspectrum.emul.io.mem.MemoryControl;
 
-public interface CallReturn {
+public interface CallReturn extends MemorySetter {
     void call(int address);
 
     boolean callZ(int address);
@@ -58,6 +59,4 @@ public interface CallReturn {
     void rst30();
 
     void rst38();
-
-    void setMemory(MemoryControl memory);
 }

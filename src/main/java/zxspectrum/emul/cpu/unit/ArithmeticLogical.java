@@ -1,17 +1,14 @@
 package zxspectrum.emul.cpu.unit;
 
+import zxspectrum.emul.MemorySetter;
 import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.mem.address.Address;
 import zxspectrum.emul.io.mem.address.IdxAddress;
 
-public interface ArithmeticLogical {
+public interface ArithmeticLogical extends MemorySetter {
     int daa();
-
-    int inc(Reg16 r);
-
-    int dec(Reg16 r);
 
     int inc(Reg8 r);
 
@@ -177,6 +174,4 @@ public interface ArithmeticLogical {
     void cpi();
 
     boolean cpir();
-
-    void setMemory(MemoryControl memory);
 }

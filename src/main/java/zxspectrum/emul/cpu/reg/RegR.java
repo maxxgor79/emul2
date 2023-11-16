@@ -23,6 +23,13 @@ public class RegR extends Reg8 {
     }
 
     @Override
+    public int ld(Reg8 r) {
+        this.value = r.value & 0xFF;
+        bit7Mask = value & BIT_7;
+        return this.value;
+    }
+
+    @Override
     public int inc() {
         value = ((value + 1) & 0x7F) | bit7Mask;
         return value;

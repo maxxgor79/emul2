@@ -260,22 +260,22 @@ public class TestAL {
     @Test
     void testInc16() {
         cpu1.HL.setValue(0x1000);
-        arithmeticLogical.inc(cpu1.HL);
+        cpu1.HL.inc();
         Assertions.assertEquals(cpu1.HL.getValue(), 0x1001);
 
         cpu1.IX.setValue(0x2000);
-        arithmeticLogical.inc(cpu1.IX);
+        cpu1.IX.inc();
         Assertions.assertEquals(cpu1.IX.getValue(), 0x2001);
     }
 
     @Test
     void testDec16() {
         cpu1.HL.setValue(0x1001);
-        arithmeticLogical.dec(cpu1.HL);
+        cpu1.HL.dec();
         Assertions.assertEquals(cpu1.HL.getValue(), 0x1000);
 
         cpu1.IX.setValue(0x2001);
-        arithmeticLogical.dec(cpu1.IX);
+        cpu1.IX.dec();
         Assertions.assertEquals(cpu1.IX.getValue(), 0x2000);
     }
 

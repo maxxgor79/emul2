@@ -54,7 +54,7 @@ public class TestReg {
     void testEx() {
         cpu.HL.setValue(11);
         cpu.DE.setValue(22);
-        ldIO.ex(cpu.HL, cpu.DE);
+        cpu.HL.swap(cpu.DE);
         Assertions.assertEquals(cpu.HL.getValue(), 22);
         Assertions.assertEquals(cpu.DE.getValue(), 11);
 

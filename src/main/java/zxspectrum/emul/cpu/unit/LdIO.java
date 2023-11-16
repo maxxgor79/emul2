@@ -1,32 +1,23 @@
 package zxspectrum.emul.cpu.unit;
 
+import zxspectrum.emul.MemorySetter;
+import zxspectrum.emul.PortIOSetter;
 import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.reg.Reg8;
 import zxspectrum.emul.cpu.reg.RegA;
 import zxspectrum.emul.cpu.reg.RegBC;
 import zxspectrum.emul.cpu.reg.RegDE;
-import zxspectrum.emul.cpu.reg.RegHL;
 import zxspectrum.emul.cpu.reg.RegI;
 import zxspectrum.emul.cpu.reg.RegR;
-import zxspectrum.emul.io.mem.MemoryAccess;
 import zxspectrum.emul.io.mem.address.AbsouluteAddress;
 import zxspectrum.emul.io.mem.address.Address;
 import zxspectrum.emul.io.mem.address.IdxAddress;
 import zxspectrum.emul.io.mem.address.RpRegisteredAddress;
-import zxspectrum.emul.io.port.PortIO;
 
-public interface LdIO {
-    void ld(RegI i, RegA a);
-
-    void ld(RegR r, RegA a);
-
+public interface LdIO extends MemorySetter, PortIOSetter {
     void ld(RegA a, RegI i);
 
     void ld(RegA a, RegR r);
-
-    void ld(Reg8 r1, Reg8 r2);
-
-    void ld(Reg8 r, int n);
 
     void ld(RegA a, AbsouluteAddress address);
 
@@ -50,24 +41,11 @@ public interface LdIO {
 
     void ld(IdxAddress address, int n);
 
-
-    void ld(Address address, Reg16 hl);
-
-    void ld(RegHL hl, Address address);
-
-    void ld(Reg16 r, int n);
-
-    void ld(Reg16 r, Address address);
+    void ld(Address address, int n);
 
     void exx();
 
-    void ex(Reg16 r1, Reg16 r2);
-
     void ex(Address address, Reg16 r);
-
-    void ex(Address address, RegBC bc);
-
-    void ex(Address address, RegDE de);
 
     void in(Reg8 r, RegBC bc);
 
@@ -106,8 +84,4 @@ public interface LdIO {
     void ini();
 
     boolean inir();
-
-    void setMemory(MemoryAccess memory);
-
-    void setPortIO(PortIO portIO);
 }

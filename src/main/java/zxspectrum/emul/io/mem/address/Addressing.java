@@ -2,10 +2,11 @@ package zxspectrum.emul.io.mem.address;
 
 import lombok.NonNull;
 import org.checkerframework.checker.units.qual.A;
+import zxspectrum.emul.MemorySetter;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.io.mem.MemoryAccess;
 
-public class Addressing {
+public class Addressing implements MemorySetter {
     public final RegisteredAddress HL;
 
     public final RpRegisteredAddress BC;
@@ -34,6 +35,7 @@ public class Addressing {
         }
     }
 
+    @Override
     public void setMemory(@NonNull MemoryAccess memory) {
         HL.setMemory(memory);
         BC.setMemory(memory);

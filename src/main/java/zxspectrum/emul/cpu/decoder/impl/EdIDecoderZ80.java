@@ -1,4 +1,4 @@
-package zxspectrum.emul.cpu.decode.impl;
+package zxspectrum.emul.cpu.decoder.impl;
 
 import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;
@@ -34,13 +34,13 @@ final class EdIDecoderZ80 extends BaseIDecoderZ80 {
                 alU.neg();
                 break;
             case 0x45:
-                callReturnU.retN();
+                callRetU.retN();
                 break;
             case 0x46:
-                cpuControlU.im0();
+                cpuCrlU.im0();
                 break;
             case 0x47:
-                ldIOU.ld(cpu.I, cpu.A);
+                cpu.I.ld(cpu.A);
                 break;
             case 0x48:
                 ldIOU.in(cpu.C, cpu.BC);
@@ -55,10 +55,10 @@ final class EdIDecoderZ80 extends BaseIDecoderZ80 {
                 ldIOU.ld(cpu.BC, addressing.ABS.setAddress(fetch16()));
                 break;
             case 0x4D:
-                callReturnU.retI();
+                callRetU.retI();
                 break;
             case 0x4F:
-                ldIOU.ld(cpu.R, cpu.A);
+                cpu.R.ld(cpu.A);
                 break;
             case 0x50:
                 ldIOU.in(cpu.D, cpu.BC);
@@ -73,7 +73,7 @@ final class EdIDecoderZ80 extends BaseIDecoderZ80 {
                 ldIOU.ld(addressing.ABS.setAddress(fetch16()), cpu.DE);
                 break;
             case 0x56:
-                cpuControlU.im1();
+                cpuCrlU.im1();
                 break;
             case 0x57:
                 ldIOU.ld(cpu.A, cpu.I);
@@ -91,7 +91,7 @@ final class EdIDecoderZ80 extends BaseIDecoderZ80 {
                 ldIOU.ld(cpu.DE, addressing.ABS.setAddress(fetch16()));
                 break;
             case 0x5E:
-                cpuControlU.im2();
+                cpuCrlU.im2();
                 break;
             case 0x5F:
                 ldIOU.ld(cpu.A, cpu.R);
@@ -130,7 +130,7 @@ final class EdIDecoderZ80 extends BaseIDecoderZ80 {
                 alU.sbc(cpu.HL, cpu.SP);
                 break;
             case 0x73:
-                ldIOU.ld(addressing.ABS.setAddress(fetch16()), cpu.SP);
+                addressing.ABS.setAddress(fetch16()).poke(cpu.SP);
                 break;
             case 0x78:
                 ldIOU.in(cpu.A, cpu.BC);
@@ -142,7 +142,7 @@ final class EdIDecoderZ80 extends BaseIDecoderZ80 {
                 alU.adc(cpu.HL, cpu.SP);
                 break;
             case 0x7B:
-                ldIOU.ld(cpu.SP, addressing.ABS.setAddress(fetch16()));
+                addressing.ABS.setAddress(fetch16()).peek(cpu.SP);
                 break;
             case 0xA0:
                 ldIOU.ldi();

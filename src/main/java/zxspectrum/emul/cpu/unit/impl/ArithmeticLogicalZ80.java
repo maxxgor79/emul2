@@ -45,16 +45,6 @@ public class ArithmeticLogicalZ80 implements ArithmeticLogical, FlagTable {
     }
 
     @Override
-    public int inc(@NonNull final Reg16 r) {
-        return r.inc();
-    }
-
-    @Override
-    public int dec(@NonNull final Reg16 r) {
-        return r.dec();
-    }
-
-    @Override
     public int inc(@NonNull final Reg8 r) {
         int result = r.inc();
         cpu.F.setValue(SZ53N_ADD_TABLE[result]);
@@ -796,7 +786,7 @@ public class ArithmeticLogicalZ80 implements ArithmeticLogical, FlagTable {
     }
 
     @Override
-    public void setMemory(@NonNull MemoryControl memory) {
+    public void setMemory(@NonNull MemoryAccess memory) {
         this.memory = memory;
     }
 }

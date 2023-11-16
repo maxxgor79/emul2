@@ -15,31 +15,31 @@ public class AbsouluteAddress implements Address {
     }
 
     @Override
-    public Address peek(Reg8 r) {
+    public AbsouluteAddress peek(Reg8 r) {
         memory.peek(address, r);
         return this;
     }
 
     @Override
-    public Address peek(Reg16 r) {
+    public AbsouluteAddress peek(Reg16 r) {
         memory.peek(address, r);
         return this;
     }
 
     @Override
-    public Address poke(Reg8 r) {
+    public AbsouluteAddress poke(Reg8 r) {
         memory.poke(address, r);
         return this;
     }
 
     @Override
-    public Address poke(Reg16 r) {
+    public AbsouluteAddress poke(Reg16 r) {
         memory.poke(address, r);
         return this;
     }
 
     @Override
-    public Address setAddress(int value) {
+    public AbsouluteAddress setAddress(int value) {
         this.address = value & 0xFFFF;
         return this;
     }

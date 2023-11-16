@@ -38,16 +38,6 @@ public class LdIOZ80 implements LdIO, FlagTable {
     }
 
     @Override
-    public void ld(@NonNull final RegI i, @NonNull final RegA a) {
-        i.setValue(a.getValue());
-    }
-
-    @Override
-    public void ld(@NonNull final RegR r, @NonNull final RegA a) {
-        r.setValue(a.getValue());
-    }
-
-    @Override
     public void ld(@NonNull final RegA a, @NonNull final RegI i) {
         final int value = i.getValue();
         a.setValue(value);
@@ -75,16 +65,6 @@ public class LdIOZ80 implements LdIO, FlagTable {
             flagValue |= RegF.P_V_FLAG;
         }
         cpu.F.setValue(flagValue);
-    }
-
-    @Override
-    public void ld(@NonNull final Reg8 r1, final Reg8 r2) {
-        r1.ld(r2);
-    }
-
-    @Override
-    public void ld(@NonNull final Reg8 r, final int n) {
-        r.setValue(n);
     }
 
     @Override
@@ -155,23 +135,9 @@ public class LdIOZ80 implements LdIO, FlagTable {
     }
 
     @Override
-    public void ld(@NonNull final Address address, final Reg16 r) {
-        address.poke(r);
-    }
-
-    @Override
-    public void ld(final RegHL hl, @NonNull final Address address) {
-        address.peek(hl);
-    }
-
-    @Override
-    public void ld(final Reg16 r, final int n) {
-        r.setValue(n);
-    }
-
-    @Override
-    public void ld(final Reg16 r, @NonNull final Address address) {
-        address.peek(r);
+    public void ld(@NonNull Address address, int n) {
+        tmpReg.setValue(n);
+        address.poke(tmpReg);
     }
 
     @Override
@@ -182,31 +148,10 @@ public class LdIOZ80 implements LdIO, FlagTable {
     }
 
     @Override
-    public void ex(@NonNull final Reg16 r1, @NonNull final Reg16 r2) {
-        r1.swap(r2);
-    }
-
-    @Override
     public void ex(@NonNull final Address address, @NonNull final Reg16 r) {
         address.peek(tmpReg);
         address.poke(r);
         r.ld(tmpReg);
-    }
-
-    @Override
-    public void ex(@NonNull final Address address, final RegBC bc) {
-        address.peek(tmpReg);
-        address.poke(bc);
-        bc.ld(tmpReg);
-        cpu.WZ.setValue(address.getAddress());
-    }
-
-    @Override
-    public void ex(@NonNull final Address address, final RegDE de) {
-        address.peek(tmpReg);
-        address.poke(de);
-        de.ld(tmpReg);
-        cpu.WZ.setValue(address.getAddress());
     }
 
     @Override

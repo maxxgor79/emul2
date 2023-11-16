@@ -1,8 +1,8 @@
-package zxspectrum.emul.cpu.decode.impl;
+package zxspectrum.emul.cpu.decoder.impl;
 
 import lombok.NonNull;
 import zxspectrum.emul.cpu.Cpu;
-import zxspectrum.emul.cpu.decode.IDecoder;
+import zxspectrum.emul.cpu.decoder.IDecoder;
 import zxspectrum.emul.cpu.unit.ArithmeticLogical;
 import zxspectrum.emul.cpu.unit.CallReturn;
 import zxspectrum.emul.cpu.unit.CpuControl;
@@ -21,11 +21,11 @@ abstract class BaseIDecoderZ80 implements IDecoder {
 
     protected final ArithmeticLogical alU;
 
-    protected final Jump jumpU;
+    protected final Jump jmpU;
 
-    protected final CallReturn callReturnU;
+    protected final CallReturn callRetU;
 
-    protected final CpuControl cpuControlU;
+    protected final CpuControl cpuCrlU;
 
     protected final Addressing addressing;
 
@@ -35,9 +35,9 @@ abstract class BaseIDecoderZ80 implements IDecoder {
         this.memory = cpu.getMemory();
         this.ldIOU = ldIO;
         this.alU = al;
-        this.jumpU = jump;
-        this.callReturnU = callReturn;
-        this.cpuControlU = cpuControl;
+        this.jmpU = jump;
+        this.callRetU = callReturn;
+        this.cpuCrlU = cpuControl;
         this.addressing = new Addressing(cpu);
     }
 

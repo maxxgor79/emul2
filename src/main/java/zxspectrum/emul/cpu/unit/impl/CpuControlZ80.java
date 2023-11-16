@@ -88,7 +88,7 @@ public class CpuControlZ80 implements CpuControl {
     }
 
     @Override
-    public void setMemory(@NonNull MemoryControl memory) {
+    public void setMemory(@NonNull MemoryAccess memory) {
         this.memory = memory;
     }
 }
