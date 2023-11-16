@@ -139,26 +139,152 @@ final class DdCbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
             case 0x08:
                 alU.rrc(cpu.B, address);
                 break;
+            case 0x09:
+                alU.rrc(cpu.C, address);
+                break;
+            case 0x0A:
+                alU.rrc(cpu.D, address);
+                break;
+            case 0x0B:
+                alU.rrc(cpu.E, address);
+                break;
+            case 0x0C:
+                alU.rrc(cpu.H, address);
+                break;
+            case 0x0D:
+                alU.rrc(cpu.L, address);
+                break;
+            case 0x0F:
+                alU.rrc(cpu.A, address);
+                break;
             case 0x10:
                 alU.rl(cpu.B, address);
+                break;
+            case 0x11:
+                alU.rl(cpu.C, address);
+                break;
+            case 0x12:
+                alU.rl(cpu.D, address);
+                break;
+            case 0x13:
+                alU.rl(cpu.E, address);
+                break;
+            case 0x14:
+                alU.rl(cpu.H, address);
+                break;
+            case 0x15:
+                alU.rl(cpu.L, address);
+                break;
+            case 0x17:
+                alU.rl(cpu.A, address);
                 break;
             case 0x18:
                 alU.rr(cpu.B, address);
                 break;
+            case 0x19:
+                alU.rr(cpu.C, address);
+                break;
+            case 0x1A:
+                alU.rr(cpu.D, address);
+                break;
+            case 0x1B:
+                alU.rr(cpu.E, address);
+                break;
+            case 0x1C:
+                alU.rr(cpu.H, address);
+                break;
+            case 0x1D:
+                alU.rr(cpu.L, address);
+                break;
+            case 0x1F:
+                alU.rr(cpu.A, address);
+                break;
             case 0x20:
                 alU.sla(cpu.B, address);
+                break;
+            case 0x21:
+                alU.sla(cpu.C, address);
+                break;
+            case 0x22:
+                alU.sla(cpu.D, address);
+                break;
+            case 0x23:
+                alU.sla(cpu.E, address);
+                break;
+            case 0x24:
+                alU.sla(cpu.H, address);
+                break;
+            case 0x25:
+                alU.sla(cpu.L, address);
+                break;
+            case 0x27:
+                alU.sla(cpu.A, address);
                 break;
             case 0x28:
                 alU.sra(cpu.B, address);
                 break;
+            case 0x29:
+                alU.sra(cpu.C, address);
+                break;
+            case 0x2A:
+                alU.sra(cpu.D, address);
+                break;
+            case 0x2B:
+                alU.sra(cpu.E, address);
+                break;
+            case 0x2C:
+                alU.sra(cpu.H, address);
+                break;
+            case 0x2D:
+                alU.sra(cpu.L, address);
+                break;
+            case 0x2F:
+                alU.sra(cpu.A, address);
+                break;
             case 0x30:
                 alU.sll(cpu.B, address);
+                break;
+            case 0x31:
+                alU.sll(cpu.C, address);
+                break;
+            case 0x32:
+                alU.sll(cpu.D, address);
+                break;
+            case 0x33:
+                alU.sll(cpu.E, address);
+                break;
+            case 0x34:
+                alU.sll(cpu.H, address);
+                break;
+            case 0x35:
+                alU.sll(cpu.L, address);
                 break;
             case 0x36:
                 alU.sl1(address);
                 break;
+            case 0x37:
+                alU.sll(cpu.A, address);
+                break;
             case 0x38:
                 alU.srl(cpu.B, address);
+                break;
+            case 0x39:
+                alU.srl(cpu.C, address);
+                break;
+            case 0x3A:
+                alU.srl(cpu.D, address);
+                break;
+            case 0x3B:
+                alU.srl(cpu.E, address);
+                break;
+            case 0x3C:
+                alU.srl(cpu.H, address);
+                break;
+            case 0x3D:
+                alU.srl(cpu.L, address);
+                break;
+            case 0x3F:
+                alU.srl(cpu.A, address);
                 break;
             case 0x80:
                 alU.res(cpu.B, BIT_0, address);
