@@ -1,6 +1,7 @@
 package zxspectrum.emul.cpu.decoder.impl;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.reg.Const;
 import zxspectrum.emul.cpu.unit.ArithmeticLogical;
@@ -10,6 +11,7 @@ import zxspectrum.emul.cpu.unit.Jump;
 import zxspectrum.emul.cpu.unit.LdIO;
 import zxspectrum.emul.io.mem.address.Addressing;
 
+@Slf4j
 final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
     private Addressing addressing;
 
@@ -19,8 +21,8 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
     }
 
     @Override
-    protected void execute(int code) {
-        int subCode = fetch8();
+    protected void execute(final int code) {
+        final int subCode = fetch8();
         switch (subCode) {
             case 0x00:
                 alU.rlc(cpu.B);

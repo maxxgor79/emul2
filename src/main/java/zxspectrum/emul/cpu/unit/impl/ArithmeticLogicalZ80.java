@@ -1,6 +1,7 @@
 package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.reg.FlagTable;
 import zxspectrum.emul.cpu.reg.Reg16;
@@ -12,6 +13,7 @@ import zxspectrum.emul.io.mem.MemoryAccess;
 import zxspectrum.emul.io.mem.address.Address;
 import zxspectrum.emul.io.mem.address.IdxAddress;
 
+@Slf4j
 public class ArithmeticLogicalZ80 implements ArithmeticLogical, FlagTable {
     private final Cpu cpu;
 

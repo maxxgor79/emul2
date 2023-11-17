@@ -42,4 +42,12 @@ public interface MemoryAccess {
   void poke(int address, @NonNull Reg8 r);
 
   void poke(int address, @NonNull Reg16 r);
+
+  class Buffer {
+    public byte[] buf;
+
+    public int offset;
+
+    public int length;
+  }
 }

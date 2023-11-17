@@ -37,7 +37,6 @@ import zxspectrum.emul.io.port.PortIO;
  * @author Maxim Gorin
  */
 public abstract class Cpu implements Resettable, PortIOSetter {
-
     public final RegA A = new RegA();
 
     public final RegF F = new RegF();

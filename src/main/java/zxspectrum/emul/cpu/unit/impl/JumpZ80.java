@@ -1,12 +1,14 @@
 package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.reg.AtomicReg16;
 import zxspectrum.emul.cpu.reg.Reg16;
 import zxspectrum.emul.cpu.unit.Jump;
 import zxspectrum.emul.io.mem.address.Address;
 
+@Slf4j
 public class JumpZ80 implements Jump {
     private final Cpu cpu;
 

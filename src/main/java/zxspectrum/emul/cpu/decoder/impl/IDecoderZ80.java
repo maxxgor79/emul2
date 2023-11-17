@@ -1,6 +1,7 @@
 package zxspectrum.emul.cpu.decoder.impl;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.unit.ArithmeticLogical;
 import zxspectrum.emul.cpu.unit.CallReturn;
@@ -9,6 +10,7 @@ import zxspectrum.emul.cpu.unit.Jump;
 import zxspectrum.emul.cpu.unit.LdIO;
 import zxspectrum.emul.io.mem.MemoryAccess;
 
+@Slf4j
 public class IDecoderZ80 extends BaseIDecoderZ80 {
 
     private final CbIDecoderZ80 cbIDecoder;
@@ -31,28 +33,32 @@ public class IDecoderZ80 extends BaseIDecoderZ80 {
 
     @Override
     public void execute() {
-        final int code = fetch8();
-        switch (code) {
+        if (cpu.HALT.isValue()) {
+            cpuCrlU.nop();
+        } else {
+            final int code = fetch8();
+            switch (code) {
 
-            case 0xED:
-                edIDecoder.execute(code);
-                break;
+                case 0xED:
+                    edIDecoder.execute(code);
+                    break;
 
-            case 0xCB:
-                cbIDecoder.execute(code);
-                break;
+                case 0xCB:
+                    cbIDecoder.execute(code);
+                    break;
 
-            case 0xFD:
-                fdIDecoder.execute(code);
-                break;
+                case 0xFD:
+                    fdIDecoder.execute(code);
+                    break;
 
-            case 0xDD:
-                ddIDecoder.execute(code);
-                break;
+                case 0xDD:
+                    ddIDecoder.execute(code);
+                    break;
 
-            default:
-                execute(code);
-                break;
+                default:
+                    execute(code);
+                    break;
+            }
         }
     }
 

@@ -16,7 +16,6 @@ import zxspectrum.emul.cpu.reg.RegSP;
  */
 @Slf4j
 abstract class MemoryNotPaged implements MemoryControl {
-
     protected byte[] buf;
 
     protected RegSP sp;
@@ -177,8 +176,12 @@ abstract class MemoryNotPaged implements MemoryControl {
     }
 
     @Override
-    public byte[] flushScreen() {
-        return Arrays.copyOfRange(buf, 0x4000, 0x5FFF);
+    public Buffer getVideoBuffer() {
+        final Buffer buffer = new Buffer();
+        buffer.buf = buf;
+        buffer.offset = 0x4000;
+        buffer.length = 0x1B00;
+        return buffer;
     }
 
     @Override

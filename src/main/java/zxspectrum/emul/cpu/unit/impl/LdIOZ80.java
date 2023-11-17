@@ -1,6 +1,7 @@
 package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.unit.LdIO;
 import zxspectrum.emul.cpu.reg.AtomicReg16;
@@ -21,6 +22,7 @@ import zxspectrum.emul.io.mem.address.IdxAddress;
 import zxspectrum.emul.io.mem.address.RpRegisteredAddress;
 import zxspectrum.emul.io.port.PortIO;
 
+@Slf4j
 public class LdIOZ80 implements LdIO, FlagTable {
     private final Cpu cpu;
 

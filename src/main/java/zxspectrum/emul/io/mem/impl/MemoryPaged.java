@@ -244,8 +244,12 @@ abstract class MemoryPaged implements MemoryControl {
     }
 
     @Override
-    public byte[] flushScreen() {
-        return Arrays.copyOfRange(buf[1], 0x0000, 0x1FFF);
+    public Buffer getVideoBuffer() {
+        final Buffer buffer = new Buffer();
+        buffer.buf = buf[1];
+        buffer.offset = 0;
+        buffer.length = 0x1B00;
+        return buffer;
     }
 
     @Override

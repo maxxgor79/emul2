@@ -1,10 +1,12 @@
 package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.unit.CallReturn;
 import zxspectrum.emul.io.mem.MemoryAccess;
 
+@Slf4j
 public class CallReturnZ80 implements CallReturn {
     private final Cpu cpu;
 

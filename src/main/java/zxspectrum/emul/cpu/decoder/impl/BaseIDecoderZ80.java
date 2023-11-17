@@ -43,14 +43,14 @@ abstract class BaseIDecoderZ80 implements IDecoder {
 
     @Override
     public int fetch8() {
-        int b = memory.peek8(cpu.PC.getValue());
+        final int b = memory.peek8(cpu.PC.getValue());
         cpu.PC.inc();
         return b;
     }
 
     @Override
     public int fetch16() {
-        int w = memory.peek16(cpu.PC.getValue());
+        final int w = memory.peek16(cpu.PC.getValue());
         cpu.PC.add(2);
         return w;
     }

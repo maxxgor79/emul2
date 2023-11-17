@@ -109,7 +109,8 @@ public class MemoryDummy implements MemoryControl {
   }
 
   @Override
-  public byte[] flushScreen() {
-    return new byte[0];
+  public Buffer getVideoBuffer() {
+    Buffer buffer = new Buffer();
+    return buffer;
   }
 }

@@ -15,5 +15,5 @@ public interface MemoryControl extends Resettable, MemoryAccess {
 
   void setSP(@NonNull RegSP sp);
 
-  byte[] flushScreen();
+  Buffer getVideoBuffer();
 }

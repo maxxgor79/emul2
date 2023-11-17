@@ -1,6 +1,7 @@
 package zxspectrum.emul.cpu.decoder.impl;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.unit.ArithmeticLogical;
 import zxspectrum.emul.cpu.unit.CallReturn;
@@ -8,6 +9,7 @@ import zxspectrum.emul.cpu.unit.CpuControl;
 import zxspectrum.emul.cpu.unit.Jump;
 import zxspectrum.emul.cpu.unit.LdIO;
 
+@Slf4j
 final class EdIDecoderZ80 extends BaseIDecoderZ80 {
 
     public EdIDecoderZ80(@NonNull Cpu cpu, @NonNull LdIO ldIO, @NonNull ArithmeticLogical al, @NonNull Jump jump, @NonNull CallReturn callReturn, @NonNull CpuControl cpuControl) {
@@ -15,8 +17,8 @@ final class EdIDecoderZ80 extends BaseIDecoderZ80 {
     }
 
     @Override
-    protected void execute(int code) {
-        int subCode = fetch8();
+    protected void execute(final int code) {
+        final int subCode = fetch8();
         switch (subCode) {
             case 0x40:
                 ldIOU.in(cpu.B, cpu.BC);

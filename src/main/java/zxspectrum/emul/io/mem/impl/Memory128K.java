@@ -71,8 +71,11 @@ public class Memory128K extends MemoryPaged {
     }
 
     @Override
-    public byte[] flushScreen() {
-        return selectedShadowScreen ? Arrays.copyOfRange(pages[0x07], 0x0000, 0x1FFF) :
-                Arrays.copyOfRange(pages[0x05], 0x0000, 0x1FFF);
+    public Buffer getVideoBuffer() {
+        final Buffer buffer = new Buffer();
+        buffer.buf = selectedShadowScreen ? pages[0x07] : pages[0x05];
+        buffer.offset = 0;
+        buffer.length = 0x1B00;
+        return buffer;
     }
 }

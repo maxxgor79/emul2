@@ -1,11 +1,13 @@
 package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.reg.RegF;
 import zxspectrum.emul.cpu.unit.CpuControl;
 import zxspectrum.emul.io.mem.MemoryAccess;
 
+@Slf4j
 public class CpuControlZ80 implements CpuControl {
     private final Cpu cpu;
 

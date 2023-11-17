@@ -2,6 +2,7 @@ package zxspectrum.emul.cpu.impl;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.decoder.IDecoder;
 import zxspectrum.emul.cpu.decoder.impl.IDecoderZ80;
@@ -18,6 +19,7 @@ import zxspectrum.emul.cpu.unit.impl.LdIOZ80;
 import zxspectrum.emul.io.mem.MemoryControl;
 import zxspectrum.emul.io.port.PortIO;
 
+@Slf4j
 public class Z80 extends Cpu {
 
     private MemoryControl memory;
@@ -39,7 +41,8 @@ public class Z80 extends Cpu {
     @Getter
     private final CallReturn callReturn;
 
-    private final IDecoder decoder;
+    @Getter
+    private final IDecoder iDecoder;
 
     public Z80() {
         arithmeticLogical = new ArithmeticLogicalZ80(this);
@@ -47,7 +50,7 @@ public class Z80 extends Cpu {
         cpuControl = new CpuControlZ80(this);
         jump = new JumpZ80(this);
         callReturn = new CallReturnZ80(this);
-        decoder = new IDecoderZ80(this, ldIO, arithmeticLogical, jump, callReturn, cpuControl);
+        iDecoder = new IDecoderZ80(this, ldIO, arithmeticLogical, jump, callReturn, cpuControl);
         init();
     }
 
@@ -63,7 +66,7 @@ public class Z80 extends Cpu {
         arithmeticLogical.setMemory(memory);
         callReturn.setMemory(memory);
         cpuControl.setMemory(memory);
-        decoder.setMemory(memory);
+        iDecoder.setMemory(memory);
     }
 
     @Override
