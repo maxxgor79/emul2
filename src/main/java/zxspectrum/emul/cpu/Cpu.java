@@ -1,6 +1,9 @@
 package zxspectrum.emul.cpu;
 
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import zxspectrum.emul.PortIOSetter;
 import zxspectrum.emul.Resettable;
 import zxspectrum.emul.cpu.interruption.Trigger;
@@ -120,6 +123,11 @@ public abstract class Cpu implements Resettable, PortIOSetter {
     public final Trigger SIGNAL_NMI = new Trigger();
 
     public final Trigger SIGNAL_INT = new Trigger();
+
+    @Setter
+    @Getter
+    @NonNull
+    private ImMode im = ImMode.IM0;
 
     public abstract void setMemory(MemoryControl memory);
 

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import zxspectrum.emul.cpu.Counter;
 import zxspectrum.emul.cpu.unit.ArithmeticLogical;
 import zxspectrum.emul.cpu.unit.impl.ArithmeticLogicalZ80;
 import zxspectrum.emul.cpu.impl.Z80;
@@ -20,13 +21,15 @@ public class TestAL {
 
     private final Memory48K mem1 = new Memory48K();
 
+    private final Counter tStatesRemains = new Counter();
+
     {
         cpu1.setMemory(mem1);
         cpu1.setPortIO(new PortIO48k());
     }
 
 
-    private ArithmeticLogical arithmeticLogical = new ArithmeticLogicalZ80(cpu1);
+    private ArithmeticLogical arithmeticLogical = new ArithmeticLogicalZ80(cpu1, tStatesRemains);
 
     private Addressing addressing = new Addressing(cpu1);
 
@@ -34,7 +37,7 @@ public class TestAL {
     void testAdd() {
         cpu1.A.setValue(0x44);
         cpu1.C.setValue(0x11);
-        cpu1.getArithmeticLogical().add(cpu1.C);
+        cpu1.getALU().add(cpu1.C);
         Assertions.assertEquals(cpu1.A.getValue(), 0x55);
 
         cpu1.A.setValue(0x23);

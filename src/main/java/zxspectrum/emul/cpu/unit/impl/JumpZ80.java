@@ -2,6 +2,7 @@ package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import zxspectrum.emul.cpu.Counter;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.reg.AtomicReg16;
 import zxspectrum.emul.cpu.reg.Reg16;
@@ -14,8 +15,11 @@ public class JumpZ80 implements Jump {
 
     private final Reg16 tmpReg = new AtomicReg16();
 
-    public JumpZ80(@NonNull final Cpu cpu) {
+    private final Counter tStatesRemains;
+
+    public JumpZ80(@NonNull final Cpu cpu, @NonNull final Counter tStatesRemains) {
         this.cpu = cpu;
+        this.tStatesRemains = tStatesRemains;
     }
 
     @Override

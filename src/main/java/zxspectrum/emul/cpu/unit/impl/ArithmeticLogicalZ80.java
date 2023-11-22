@@ -2,6 +2,7 @@ package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import zxspectrum.emul.cpu.Counter;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.reg.FlagTable;
 import zxspectrum.emul.cpu.reg.Reg16;
@@ -21,9 +22,12 @@ public class ArithmeticLogicalZ80 implements ArithmeticLogical, FlagTable {
 
     private final Reg8 tmpReg = new RegA();
 
-    public ArithmeticLogicalZ80(@NonNull Cpu cpu) {
+    private final Counter tStatesRemains;
+
+    public ArithmeticLogicalZ80(@NonNull Cpu cpu, @NonNull final Counter tStatesRemains) {
         initTables();
         this.cpu = cpu;
+        this.tStatesRemains = tStatesRemains;
         this.memory = cpu.getMemory();
     }
 

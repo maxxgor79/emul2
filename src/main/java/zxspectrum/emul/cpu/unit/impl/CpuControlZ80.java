@@ -2,7 +2,9 @@ package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import zxspectrum.emul.cpu.Counter;
 import zxspectrum.emul.cpu.Cpu;
+import zxspectrum.emul.cpu.ImMode;
 import zxspectrum.emul.cpu.reg.RegF;
 import zxspectrum.emul.cpu.unit.CpuControl;
 import zxspectrum.emul.io.mem.MemoryAccess;
@@ -13,8 +15,11 @@ public class CpuControlZ80 implements CpuControl {
 
     private MemoryAccess memory;
 
-    public CpuControlZ80(@NonNull Cpu cpu) {
+    private final Counter tStatesRemains;
+
+    public CpuControlZ80(@NonNull Cpu cpu, @NonNull final Counter tStatesRemains) {
         this.cpu = cpu;
+        this.tStatesRemains = tStatesRemains;
         this.memory = cpu.getMemory();
     }
 
@@ -32,22 +37,29 @@ public class CpuControlZ80 implements CpuControl {
 
     @Override
     public void im0() {
-        //do nothing
+        cpu.setIm(ImMode.IM0);
     }
 
     @Override
     public void im1() {
+        cpu.setIm(ImMode.IM1);
+        /*
         memory.push(cpu.PC);
         cpu.PC.setValue(0x38);
         cpu.WZ.ld(cpu.PC);
+        */
+
     }
 
     @Override
     public void im2() {
+        cpu.setIm(ImMode.IM2);
+        /*
         memory.push(cpu.PC);
         final int address = cpu.I.getValue() << 8;
         cpu.PC.setValue(memory.peek16(address));
         cpu.WZ.ld(cpu.PC);
+         */
     }
 
     @Override

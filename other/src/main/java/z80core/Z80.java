@@ -1,6 +1,6 @@
 // 
 // Decompiled by Procyon v0.5.36
-// 
+
 
 package z80core;
 
@@ -1137,7 +1137,7 @@ public class Z80
                 this.opCode = this.MemIoImpl.fetchOpcode(this.regPC);
                 this.regPC = (this.regPC + 1 & 0xFFFF);
                 this.decodeOpcode(this.opCode);
-                if (this.pendingEI && this.opCode != 251) {
+                if (this.pendingEI && this.opCode != 251) {//ei
                     this.pendingEI = false;
                 }
                 if (!this.execDone) {
@@ -2440,7 +2440,7 @@ public class Z80
                 this.regPC = (this.regPC + 2 & 0xFFFF);
                 break;
             }
-            case 251: {
+            case 251: {//ei
                 this.ffIFF1 = true;
                 this.ffIFF2 = true;
                 this.pendingEI = true;

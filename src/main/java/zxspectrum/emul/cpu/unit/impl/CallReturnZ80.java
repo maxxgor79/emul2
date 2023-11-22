@@ -2,6 +2,7 @@ package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import zxspectrum.emul.cpu.Counter;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.unit.CallReturn;
 import zxspectrum.emul.io.mem.MemoryAccess;
@@ -12,8 +13,11 @@ public class CallReturnZ80 implements CallReturn {
 
     private MemoryAccess memory;
 
-    public CallReturnZ80(@NonNull final Cpu cpu) {
+    private final Counter tStatesRemains;
+
+    public CallReturnZ80(@NonNull final Cpu cpu, @NonNull final Counter tStatesRemains) {
         this.cpu = cpu;
+        this.tStatesRemains = tStatesRemains;
         this.memory = cpu.getMemory();
     }
 

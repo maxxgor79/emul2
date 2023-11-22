@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import zxspectrum.emul.cpu.Counter;
 import zxspectrum.emul.cpu.unit.LdIO;
 import zxspectrum.emul.cpu.unit.impl.LdIOZ80;
 import zxspectrum.emul.cpu.impl.Z80;
@@ -24,12 +25,14 @@ public class TestReg {
 
     private final Memory48K mem = new Memory48K();
 
+    private final Counter tStatesRemains = new Counter();
+
     {
         cpu.setMemory(mem);
         cpu.setPortIO(new PortIO48k());
     }
 
-    private final LdIO ldIO = new LdIOZ80(cpu);
+    private final LdIO ldIO = new LdIOZ80(cpu, tStatesRemains);
 
     private final Addressing addressing = new Addressing(cpu);
 

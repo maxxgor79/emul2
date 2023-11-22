@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import zxspectrum.emul.cpu.Counter;
 import zxspectrum.emul.cpu.unit.CpuControl;
 import zxspectrum.emul.cpu.unit.LdIO;
 import zxspectrum.emul.cpu.impl.Z80;
@@ -22,6 +23,8 @@ public class TestCpu {
     private final Z80 cpu = new Z80();
 
     private final Memory48K mem = new Memory48K();
+
+    private final Counter tStatesRemains = new Counter();
 
     {
         cpu.setMemory(mem);
@@ -48,9 +51,9 @@ public class TestCpu {
 
     int outPort;
 
-    private final LdIO ldIO = new LdIOZ80(cpu);
+    private final LdIO ldIO = new LdIOZ80(cpu, tStatesRemains);
 
-    private final CpuControl cpuControl = new CpuControlZ80(cpu);
+    private final CpuControl cpuControl = new CpuControlZ80(cpu, tStatesRemains);
 
     private final Addressing addressing = new Addressing(cpu);
 

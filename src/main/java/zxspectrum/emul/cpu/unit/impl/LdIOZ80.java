@@ -2,6 +2,7 @@ package zxspectrum.emul.cpu.unit.impl;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import zxspectrum.emul.cpu.Counter;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.unit.LdIO;
 import zxspectrum.emul.cpu.reg.AtomicReg16;
@@ -32,8 +33,11 @@ public class LdIOZ80 implements LdIO, FlagTable {
 
     private final Reg16 tmpReg = new AtomicReg16();
 
-    public LdIOZ80(@NonNull final Cpu cpu) {
+    private final Counter tStatesRemains;
+
+    public LdIOZ80(@NonNull final Cpu cpu, @NonNull final Counter tStatesRemains) {
         this.cpu = cpu;
+        this.tStatesRemains = tStatesRemains;
         this.memory = cpu.getMemory();
         this.portIO = cpu.getPortIO();
         initTables();
