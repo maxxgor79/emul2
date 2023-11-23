@@ -31,7 +31,7 @@ public class IDecoderZ80 extends BaseIDecoderZ80 {
         super(cpu, ldIO, al, jump, callReturn, cpuControl);
         this.tStatesRemains = tStatesRemains;
         cbIDecoder = new CbIDecoderZ80(cpu, ldIO, al, jump, callReturn, cpuControl);
-        edIDecoder = new EdIDecoderZ80(cpu, ldIO, al, jump, callReturn, cpuControl);
+        edIDecoder = new EdIDecoderZ80(cpu, tStatesRemains, ldIO, al, jump, callReturn, cpuControl);
         fdIDecoder = new FdIDecoderZ80(cpu, ldIO, al, jump, callReturn, cpuControl);
         ddIDecoder = new DdIDecoderZ80(cpu, ldIO, al, jump, callReturn, cpuControl);
     }
