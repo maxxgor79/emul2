@@ -2,6 +2,7 @@ package zxspectrum.emul.cpu.decoder.impl;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import zxspectrum.emul.cpu.Counter;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.reg.Const;
 import zxspectrum.emul.cpu.unit.ArithmeticLogical;
@@ -13,16 +14,19 @@ import zxspectrum.emul.io.mem.address.Addressing;
 
 @Slf4j
 final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
-    private Addressing addressing;
+    private final Counter tStatesRemains;
 
-    public CbIDecoderZ80(@NonNull Cpu cpu, @NonNull LdIO ldIO, @NonNull ArithmeticLogical al, @NonNull Jump jump
-            , @NonNull CallReturn callReturn, @NonNull CpuControl cpuControl) {
+    public CbIDecoderZ80(@NonNull Cpu cpu, @NonNull final Counter tStatesRemains, @NonNull LdIO ldIO
+            , @NonNull ArithmeticLogical al, @NonNull Jump jump, @NonNull CallReturn callReturn
+            , @NonNull CpuControl cpuControl) {
         super(cpu, ldIO, al, jump, callReturn, cpuControl);
+        this.tStatesRemains = tStatesRemains;
     }
 
     @Override
     protected void execute(final int code) {
         final int subCode = fetch8();
+        tStatesRemains.inc(4);
         switch (subCode) {
             case 0x00:
                 alU.rlc(cpu.B);
@@ -44,6 +48,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x06:
                 alU.rlc(addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0x07:
                 alU.rlc(cpu.A);
@@ -68,6 +73,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x0E:
                 alU.rrc(addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0x0F:
                 alU.rrc(cpu.A);
@@ -92,6 +98,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x16:
                 alU.rl(addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0x17:
                 alU.rl(cpu.A);
@@ -116,6 +123,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x1E:
                 alU.rr(addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0x1F:
                 alU.rr(cpu.A);
@@ -140,6 +148,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x26:
                 alU.sla(addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0x27:
                 alU.sla(cpu.A);
@@ -164,6 +173,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x2E:
                 alU.sra(addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0x2F:
                 alU.sra(cpu.A);
@@ -188,6 +198,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x3E:
                 alU.srl(addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0x3F:
                 alU.srl(cpu.A);
@@ -212,6 +223,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x46:
                 alU.bit(BIT_0, addressing.HL);
+                tStatesRemains.inc(4);
                 break;
             case 0x47:
                 alU.bit(BIT_0, cpu.A);
@@ -236,6 +248,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x4E:
                 alU.bit(BIT_1, addressing.HL);
+                tStatesRemains.inc(4);
                 break;
             case 0x4F:
                 alU.bit(BIT_1, cpu.A);
@@ -260,6 +273,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x56:
                 alU.bit(BIT_2, addressing.HL);
+                tStatesRemains.inc(4);
                 break;
             case 0x57:
                 alU.bit(BIT_2, cpu.A);
@@ -284,6 +298,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x5E:
                 alU.bit(BIT_3, addressing.HL);
+                tStatesRemains.inc(4);
                 break;
             case 0x5F:
                 alU.bit(BIT_3, cpu.A);
@@ -308,6 +323,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x66:
                 alU.bit(BIT_4, addressing.HL);
+                tStatesRemains.inc(4);
                 break;
             case 0x67:
                 alU.bit(BIT_4, cpu.A);
@@ -332,6 +348,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x6E:
                 alU.bit(BIT_5, addressing.HL);
+                tStatesRemains.inc(4);
                 break;
             case 0x6F:
                 alU.bit(BIT_5, cpu.A);
@@ -356,6 +373,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x76:
                 alU.bit(BIT_6, addressing.HL);
+                tStatesRemains.inc(4);
                 break;
             case 0x77:
                 alU.bit(BIT_6, cpu.A);
@@ -380,10 +398,12 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x7E:
                 alU.bit(BIT_7, addressing.HL);
+                tStatesRemains.inc(4);
                 break;
             case 0x7F:
                 alU.bit(BIT_7, cpu.A);
                 break;
+
             case 0x80:
                 alU.res(BIT_0, cpu.B);
                 break;
@@ -404,6 +424,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x86:
                 alU.res(BIT_0, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0x87:
                 alU.res(BIT_0, cpu.A);
@@ -428,6 +449,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x8E:
                 alU.res(BIT_1, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0x8F:
                 alU.res(BIT_1, cpu.A);
@@ -452,6 +474,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x96:
                 alU.res(BIT_2, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0x97:
                 alU.res(BIT_2, cpu.A);
@@ -476,6 +499,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x9E:
                 alU.res(BIT_3, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0x9F:
                 alU.res(BIT_3, cpu.A);
@@ -500,6 +524,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0xA6:
                 alU.res(BIT_4, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0xA7:
                 alU.res(BIT_4, cpu.A);
@@ -524,6 +549,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0xAE:
                 alU.res(BIT_5, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0xAF:
                 alU.res(BIT_5, cpu.A);
@@ -548,6 +574,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0xB6:
                 alU.res(BIT_6, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0xB7:
                 alU.res(BIT_6, cpu.A);
@@ -572,6 +599,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0xBE:
                 alU.res(BIT_7, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0xBF:
                 alU.res(BIT_7, cpu.A);
@@ -596,6 +624,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0xC6:
                 alU.set(BIT_0, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0xC7:
                 alU.set(BIT_0, cpu.A);
@@ -620,6 +649,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0xCE:
                 alU.set(BIT_1, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0xCF:
                 alU.set(BIT_1, cpu.A);
@@ -644,6 +674,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0xD6:
                 alU.set(BIT_2, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0xD7:
                 alU.set(BIT_2, cpu.A);
@@ -668,6 +699,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0xDE:
                 alU.set(BIT_3, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0xDF:
                 alU.set(BIT_3, cpu.A);
@@ -692,6 +724,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0xE6:
                 alU.set(BIT_4, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0xE7:
                 alU.set(BIT_4, cpu.A);
@@ -716,6 +749,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0xEE:
                 alU.set(BIT_5, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0xEF:
                 alU.set(BIT_5, cpu.A);
@@ -740,6 +774,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0xF6:
                 alU.set(BIT_6, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0xF7:
                 alU.set(BIT_6, cpu.A);
@@ -764,6 +799,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0xFE:
                 alU.set(BIT_7, addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0xFF:
                 alU.set(BIT_7, cpu.A);
@@ -789,6 +825,7 @@ final class CbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x36:
                 alU.sl1(addressing.HL);
+                tStatesRemains.inc(4 + 3);
                 break;
             case 0x37:
                 alU.sl1(cpu.A);
