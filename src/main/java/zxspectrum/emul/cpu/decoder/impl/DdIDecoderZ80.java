@@ -2,6 +2,7 @@ package zxspectrum.emul.cpu.decoder.impl;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import zxspectrum.emul.cpu.Counter;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.unit.ArithmeticLogical;
 import zxspectrum.emul.cpu.unit.CallReturn;
@@ -12,17 +13,21 @@ import zxspectrum.emul.io.mem.MemoryAccess;
 
 @Slf4j
 final class DdIDecoderZ80 extends BaseIDecoderZ80 {
+    private final Counter tStateRemains;
     private final DdCbIDecoderZ80 ddCbIDecoderZ80;
 
-    public DdIDecoderZ80(@NonNull Cpu cpu, @NonNull LdIO ldIO, @NonNull ArithmeticLogical al, @NonNull Jump jump
-            , @NonNull CallReturn callReturn, @NonNull CpuControl cpuControl) {
+    public DdIDecoderZ80(@NonNull Cpu cpu, @NonNull final Counter tStateRemains, @NonNull LdIO ldIO
+            , @NonNull ArithmeticLogical al, @NonNull Jump jump, @NonNull CallReturn callReturn
+            , @NonNull CpuControl cpuControl) {
         super(cpu, ldIO, al, jump, callReturn, cpuControl);
-        ddCbIDecoderZ80 = new DdCbIDecoderZ80(cpu, ldIO, al, jump, callReturn, cpuControl);
+        this.tStateRemains = tStateRemains;
+        ddCbIDecoderZ80 = new DdCbIDecoderZ80(cpu, tStateRemains, ldIO, al, jump, callReturn, cpuControl);
     }
 
     @Override
     protected void execute(final int code) {
         final int subCode = fetch8();
+        tStateRemains.inc(4);
         switch (subCode) {
             case 0x09:
                 alU.add(cpu.IX, cpu.BC);
@@ -235,22 +240,54 @@ final class DdIDecoderZ80 extends BaseIDecoderZ80 {
             case 0x7D:
                 cpu.A.ld(cpu.IXL);
                 break;
-            case 0x84: alU.add(cpu.IXH); break;
-            case 0x85: alU.add(cpu.IXL); break;
-            case 0x8C: alU.adc(cpu.IXH); break;
-            case 0x8D: alU.adc(cpu.IXL); break;
-            case 0x94: alU.sub(cpu.IXH); break;
-            case 0x95: alU.sub(cpu.IXL); break;
-            case 0x9C: alU.sbc(cpu.IXH); break;
-            case 0x9D: alU.sbc(cpu.IXL); break;
-            case 0xA4: alU.and(cpu.IXH); break;
-            case 0xA5: alU.and(cpu.IXL); break;
-            case 0xAC: alU.xor(cpu.IXH); break;
-            case 0xAD: alU.xor(cpu.IXL); break;
-            case 0xB4: alU.or(cpu.IXH); break;
-            case 0xB5: alU.or(cpu.IXL); break;
-            case 0xBC: alU.cp(cpu.IXH); break;
-            case 0xBD: alU.cp(cpu.IXL); break;
+            case 0x84:
+                alU.add(cpu.IXH);
+                break;
+            case 0x85:
+                alU.add(cpu.IXL);
+                break;
+            case 0x8C:
+                alU.adc(cpu.IXH);
+                break;
+            case 0x8D:
+                alU.adc(cpu.IXL);
+                break;
+            case 0x94:
+                alU.sub(cpu.IXH);
+                break;
+            case 0x95:
+                alU.sub(cpu.IXL);
+                break;
+            case 0x9C:
+                alU.sbc(cpu.IXH);
+                break;
+            case 0x9D:
+                alU.sbc(cpu.IXL);
+                break;
+            case 0xA4:
+                alU.and(cpu.IXH);
+                break;
+            case 0xA5:
+                alU.and(cpu.IXL);
+                break;
+            case 0xAC:
+                alU.xor(cpu.IXH);
+                break;
+            case 0xAD:
+                alU.xor(cpu.IXL);
+                break;
+            case 0xB4:
+                alU.or(cpu.IXH);
+                break;
+            case 0xB5:
+                alU.or(cpu.IXL);
+                break;
+            case 0xBC:
+                alU.cp(cpu.IXH);
+                break;
+            case 0xBD:
+                alU.cp(cpu.IXL);
+                break;
         }
     }
 
