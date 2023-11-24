@@ -342,7 +342,7 @@ final class DdCbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
                 break;
             case 0x35:
                 alU.sll(cpu.L, address);
-                tStatesRemains.inc(5 + 3 + 3 + 5 + 3);
+                tStatesRemains.inc(5 + 3 + 5 + 3);
                 break;
             case 0x36:
                 alU.sl1(address);
