@@ -124,14 +124,14 @@ public class CallReturnZ80 implements CallReturn {
 
     @Override
     public void retI() {
-        cpu.IFF1.setValue(cpu.IFF2.isValue());
+        cpu.IFF1.setOn(cpu.IFF2.isOn());
         memory.pop(cpu.PC);
         cpu.WZ.ld(cpu.PC);
     }
 
     @Override
     public void retN() {
-        cpu.IFF1.setValue(cpu.IFF2.isValue());
+        cpu.IFF1.setOn(cpu.IFF2.isOn());
         memory.pop(cpu.PC);
         cpu.WZ.ld(cpu.PC);
     }

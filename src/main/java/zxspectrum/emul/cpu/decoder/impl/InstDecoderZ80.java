@@ -12,33 +12,33 @@ import zxspectrum.emul.cpu.unit.LdIO;
 import zxspectrum.emul.io.mem.MemoryAccess;
 
 @Slf4j
-public class IDecoderZ80 extends BaseIDecoderZ80 {
+public class InstDecoderZ80 extends BaseInstDecoderZ80 {
 
-    private final CbIDecoderZ80 cbIDecoder;
+    private final CbInstDecoderZ80 cbIDecoder;
 
-    private final EdIDecoderZ80 edIDecoder;
+    private final EdInstDecoderZ80 edIDecoder;
 
-    private final FdIDecoderZ80 fdIDecoder;
+    private final FdInstDecoderZ80 fdIDecoder;
 
-    private final DdIDecoderZ80 ddIDecoder;
+    private final DdInstDecoderZ80 ddIDecoder;
 
     private final Counter tStatesRemains;
 
 
-    public IDecoderZ80(@NonNull final Cpu cpu, @NonNull final Counter tStatesRemains, @NonNull final LdIO ldIO
+    public InstDecoderZ80(@NonNull final Cpu cpu, @NonNull final Counter tStatesRemains, @NonNull final LdIO ldIO
             , @NonNull final ArithmeticLogical al, @NonNull final Jump jump, @NonNull final CallReturn callReturn
             , @NonNull final CpuControl cpuControl) {
         super(cpu, ldIO, al, jump, callReturn, cpuControl);
         this.tStatesRemains = tStatesRemains;
-        cbIDecoder = new CbIDecoderZ80(cpu, tStatesRemains, ldIO, al, jump, callReturn, cpuControl);
-        edIDecoder = new EdIDecoderZ80(cpu, tStatesRemains, ldIO, al, jump, callReturn, cpuControl);
-        ddIDecoder = new DdIDecoderZ80(cpu, tStatesRemains, ldIO, al, jump, callReturn, cpuControl);
-        fdIDecoder = new FdIDecoderZ80(cpu, tStatesRemains, ldIO, al, jump, callReturn, cpuControl);
+        cbIDecoder = new CbInstDecoderZ80(cpu, tStatesRemains, ldIO, al, jump, callReturn, cpuControl);
+        edIDecoder = new EdInstDecoderZ80(cpu, tStatesRemains, ldIO, al, jump, callReturn, cpuControl);
+        ddIDecoder = new DdInstDecoderZ80(cpu, tStatesRemains, ldIO, al, jump, callReturn, cpuControl);
+        fdIDecoder = new FdInstDecoderZ80(cpu, tStatesRemains, ldIO, al, jump, callReturn, cpuControl);
     }
 
     @Override
     public void execute() {
-        if (cpu.HALT.isValue()) {
+        if (cpu.HALT.isOn()) {
             cpuCrlU.nop();
         } else {
             final int code = fetch8();

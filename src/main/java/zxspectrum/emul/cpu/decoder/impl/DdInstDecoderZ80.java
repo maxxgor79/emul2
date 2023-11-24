@@ -12,16 +12,16 @@ import zxspectrum.emul.cpu.unit.LdIO;
 import zxspectrum.emul.io.mem.MemoryAccess;
 
 @Slf4j
-final class DdIDecoderZ80 extends BaseIDecoderZ80 {
+final class DdInstDecoderZ80 extends BaseInstDecoderZ80 {
     private final Counter tStateRemains;
-    private final DdCbIDecoderZ80 ddCbIDecoderZ80;
+    private final DdCbInstDecoderZ80 ddCbIDecoderZ80;
 
-    public DdIDecoderZ80(@NonNull Cpu cpu, @NonNull final Counter tStateRemains, @NonNull LdIO ldIO
+    public DdInstDecoderZ80(@NonNull Cpu cpu, @NonNull final Counter tStateRemains, @NonNull LdIO ldIO
             , @NonNull ArithmeticLogical al, @NonNull Jump jump, @NonNull CallReturn callReturn
             , @NonNull CpuControl cpuControl) {
         super(cpu, ldIO, al, jump, callReturn, cpuControl);
         this.tStateRemains = tStateRemains;
-        ddCbIDecoderZ80 = new DdCbIDecoderZ80(cpu, tStateRemains, ldIO, al, jump, callReturn, cpuControl);
+        ddCbIDecoderZ80 = new DdCbInstDecoderZ80(cpu, tStateRemains, ldIO, al, jump, callReturn, cpuControl);
     }
 
     @Override

@@ -11,11 +11,11 @@ import zxspectrum.emul.cpu.unit.Jump;
 import zxspectrum.emul.cpu.unit.LdIO;
 
 @Slf4j
-final class EdIDecoderZ80 extends BaseIDecoderZ80 {
+final class EdInstDecoderZ80 extends BaseInstDecoderZ80 {
 
     private final Counter tStatesRemains;
 
-    public EdIDecoderZ80(@NonNull Cpu cpu, @NonNull final Counter tStatesRemains, @NonNull LdIO ldIO
+    public EdInstDecoderZ80(@NonNull Cpu cpu, @NonNull final Counter tStatesRemains, @NonNull LdIO ldIO
             , @NonNull ArithmeticLogical al, @NonNull Jump jump, @NonNull CallReturn callReturn
             , @NonNull CpuControl cpuControl) {
         super(cpu, ldIO, al, jump, callReturn, cpuControl);

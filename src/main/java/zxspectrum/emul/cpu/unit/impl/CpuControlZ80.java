@@ -25,14 +25,15 @@ public class CpuControlZ80 implements CpuControl {
 
     @Override
     public void ei() {
-        cpu.IFF1.setValue(true);
-        cpu.IFF2.setValue(true);
+        cpu.IFF1.setOn(true);
+        cpu.IFF2.setOn(true);
+        cpu.pendEi();
     }
 
     @Override
     public void di() {
-        cpu.IFF1.setValue(false);
-        cpu.IFF2.setValue(false);
+        cpu.IFF1.setOn(false);
+        cpu.IFF2.setOn(false);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class CpuControlZ80 implements CpuControl {
 
     @Override
     public void halt() {
-        cpu.HALT.setValue(true);
+        cpu.HALT.setOn(true);
     }
 
     @Override

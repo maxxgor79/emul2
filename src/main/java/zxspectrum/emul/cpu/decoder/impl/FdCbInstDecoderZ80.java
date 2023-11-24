@@ -13,10 +13,10 @@ import zxspectrum.emul.cpu.unit.LdIO;
 import zxspectrum.emul.io.mem.address.IdxAddress;
 
 @Slf4j
-final class FdCbIDecoderZ80 extends BaseIDecoderZ80 implements Const {
+final class FdCbInstDecoderZ80 extends BaseInstDecoderZ80 implements Const {
     private final Counter tStatesRemains;
 
-    FdCbIDecoderZ80(@NonNull Cpu cpu, @NonNull final Counter tStatesRemains, @NonNull LdIO ldIO
+    FdCbInstDecoderZ80(@NonNull Cpu cpu, @NonNull final Counter tStatesRemains, @NonNull LdIO ldIO
             , @NonNull ArithmeticLogical al, @NonNull Jump jump, @NonNull CallReturn callReturn
             , @NonNull CpuControl cpuControl) {
         super(cpu, ldIO, al, jump, callReturn, cpuControl);

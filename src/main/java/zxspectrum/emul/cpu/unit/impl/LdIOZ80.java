@@ -13,7 +13,6 @@ import zxspectrum.emul.cpu.reg.RegA;
 import zxspectrum.emul.cpu.reg.RegBC;
 import zxspectrum.emul.cpu.reg.RegDE;
 import zxspectrum.emul.cpu.reg.RegF;
-import zxspectrum.emul.cpu.reg.RegHL;
 import zxspectrum.emul.cpu.reg.RegI;
 import zxspectrum.emul.cpu.reg.RegR;
 import zxspectrum.emul.io.mem.MemoryAccess;
@@ -52,7 +51,7 @@ public class LdIOZ80 implements LdIO, FlagTable {
         if (value == 0) {
             flagValue |= RegF.ZERO_FLAG;
         }
-        if (cpu.IFF2.isValue()) {
+        if (cpu.IFF2.isOn()) {
             flagValue |= RegF.P_V_FLAG;
         }
         cpu.F.setValue(flagValue);
@@ -67,7 +66,7 @@ public class LdIOZ80 implements LdIO, FlagTable {
         if (value == 0) {
             flagValue |= RegF.ZERO_FLAG;
         }
-        if (cpu.IFF2.isValue()) {
+        if (cpu.IFF2.isOn()) {
             flagValue |= RegF.P_V_FLAG;
         }
         cpu.F.setValue(flagValue);

@@ -11,12 +11,20 @@ public class Counter implements Resettable {
     @Getter
     private int value;
 
-    public void inc(int d) {
-        value += d;
+    public int inc(int d) {
+        return value += d;
+    }
+
+    public int dec() {
+        return --value;
     }
 
     @Override
     public void reset() {
         value = 0;
+    }
+
+    public boolean isZero() {
+        return value == 0;
     }
 }

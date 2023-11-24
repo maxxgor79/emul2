@@ -124,6 +124,8 @@ public abstract class Cpu implements Resettable, PortIOSetter {
 
     public final Trigger SIGNAL_INT = new Trigger();
 
+    public abstract void pendEi();
+
     @Setter
     @Getter
     @NonNull
@@ -135,4 +137,5 @@ public abstract class Cpu implements Resettable, PortIOSetter {
 
     public abstract PortIO getPortIO();
 
+    public abstract void clock();
 }

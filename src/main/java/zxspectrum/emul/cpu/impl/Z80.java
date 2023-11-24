@@ -6,8 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import zxspectrum.emul.cpu.Counter;
 import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.ImMode;
-import zxspectrum.emul.cpu.decoder.IDecoder;
-import zxspectrum.emul.cpu.decoder.impl.IDecoderZ80;
+import zxspectrum.emul.cpu.decoder.InstDecoder;
+import zxspectrum.emul.cpu.decoder.impl.InstDecoderZ80;
+import zxspectrum.emul.cpu.interruption.Latch;
 import zxspectrum.emul.cpu.unit.CallReturn;
 import zxspectrum.emul.cpu.unit.CpuControl;
 import zxspectrum.emul.cpu.unit.Jump;
@@ -23,6 +24,9 @@ import zxspectrum.emul.io.port.PortIO;
 
 @Slf4j
 public class Z80 extends Cpu {
+    private static final int NMI_ADDRESS = 0x66;
+
+    private static final int INT1_ADDRESS = 0x38;
 
     private final Counter tStatesRemains = new Counter();
 
@@ -46,7 +50,12 @@ public class Z80 extends Cpu {
     private final CallReturn callRetU;
 
     @Getter
-    private final IDecoder iDecoder;
+    private final InstDecoder instDecoder;
+
+    @Getter
+    private long clockCounter;
+
+    private final Latch intLatch = new Latch();
 
     public Z80() {
         aLU = new ArithmeticLogicalZ80(this, tStatesRemains);
@@ -54,7 +63,7 @@ public class Z80 extends Cpu {
         cpuCtlU = new CpuControlZ80(this, tStatesRemains);
         jmpU = new JumpZ80(this, tStatesRemains);
         callRetU = new CallReturnZ80(this, tStatesRemains);
-        iDecoder = new IDecoderZ80(this, tStatesRemains, ldIOU, aLU, jmpU, callRetU, cpuCtlU);
+        instDecoder = new InstDecoderZ80(this, tStatesRemains, ldIOU, aLU, jmpU, callRetU, cpuCtlU);
         init();
     }
 
@@ -70,7 +79,7 @@ public class Z80 extends Cpu {
         aLU.setMemory(memory);
         callRetU.setMemory(memory);
         cpuCtlU.setMemory(memory);
-        iDecoder.setMemory(memory);
+        instDecoder.setMemory(memory);
     }
 
     @Override
@@ -91,8 +100,8 @@ public class Z80 extends Cpu {
 
     @Override
     public void reset() {
-        IFF1.setValue(false);
-        IFF2.setValue(false);
+        IFF1.setOn(false);
+        IFF2.setOn(false);
         PC.setValue(0);
         MEM_PTR.setValue(0);
         SP.setValue(0xFFFF);
@@ -113,10 +122,10 @@ public class Z80 extends Cpu {
         IX.setValue(0xFFFF);
         IY.setValue(0xFFFF);
         IR.setValue(0xFF00);
-        SIGNAL_INT.setValue(false);
-        SIGNAL_NMI.setValue(false);
+        SIGNAL_INT.setOn(false);
+        SIGNAL_NMI.setOn(false);
         setIm(ImMode.IM0);
-        HALT.setValue(false);
+        HALT.setOn(false);
         tStatesRemains.reset();
         if (memory != null) {
             memory.reset();
@@ -124,5 +133,58 @@ public class Z80 extends Cpu {
         if (portIO != null) {
             portIO.reset();
         }
+        clockCounter = 0L;
+    }
+
+    @Override
+    public void clock() {
+        if (tStatesRemains.isZero()) {
+            if (SIGNAL_NMI.isOn()) {
+                execNmi();
+            } else {
+                if (SIGNAL_INT.isOn() && IFF1.isOn() && intLatch.isEnabled()) {
+                    execInt();
+                }
+                instDecoder.execute();
+                intLatch.countDown();
+            }
+        }
+        tStatesRemains.dec();
+        clockCounter++;
+    }
+
+    protected void execNmi() {
+        SIGNAL_NMI.setOn(false);
+        HALT.setOn(false);
+        IFF1.setOn(false);
+        memory.push(PC);
+        PC.setValue(NMI_ADDRESS);
+        WZ.ld(PC);
+    }
+
+    protected void execInt() {
+        HALT.setOn(false);
+        IFF1.setOn(false);
+        IFF2.setOn(false);
+        memory.push(PC);
+        switch (getIm()) {
+            case IM0 -> {
+                //ignored
+            }
+
+            case IM1 -> {
+                PC.setValue(INT1_ADDRESS);
+            }
+
+            case IM2 -> {
+                PC.setValue((R.getValue() << 8) | 0xFF);
+            }
+        }
+        WZ.ld(PC);
+    }
+
+    @Override
+    public void pendEi() {
+        intLatch.setCounter(2);
     }
 }

@@ -18,5 +18,5 @@ public class Trigger {
 
   @Setter
   @Getter
-  protected boolean value;
+  protected boolean on;
 }
