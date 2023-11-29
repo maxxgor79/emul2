@@ -1,8 +1,10 @@
 package zxspectrum.emul.machine;
 
+import lombok.NonNull;
 import zxspectrum.emul.io.port.PortIO128k;
 import zxspectrum.emul.io.sound.SoundChip;
 import zxspectrum.emul.io.sound.SoundChipFactory;
+import zxspectrum.emul.profile.ZxProfile;
 
 /**
  * ZXSpectrum128K.
@@ -15,8 +17,8 @@ class ZXSpectrum128K extends CommonZXSpectrum {
 
     private PortIO128k portInstance;
 
-    ZXSpectrum128K() {
-        super(MachineModel.SPECTRUM128K);
+    ZXSpectrum128K(@NonNull final ZxProfile profile) {
+        super(profile);
     }
 
     @Override
@@ -26,7 +28,7 @@ class ZXSpectrum128K extends CommonZXSpectrum {
 
     @Override
     protected void createSoundChip() {
-        soundChip = SoundChipFactory.getInstance(machineModel);
+        soundChip = SoundChipFactory.getInstance(profile.getSoundChipType());
     }
 
     @Override

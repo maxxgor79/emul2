@@ -12,7 +12,7 @@ import zxspectrum.emul.cpu.impl.Z80;
 import zxspectrum.emul.cpu.unit.impl.CpuControlZ80;
 import zxspectrum.emul.cpu.unit.impl.LdIOZ80;
 import zxspectrum.emul.io.mem.address.Addressing;
-import zxspectrum.emul.io.mem.impl.Memory48K;
+import zxspectrum.emul.io.mem.ram.impl.Memory48K;
 import zxspectrum.emul.io.port.PortIO48k;
 
 import java.io.IOException;

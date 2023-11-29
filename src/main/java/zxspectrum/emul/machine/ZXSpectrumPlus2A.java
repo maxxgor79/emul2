@@ -1,23 +1,24 @@
 package zxspectrum.emul.machine;
 
-import zxspectrum.emul.io.port.PortIOPlus2;
+import lombok.NonNull;
 import zxspectrum.emul.io.port.PortIOPlus2A;
 import zxspectrum.emul.io.sound.SoundChip;
 import zxspectrum.emul.io.sound.SoundChipFactory;
+import zxspectrum.emul.profile.ZxProfile;
 
 /**
  * ZXSpectrum2APlus.
  *
  * @author Maxim Gorin
  */
-class ZXSpectrum2APlus extends CommonZXSpectrum {
+class ZXSpectrumPlus2A extends CommonZXSpectrum {
 
     protected SoundChip soundChip;
 
     private PortIOPlus2A portInstance;
 
-    ZXSpectrum2APlus() {
-        super(MachineModel.SPECTRUMPLUS2A);
+    ZXSpectrumPlus2A(@NonNull final ZxProfile profile) {
+        super(profile);
     }
 
     @Override
@@ -27,7 +28,7 @@ class ZXSpectrum2APlus extends CommonZXSpectrum {
 
     @Override
     protected void createSoundChip() {
-        soundChip = SoundChipFactory.getInstance(machineModel);
+        soundChip = SoundChipFactory.getInstance(profile.getSoundChipType());
     }
 
     @Override

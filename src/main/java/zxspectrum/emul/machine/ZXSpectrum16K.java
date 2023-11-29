@@ -1,6 +1,8 @@
 package zxspectrum.emul.machine;
 
+import lombok.NonNull;
 import zxspectrum.emul.io.port.PortIO16k;
+import zxspectrum.emul.profile.ZxProfile;
 
 /**
  * ZXSpectrum16K.
@@ -11,8 +13,8 @@ class ZXSpectrum16K extends CommonZXSpectrum {
 
   private PortIO16k portInstance;
 
-  ZXSpectrum16K() {
-    super(MachineModel.SPECTRUM16K);
+  ZXSpectrum16K(@NonNull final ZxProfile profile) {
+    super(profile);
   }
 
   @Override

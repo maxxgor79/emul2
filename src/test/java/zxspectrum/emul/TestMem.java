@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import zxspectrum.emul.cpu.impl.Z80;
-import zxspectrum.emul.io.mem.MemoryFactory;
-import zxspectrum.emul.io.mem.impl.Memory128K;
-import zxspectrum.emul.machine.MachineModel;
+import zxspectrum.emul.io.mem.ram.MemoryFactory;
+import zxspectrum.emul.io.mem.ram.RamType;
+import zxspectrum.emul.io.mem.ram.impl.Memory128K;
 
 
 /**
@@ -25,7 +25,7 @@ public class TestMem {
     @Order(1)
     void testMem48k() {
         Z80 cpu = new Z80();
-        cpu.setMemory(MemoryFactory.getInstance(MachineModel.SPECTRUM48K));
+        cpu.setMemory(MemoryFactory.getInstance(RamType.Ram48k));
         cpu.A.setValue(150);
         cpu.getMemory().poke(0, cpu.A);
         int val = cpu.getMemory().peek8(0);
@@ -88,7 +88,7 @@ public class TestMem {
     @Order(2)
     void testMem128k() {
         Z80 cpu = new Z80();
-        cpu.setMemory(MemoryFactory.getInstance(MachineModel.SPECTRUM128K));
+        cpu.setMemory(MemoryFactory.getInstance(RamType.Ram128k));
         cpu.A.setValue(150);
         cpu.getMemory().poke(0, cpu.A);
         int val = cpu.getMemory().peek8(0);
@@ -151,7 +151,7 @@ public class TestMem {
     @Order(3)
     void testPaging() {
         Z80 cpu = new Z80();
-        cpu.setMemory(MemoryFactory.getInstance(MachineModel.SPECTRUM128K));
+        cpu.setMemory(MemoryFactory.getInstance(RamType.Ram128k));
         cpu.A.setValue(50);
         cpu.getMemory().poke(0xf000, cpu.A);
         cpu.A.setValue(51);
@@ -213,7 +213,7 @@ public class TestMem {
     @Order(100)
     void testPaging2() {
         Z80 cpu = new Z80();
-        cpu.setMemory(MemoryFactory.getInstance(MachineModel.SPECTRUM128K));
+        cpu.setMemory(MemoryFactory.getInstance(RamType.Ram128k));
         cpu.A.setValue(50);
         cpu.getMemory().setPageMapping(0);
         cpu.getMemory().poke(0xf000, cpu.A);
@@ -228,7 +228,7 @@ public class TestMem {
     @Order(4)
     void testPagingPlus2() {
         Z80 cpu = new Z80();
-        cpu.setMemory(MemoryFactory.getInstance(MachineModel.SPECTRUMPLUS2A));
+        cpu.setMemory(MemoryFactory.getInstance(RamType.RamPlus2A));
         cpu.getMemory().setPageMapping((0b0000_0001 << 16));
         cpu.A.setValue(190);
         cpu.getMemory().poke(0, cpu.A);

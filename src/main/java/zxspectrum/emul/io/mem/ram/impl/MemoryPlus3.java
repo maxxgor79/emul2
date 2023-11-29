@@ -1,4 +1,4 @@
-package zxspectrum.emul.io.mem.impl;
+package zxspectrum.emul.io.mem.ram.impl;
 
 import lombok.NoArgsConstructor;
 

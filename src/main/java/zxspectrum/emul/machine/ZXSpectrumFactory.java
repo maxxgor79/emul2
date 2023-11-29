@@ -1,6 +1,7 @@
 package zxspectrum.emul.machine;
 
 import lombok.NonNull;
+import zxspectrum.emul.profile.ZxProfile;
 
 /**
  * ZXSpectrumFactory.
@@ -9,30 +10,18 @@ import lombok.NonNull;
  */
 public final class ZXSpectrumFactory {
 
-  private static final ZXSpectrum16K ZX_SPECTRUM_16_K = new ZXSpectrum16K();
+    private ZXSpectrumFactory() {
 
-  private static final ZXSpectrum48K ZX_SPECTRUM_48_K = new ZXSpectrum48K();
+    }
 
-  private static final ZXSpectrum128K ZX_SPECTRUM_128_K = new ZXSpectrum128K();
-
-  private static final ZXSpectrum2Plus ZX_SPECTRUM_2_PLUS = new ZXSpectrum2Plus();
-
-  private static final ZXSpectrum2APlus ZX_SPECTRUM_2_A_PLUS = new ZXSpectrum2APlus();
-
-  private static final ZXSpectrum3Plus ZX_SPECTRUM_3_PLUS = new ZXSpectrum3Plus();
-
-  private ZXSpectrumFactory() {
-
-  }
-
-  public static ZXSpectrum getInstance(@NonNull MachineModel model) {
-    return switch (model) {
-      case SPECTRUM16K -> ZX_SPECTRUM_16_K;
-      case SPECTRUM48K -> ZX_SPECTRUM_48_K;
-      case SPECTRUM128K -> ZX_SPECTRUM_128_K;
-      case SPECTRUMPLUS2 -> ZX_SPECTRUM_2_PLUS;
-      case SPECTRUMPLUS2A -> ZX_SPECTRUM_2_A_PLUS;
-      case SPECTRUMPLUS3 -> ZX_SPECTRUM_3_PLUS;
-    };
-  }
+    public static ZXSpectrum getInstance(@NonNull final ZxProfile profile) {
+        return switch (profile.getRamType()) {
+            case Ram16k -> new ZXSpectrum16K(profile);
+            case Ram48k, Default -> new ZXSpectrum48K(profile);
+            case Ram128k -> new ZXSpectrum128K(profile);
+            case RamPlus2 -> new ZXSpectrumPlus2(profile);
+            case RamPlus2A -> new ZXSpectrumPlus2A(profile);
+            case RamPlus3 -> new ZXSpectrumPlus3(profile);
+        };
+    }
 }

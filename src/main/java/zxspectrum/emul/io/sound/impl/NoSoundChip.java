@@ -7,7 +7,7 @@ import zxspectrum.emul.io.sound.SoundChip;
  *
  * @author Maxim Gorin
  */
-public class Beeper implements SoundChip {
+public class NoSoundChip implements SoundChip {
 
   @Override
   public void reset() {

@@ -2,30 +2,20 @@ package zxspectrum.emul.cpu;
 
 import lombok.NonNull;
 import zxspectrum.emul.cpu.impl.Z80;
-import zxspectrum.emul.machine.MachineModel;
 
 /**
  * CpuFactory.
  *
  * @author Maxim Gorin
  */
-public class CpuFactory {
+public final class CpuFactory {
 
-  private static final Z80 CPU = new Z80();
+    private CpuFactory() {
+    }
 
-  private CpuFactory() {
-
-  }
-
-  public static Cpu getInstance(@NonNull MachineModel model) {
-    return switch (model) {
-      case SPECTRUM16K -> CPU;
-      case SPECTRUM48K -> CPU;
-      case SPECTRUM128K -> CPU;
-      case SPECTRUMPLUS2 -> CPU;
-      case SPECTRUMPLUS2A -> CPU;
-      case SPECTRUMPLUS3 -> CPU;
-    };
-  }
-
+    public static Cpu getInstance(@NonNull CpuType type) {
+        return switch (type) {
+            case T34VM1, Z80, Z80A, Z80B, Z80H, KM1858VM1, KM1858VM3, Default -> new Z80();
+        };
+    }
 }
