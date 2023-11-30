@@ -27,6 +27,10 @@ import java.util.Properties;
 @EqualsAndHashCode
 public class ZxProfile implements Loader {
     protected static final String ROM_DIR = "rom";
+
+    protected static final String SKIN_DIR = "skin";
+
+
     @Getter
     @Setter
     @NonNull
@@ -70,6 +74,10 @@ public class ZxProfile implements Loader {
 
     @Getter
     @Setter(AccessLevel.PROTECTED)
+    private int scanLines;
+
+    @Getter
+    @Setter(AccessLevel.PROTECTED)
     private SoundChipType soundChipType;
 
     @Getter
@@ -90,6 +98,7 @@ public class ZxProfile implements Loader {
 
     @Getter
     @Setter
+    @NonNull
     private CpuType cpuType;
 
     @Getter
@@ -106,6 +115,8 @@ public class ZxProfile implements Loader {
     @Setter(AccessLevel.PROTECTED)
     @NonNull
     private List<byte[]> roms;
+
+
 
     public boolean hasDisk() {
         return disk;
@@ -145,9 +156,9 @@ public class ZxProfile implements Loader {
         setRightBorderWidth(getInt(props, "rightBorderWidth"));
         setTopBorderHeight(getInt(props, "topBorderHeight"));
         setBottomBorderHeight(getInt(props, "bottomBorderHeight"));
-        tStatesPerLine = getInt(props, "tStatesPerLine");
+        setTStatesPerLine(getInt(props, "tStatesPerLine"));
         setIntLength(getInt(props, "intLength"));
-        cpuType = CpuType.getByName(props.getProperty("cpuType"));
+        setCpuType(CpuType.getByName(props.getProperty("cpuType")));
         setRamType(RamType.getByName(props.getProperty("ramType")));
         setUlaType(UlaType.getByName(props.getProperty("ulaType")));
         setDisk(getBoolean(props, "disk"));
@@ -160,11 +171,12 @@ public class ZxProfile implements Loader {
             final String romFileNames = props.getProperty("romFileName");
             setRoms(parseRomFileName(romFileNames));
         }
-        setTStatesPerFrame((topBorderHeight + screenHeight + bottomBorderHeight) * tStatesPerLine);
-        setIntRate(cpuType.getClockRate() / tStatesPerFrame);
+        setScanLines(getTopBorderHeight() + getScreenHeight() + getBottomBorderHeight());
+        setTStatesPerFrame(getScanLines() * getTStatesPerLine());
+        setIntRate(cpuType.getClockRate() / getTStatesPerFrame());
     }
 
-    protected static List<byte[]> parseRomFileName(String romFileName) throws IOException {
+    protected static List<byte[]> parseRomFileName(@NonNull final String romFileName) throws IOException {
         final String[] fileNames = romFileName.split(",");
         final List<byte[]> roms = new ArrayList<>(fileNames.length);
         for (String fileName : fileNames) {
@@ -175,7 +187,7 @@ public class ZxProfile implements Loader {
     }
 
 
-    protected static List<byte[]> parseRomType(String romTypes) throws IOException {
+    protected static List<byte[]> parseRomType(@NonNull final String romTypes) throws IOException {
         final String[] types = romTypes.split(",");
         final List<byte[]> roms = new ArrayList<>(types.length);
         for (String type : types) {
@@ -189,7 +201,7 @@ public class ZxProfile implements Loader {
         return Collections.unmodifiableList(roms);
     }
 
-    protected static byte[] loadRom(String name) throws IOException {
+    protected static byte[] loadRom(@NonNull final String name) throws IOException {
         return IOUtils.resourceToByteArray("/" + ROM_DIR + "/" + name);
     }
 
