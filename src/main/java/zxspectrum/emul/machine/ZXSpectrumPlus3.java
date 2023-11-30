@@ -1,6 +1,7 @@
 package zxspectrum.emul.machine;
 
 import lombok.NonNull;
+import zxspectrum.emul.io.mem.ram.RamType;
 import zxspectrum.emul.io.port.PortIOPlus3;
 import zxspectrum.emul.io.sound.SoundChip;
 import zxspectrum.emul.io.sound.SoundChipFactory;
@@ -19,6 +20,7 @@ class ZXSpectrumPlus3 extends CommonZXSpectrum {
 
     ZXSpectrumPlus3(@NonNull final ZxProfile profile) {
         super(profile);
+        assert profile.getRamType() == RamType.RamPlus3;
     }
 
     @Override

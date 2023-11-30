@@ -1,6 +1,7 @@
 package zxspectrum.emul.machine;
 
 import lombok.NonNull;
+import zxspectrum.emul.io.mem.ram.RamType;
 import zxspectrum.emul.io.port.PortIO16k;
 import zxspectrum.emul.profile.ZxProfile;
 
@@ -15,6 +16,7 @@ class ZXSpectrum16K extends CommonZXSpectrum {
 
   ZXSpectrum16K(@NonNull final ZxProfile profile) {
     super(profile);
+    assert profile.getRamType() == RamType.Ram16k;
   }
 
   @Override
