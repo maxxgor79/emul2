@@ -197,7 +197,12 @@ abstract class MemoryNotPaged extends RomMemory implements MemoryControl {
     @Override
     public void reset() {
         assert rom[0] != null : "rom[0] is null";
+        Arrays.fill(buf, 0, buf.length - 1, (byte) -1);
         System.arraycopy(rom[0], 0, buf, 0, rom[0].length);
-        Arrays.fill(buf, VIDEO_BUFFER_ADDRESS, lastAddress, (byte) -1);
+    }
+
+    @Override
+    protected void initRom() {
+        System.arraycopy(rom[0], 0, buf, 0, rom[0].length);
     }
 }

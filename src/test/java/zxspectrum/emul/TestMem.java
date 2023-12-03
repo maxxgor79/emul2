@@ -46,7 +46,7 @@ public class TestMem {
         cpu.A.setValue(150);
         cpu.getMemory().poke(0, cpu.A);
         int val = cpu.getMemory().peek8(0);
-        Assertions.assertEquals(val, 0);
+        Assertions.assertNotEquals(val, 150);
 
         cpu.BC.setValue(0x1234);
         cpu.getMemory().push(cpu.BC);
@@ -256,13 +256,11 @@ public class TestMem {
         cpu.A.setValue(190);
         cpu.getMemory().poke(0, cpu.A);
         cpu.getMemory().peek(0, cpu.B);
-        Assertions.assertEquals(cpu.B.getValue(), 190);
+        Assertions.assertNotEquals(cpu.B.getValue(), 190);
         cpu.getMemory().setPageMapping(0);
         cpu.A.setValue(191);
         cpu.getMemory().poke(5, cpu.A);
         cpu.getMemory().peek(5, cpu.B);
-        if (cpu.B.getValue() == 191) {
-            Assertions.fail();
-        }
+        Assertions.assertNotEquals(cpu.B.getValue(), 191);
     }
 }

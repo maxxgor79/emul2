@@ -30,6 +30,7 @@ abstract class RomMemory implements RomControl {
             throw new IllegalArgumentException("length != ROM_SIZE");
         }
         rom[n] = Arrays.copyOfRange(buf, offset, length);
+        initRom();
     }
 
     @Override
@@ -44,7 +45,10 @@ abstract class RomMemory implements RomControl {
             }
             rom[i] = uploadRom[i];
         }
+        initRom();
     }
+
+    abstract protected void initRom();
 
     @Override
     public abstract int getRomCount();

@@ -20,13 +20,17 @@ public final class MemoryFactory {
     }
 
     public static MemoryControl getInstance(@NonNull final ZxProfile profile) {
-        return switch (profile.getRamType()) {
-            case Ram16k -> new Memory16K(profile);
-            case Ram48k, Default -> new Memory48K(profile);
-            case Ram128k -> new Memory128K(profile);
-            case RamPlus2 -> new MemoryPlus2(profile);
-            case RamPlus2A -> new MemoryPlus2A(profile);
-            case RamPlus3 -> new MemoryPlus3(profile);
+        return getInstance(profile.getRamType());
+    }
+
+    public static MemoryControl getInstance(@NonNull final RamType type) {
+        return switch (type) {
+            case Ram16k -> new Memory16K();
+            case Ram48k, Default -> new Memory48K();
+            case Ram128k -> new Memory128K();
+            case RamPlus2 -> new MemoryPlus2();
+            case RamPlus2A -> new MemoryPlus2A();
+            case RamPlus3 -> new MemoryPlus3();
         };
     }
 }

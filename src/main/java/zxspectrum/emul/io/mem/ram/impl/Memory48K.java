@@ -11,7 +11,7 @@ import zxspectrum.emul.profile.ZxProfile;
 public class Memory48K extends MemoryNotPaged {
     protected static final int RAM_SIZE = 0x10000;
 
-    public Memory48K(@NonNull final ZxProfile profile) {
+    public Memory48K() {
         buf = new byte[RAM_SIZE];
         this.lastAddress = RAM_SIZE - 1;
     }

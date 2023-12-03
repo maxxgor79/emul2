@@ -1,8 +1,5 @@
 package zxspectrum.emul.io.mem.ram.impl;
 
-import lombok.NonNull;
-import zxspectrum.emul.profile.ZxProfile;
-
 /**
  * MemoryPlus2A.
  *
@@ -10,19 +7,18 @@ import zxspectrum.emul.profile.ZxProfile;
  */
 public class MemoryPlus2A extends MemoryPlus2 {
 
-    public static final int SELECTED_ROM_LOW = SELECTED_ROM;
+    protected static final int SELECTED_ROM_LOW = SELECTED_ROM;
 
-    public static final int SPECIAL_PAGING_MODE = 0x01;
+    protected static final int SPECIAL_PAGING_MODE = 1;
 
-    public static final int SPECIAL_ATTRIBUTE = 0x02;
+    protected static final int SPECIAL_ATTRIBUTE = 2;
 
-    public static final int SPECIAL_SELECTED_ROM_HI = 0x04;
+    protected static final int SPECIAL_SELECTED_ROM_HI = 4;
 
-    public MemoryPlus2A(@NonNull final ZxProfile profile) {
-        super(profile);
-        rom = new byte[0x04][romSize];
-        pages = new byte[0x08][PAGE_SIZE];
-        buf = new byte[0x04][];//64Kb
+    public MemoryPlus2A() {
+        rom = new byte[4][ROM_SIZE];
+        pages = new byte[8][PAGE_SIZE];
+        buf = new byte[4][];//64Kb
         lastAddress = 0xFFFF;
         lastPageIndex = 0x03;
         pagedAddressShift = 0x10 - lastPageIndex;
@@ -35,57 +31,46 @@ public class MemoryPlus2A extends MemoryPlus2 {
         if (disabledPageSelecting) {
             return;
         }
-        int normal = value & 0x3F;
+        value &= 0x3F;
         int special = (value >>> 0x10) & 0x3F;
-
-        int pageIndex = normal & SELECTED_PAGE;
-        selectedShadowScreen = (normal & SHADOW_SCREEN) != 0x00;
-        int selectedRomLo = (normal & SELECTED_ROM_LOW) == 0x00 ? 0x00 : 0x01;
-        disabledPageSelecting = (normal & DISABLED_PAGE_SELECTING) != 0x00;
-
-        boolean specialMode = (special & SPECIAL_PAGING_MODE) != 0x00;
-        int bit1 = (special & SPECIAL_ATTRIBUTE) != 0x00 ? 0x01 : 0x00;
-        int bit2;
-        int selectedRomHi = bit2 = (special & SPECIAL_SELECTED_ROM_HI) != 0x00 ? 0x02 : 0x00;
+        selectedShadowScreen = (value & SHADOW_SCREEN) != 0;
+        disabledPageSelecting = (value & DISABLED_PAGE_SELECTING) != 0;
+        boolean specialMode = (special & SPECIAL_PAGING_MODE) != 0;
 
         if (specialMode) {
-            if (bit1 == 0x00 && bit2 == 0x00) {
-                buf[0x00] = pages[0x00];
-                buf[0x01] = pages[0x01];
-                buf[0x02] = pages[0x02];
-                buf[0x03] = pages[0x03];
-            } else if (bit1 == 0x01 && bit2 == 0x00) {
-                buf[0x00] = pages[0x04];
-                buf[0x01] = pages[0x05];
-                buf[0x02] = pages[0x06];
-                buf[0x03] = pages[0x07];
-            } else if (bit1 == 0x00 && bit2 == 0x01) {
-                buf[0x00] = pages[0x04];
-                buf[0x01] = pages[0x05];
-                buf[0x02] = pages[0x06];
-                buf[0x03] = pages[0x03];
-            } else if (bit1 == 0x01 && bit2 == 0x01) {
-                buf[0x00] = pages[0x04];
-                buf[0x01] = pages[0x07];
-                buf[0x02] = pages[0x06];
-                buf[0x03] = pages[0x03];
+            int bit1 = (special & SPECIAL_ATTRIBUTE) != 0 ? 1 : 0;
+            int bit2 = (special & SPECIAL_SELECTED_ROM_HI) != 0 ? 2 : 0;
+            if (bit1 == 0 && bit2 == 0) {
+                buf[0] = pages[0];
+                buf[1] = pages[1];
+                buf[2] = pages[2];
+                buf[3] = pages[3];
+            } else if (bit1 == 1 && bit2 == 0) {
+                buf[0] = pages[4];
+                buf[1] = pages[5];
+                buf[2] = pages[6];
+                buf[3] = pages[7];
+            } else if (bit1 == 0 && bit2 == 1) {
+                buf[0] = pages[4];
+                buf[1] = pages[5];
+                buf[2] = pages[6];
+                buf[3] = pages[3];
+            } else if (bit1 == 1 && bit2 == 1) {
+                buf[0] = pages[4];
+                buf[1] = pages[7];
+                buf[2] = pages[6];
+                buf[3] = pages[3];
             }
-            romSize = 0x0000;//TODO ???
         } else {
-            int index = selectedRomHi | selectedRomLo;
-            assert rom[index] != null : "rom[index] is null";
-            buf[0x00] = rom[index];
-            buf[0x01] = pages[0x05];
-            buf[0x02] = pages[0x02];
-            buf[0x03] = pages[pageIndex];
-            romSize = ROM_SIZE;
+            selectedRom = ((special & SPECIAL_SELECTED_ROM_HI) != 0 ? 2 : 0)
+                    | ((value & SELECTED_ROM_LOW) == 0 ? 0 : 1);
+            int pageIndex = value & SELECTED_PAGE;
+            assert rom[selectedRom] != null : "rom[index] is null";
+            buf[0] = rom[selectedRom];
+            buf[1] = pages[5];
+            buf[2] = pages[2];
+            buf[3] = pages[pageIndex];
         }
-    }
-
-    @Override
-    public void reset() {
-        super.reset();
-        defaultPageMapping();
     }
 
     @Override

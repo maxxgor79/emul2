@@ -29,44 +29,49 @@ public class Memory128K extends MemoryPaged {
 
     protected boolean selectedShadowScreen;
 
+    protected int selectedRom;
+
     protected final Buffer buffer = new Buffer();
 
-    public Memory128K(@NonNull final ZxProfile profile) {
-        pages = new byte[0x08][PAGE_SIZE];
-        buf = new byte[0x04][];//64Kb
+    public Memory128K() {
+        pages = new byte[8][PAGE_SIZE];
+        buf = new byte[4][];//64Kb
         lastAddress = 0xFFFF;
         lastPageIndex = 0x03;
         pagedAddressShift = 0x10 - lastPageIndex;
         lastPageAddress = 0x3FFF;
+        romSize = ROM_SIZE;
         defaultPageMapping();
     }
 
     @Override
     public void setPageMapping(int value) {
-        value &= 0x3F;
-        if (!disabledPageSelecting) {
-            selectedShadowScreen = (value & SHADOW_SCREEN) != 0x00;
-            disabledPageSelecting = (value & DISABLED_PAGE_SELECTING) != 0x00;
-            int pageIndex = value & SELECTED_PAGE;
-            int selectedRom = (value & SELECTED_ROM) == 0x00 ? 0x00 : 0x01;
-            assert rom[selectedRom] != null;
-            buf[0x00] = rom[selectedRom];
-            buf[0x03] = pages[pageIndex];
+        if (disabledPageSelecting) {
+            return;
         }
+        value &= 0x3F;
+        selectedShadowScreen = (value & SHADOW_SCREEN) != 0;
+        disabledPageSelecting = (value & DISABLED_PAGE_SELECTING) != 0;
+        int pageIndex = value & SELECTED_PAGE;
+        selectedRom = (value & SELECTED_ROM) == 0 ? 0 : 1;
+        assert rom[selectedRom] != null;
+        buf[0] = rom[selectedRom];
+        buf[3] = pages[pageIndex];
     }
 
     protected void defaultPageMapping() {
-        buf[0x00] = rom[0x00];
-        buf[0x01] = pages[0x05];//screen
-        buf[0x02] = pages[0x02];
-        buf[0x03] = pages[0x00];
-        romSize = ROM_SIZE;
+        buf[0] = rom[selectedRom];//rom
+        buf[1] = pages[5];//screen
+        buf[2] = pages[2];
+        buf[3] = pages[0];
     }
 
     @Override
     public void reset() {
         super.reset();
         disabledPageSelecting = false;
+        selectedShadowScreen = false;
+        selectedRom = 0;
         defaultPageMapping();
         for (int i = 0; i < pages.length; i++) {
             Arrays.fill(pages[i], (byte) -1);
@@ -75,26 +80,19 @@ public class Memory128K extends MemoryPaged {
 
     @Override
     public Buffer getVideoBuffer() {
-        buffer.buf = selectedShadowScreen ? pages[0x07] : pages[0x05];
+        buffer.buf = selectedShadowScreen ? pages[7] : pages[5];
         buffer.offset = 0;
         buffer.length = VIDEO_BUFFER_SIZE;
         return buffer;
     }
 
     @Override
-    public void upload(@NonNull final byte[]... uploadRom) {
-        super.upload(uploadRom);
-        defaultPageMapping();
-    }
-
-    @Override
-    public void uploadRom(int n, @NonNull final byte[] buf, int offset, int length) {
-        super.uploadRom(n, buf, offset, length);
-        defaultPageMapping();
-    }
-
-    @Override
     public int getRomCount() {
         return 2;
+    }
+
+    @Override
+    protected void initRom() {
+        buf[0] = rom[selectedRom];
     }
 }

@@ -9,7 +9,6 @@ import zxspectrum.emul.profile.ZxProfile;
  * @author Maxim Gorin
  */
 public class MemoryPlus2 extends Memory128K {
-    public MemoryPlus2(@NonNull final ZxProfile profile) {
-        super(profile);
+    public MemoryPlus2() {
     }
 }

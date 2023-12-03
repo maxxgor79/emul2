@@ -10,7 +10,6 @@ import zxspectrum.emul.profile.ZxProfile;
  * @author Maxim Gorin
  */
 public class MemoryPlus3 extends MemoryPlus2 {
-    public MemoryPlus3(@NonNull final ZxProfile profile) {
-        super(profile);
+    public MemoryPlus3() {
     }
 }
