@@ -41,7 +41,7 @@ abstract class CommonZXSpectrum implements ZXSpectrum {
     }
 
     protected void createMemory() {
-        this.memory = MemoryFactory.getInstance(profile.getRamType());
+        this.memory = MemoryFactory.getInstance(profile);
     }
 
     protected abstract void createPortIO();
@@ -66,6 +66,12 @@ abstract class CommonZXSpectrum implements ZXSpectrum {
     }
 
     protected void initMemory() {
+        if (profile.getRoms().size() < memory.getRomCount()) {
+            throw new IllegalArgumentException(memory.getRomCount() + " rom(s) required");
+        }
+        for (int i = 0; i < memory.getRomCount(); i++) {
+            memory.upload(profile.getRoms().get(i));
+        }
     }
 
     protected abstract void initPortIO();
@@ -112,5 +118,10 @@ abstract class CommonZXSpectrum implements ZXSpectrum {
         memory.reset();
         portIO.reset();
         ula.reset();
+    }
+
+    @Override
+    public void run() {
+
     }
 }

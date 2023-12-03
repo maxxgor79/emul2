@@ -1,6 +1,5 @@
 package zxspectrum.emul.profile;
 
-import lombok.Getter;
 import lombok.NonNull;
 import org.apache.commons.io.IOUtils;
 
@@ -14,10 +13,10 @@ import java.util.Properties;
 public final class ZxProfiles {
     protected static final String FILE_NAME = "profiles.properties";
 
-    private static final ZxProfiles INSTANCE = new ZxProfiles();
+    private static final ZxProfiles instance = new ZxProfiles();
 
     public static ZxProfiles getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     private ZxProfiles() {
@@ -31,7 +30,7 @@ public final class ZxProfiles {
         return load("/" + FILE_NAME);
     }
 
-    public List<ZxProfile> load(@NonNull String fileName) throws IOException {
+    public List<ZxProfile> load(@NonNull final String fileName) throws IOException {
         Properties props = new Properties();
         props.load(new ByteArrayInputStream(IOUtils.resourceToByteArray(fileName)));
         defaultProfileName = props.getProperty("defaultProfileName");
@@ -54,7 +53,7 @@ public final class ZxProfiles {
         return profiles == null ? Collections.emptyList() : profiles;
     }
 
-    public ZxProfile getByName(@NonNull String name) {
+    public ZxProfile getByName(@NonNull final String name) {
         if (name.trim().isEmpty()) {
             return null;
         }

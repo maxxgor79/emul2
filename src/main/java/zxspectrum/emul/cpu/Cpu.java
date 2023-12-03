@@ -4,7 +4,7 @@ package zxspectrum.emul.cpu;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import zxspectrum.emul.ClockControl;
+import zxspectrum.emul.ClockExecutor;
 import zxspectrum.emul.PortIOSetter;
 import zxspectrum.emul.Resettable;
 import zxspectrum.emul.cpu.interruption.Trigger;
@@ -40,7 +40,7 @@ import zxspectrum.emul.io.port.PortIO;
  *
  * @author Maxim Gorin
  */
-public abstract class Cpu implements Resettable, PortIOSetter, ClockControl {
+public abstract class Cpu implements Resettable, PortIOSetter, ClockExecutor {
     public final RegA A = new RegA();
 
     public final RegF F = new RegF();

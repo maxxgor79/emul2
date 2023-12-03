@@ -12,35 +12,30 @@ import zxspectrum.emul.profile.ZxProfile;
  */
 class ZXSpectrum16K extends CommonZXSpectrum {
 
-  private PortIO16k portInstance;
+    private PortIO16k portInstance;
 
-  ZXSpectrum16K(@NonNull final ZxProfile profile) {
-    super(profile);
-    assert profile.getRamType() == RamType.Ram16k;
-  }
+    ZXSpectrum16K(@NonNull final ZxProfile profile) {
+        super(profile);
+        assert profile.getRamType() == RamType.Ram16k;
+    }
 
-  @Override
-  public void run() {
+    @Override
+    protected void createPortIO() {
+        portIO = portInstance = new PortIO16k();
+    }
 
-  }
+    @Override
+    protected void createSoundChip() {
 
-  @Override
-  protected void createPortIO() {
-    portIO = portInstance = new PortIO16k();
-  }
+    }
 
-  @Override
-  protected void createSoundChip() {
+    @Override
+    protected void initPortIO() {
+        portInstance.setUla(ula);
+    }
 
-  }
+    @Override
+    protected void initSoundChip() {
 
-  @Override
-  protected void initPortIO() {
-    portInstance.setUla(ula);
-  }
-
-  @Override
-  protected void initSoundChip() {
-
-  }
+    }
 }

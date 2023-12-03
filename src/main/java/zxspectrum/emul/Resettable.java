@@ -6,6 +6,5 @@ package zxspectrum.emul;
  * @author Maxim Gorin
  */
 public interface Resettable {
-
   void reset();
 }

@@ -11,10 +11,9 @@ import zxspectrum.emul.chipset.impl.UlaStd;
 public final class UlaFactory {
 
     private UlaFactory() {
-
     }
 
-    public static Ula getInstance(@NonNull UlaType type) {
+    public static Ula getInstance(@NonNull final UlaType type) {
         return switch (type) {
             case Default, UlaStd -> new UlaStd();
         };

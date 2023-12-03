@@ -1,11 +1,14 @@
 package zxspectrum.emul.io.mem.ram.impl;
 
+import lombok.NonNull;
+import zxspectrum.emul.profile.ZxProfile;
+
 /**
  * MemoryPlus2A.
  *
  * @author Maxim Gorin
  */
-public class MemoryPlus2A extends Memory128K {
+public class MemoryPlus2A extends MemoryPlus2 {
 
     public static final int SELECTED_ROM_LOW = SELECTED_ROM;
 
@@ -15,9 +18,10 @@ public class MemoryPlus2A extends Memory128K {
 
     public static final int SPECIAL_SELECTED_ROM_HI = 0x04;
 
-    public MemoryPlus2A() {
+    public MemoryPlus2A(@NonNull final ZxProfile profile) {
+        super(profile);
         rom = new byte[0x04][romSize];
-        pages = new byte[0x08][0x4000];
+        pages = new byte[0x08][PAGE_SIZE];
         buf = new byte[0x04][];//64Kb
         lastAddress = 0xFFFF;
         lastPageIndex = 0x03;
@@ -66,14 +70,15 @@ public class MemoryPlus2A extends Memory128K {
                 buf[0x02] = pages[0x06];
                 buf[0x03] = pages[0x03];
             }
-            romSize = 0x0000;
+            romSize = 0x0000;//TODO ???
         } else {
             int index = selectedRomHi | selectedRomLo;
+            assert rom[index] != null : "rom[index] is null";
             buf[0x00] = rom[index];
             buf[0x01] = pages[0x05];
             buf[0x02] = pages[0x02];
             buf[0x03] = pages[pageIndex];
-            romSize = 0x4000;
+            romSize = ROM_SIZE;
         }
     }
 
@@ -81,5 +86,10 @@ public class MemoryPlus2A extends Memory128K {
     public void reset() {
         super.reset();
         defaultPageMapping();
+    }
+
+    @Override
+    public int getRomCount() {
+        return 4;
     }
 }

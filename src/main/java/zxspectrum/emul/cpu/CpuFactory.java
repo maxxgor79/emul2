@@ -13,7 +13,7 @@ public final class CpuFactory {
     private CpuFactory() {
     }
 
-    public static Cpu getInstance(@NonNull CpuType type) {
+    public static Cpu getInstance(@NonNull final CpuType type) {
         return switch (type) {
             case T34VM1, Z80, Z80A, Z80B, Z80H, KM1858VM1, KM1858VM3, Default -> new Z80();
         };

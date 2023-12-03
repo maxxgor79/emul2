@@ -88,7 +88,7 @@ public class Z80 extends Cpu {
     }
 
     @Override
-    public void setPortIO(@NonNull PortIO portIO) {
+    public void setPortIO(@NonNull final PortIO portIO) {
         this.portIO = portIO;
         ldIOU.setPortIO(portIO);
     }

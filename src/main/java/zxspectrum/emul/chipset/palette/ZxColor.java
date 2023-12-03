@@ -36,7 +36,7 @@ public enum ZxColor {
     @Getter
     private int id;
 
-    public static final ZxColor[] darkColor = new ZxColor[7];
+    public static final ZxColor[] darkColor = new ZxColor[8];
 
     static {
         darkColor[Black.id] = Black;
@@ -49,7 +49,7 @@ public enum ZxColor {
         darkColor[Gray.id] = Gray;
     }
 
-    public static final ZxColor[] lightColor = new ZxColor[7];
+    public static final ZxColor[] lightColor = new ZxColor[8];
 
     static {
         lightColor[Black.id] = Black;

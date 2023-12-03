@@ -9,11 +9,14 @@ import zxspectrum.emul.cpu.reg.RegSP;
  *
  * @author Maxim Gorin
  */
-public interface MemoryControl extends Resettable, MemoryAccess {
+public interface MemoryControl extends Resettable, MemoryAccess, RomControl {
+    int VIDEO_BUFFER_ADDRESS = 0x4000;
 
-  void setPageMapping(int pageMapping);
+    int VIDEO_BUFFER_SIZE = 0x1B00;
 
-  void setSP(@NonNull RegSP sp);
+    void setPageMapping(int pageMapping);
 
-  Buffer getVideoBuffer();
+    void setSP(@NonNull RegSP sp);
+
+    Buffer getVideoBuffer();
 }

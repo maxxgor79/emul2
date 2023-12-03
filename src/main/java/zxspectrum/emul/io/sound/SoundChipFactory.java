@@ -12,7 +12,6 @@ import zxspectrum.emul.io.sound.impl.NoSoundChip;
  */
 public final class SoundChipFactory {
     private SoundChipFactory() {
-
     }
 
     public static SoundChip getInstance(@NonNull final SoundChipType type) {

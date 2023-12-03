@@ -15,13 +15,12 @@ import zxspectrum.emul.cpu.reg.RegSP;
  * @author Maxim Gorin
  */
 @Slf4j
-abstract class MemoryPaged implements MemoryControl {
-
+abstract class MemoryPaged extends RomMemory implements MemoryControl {
     protected byte[][] buf;
 
     protected int lastAddress;
 
-    protected int romSize = 0x4000;
+    protected int romSize = ROM_SIZE;
 
     protected RegSP sp;
 
@@ -248,7 +247,7 @@ abstract class MemoryPaged implements MemoryControl {
         final Buffer buffer = new Buffer();
         buffer.buf = buf[1];
         buffer.offset = 0;
-        buffer.length = 0x1B00;
+        buffer.length = VIDEO_BUFFER_SIZE;
         return buffer;
     }
 

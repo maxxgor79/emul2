@@ -15,14 +15,16 @@ import zxspectrum.emul.cpu.reg.RegSP;
  * @author Maxim Gorin
  */
 @Slf4j
-abstract class MemoryNotPaged implements MemoryControl {
+abstract class MemoryNotPaged extends RomMemory implements MemoryControl {
     protected byte[] buf;
 
     protected RegSP sp;
 
     protected int lastAddress;
 
-    protected int romSize = 0x4000;
+    protected int romSize = ROM_SIZE;
+
+    protected final Buffer buffer = new Buffer();
 
     @Override
     public void pop(@NonNull Reg16 r) {
@@ -177,10 +179,9 @@ abstract class MemoryNotPaged implements MemoryControl {
 
     @Override
     public Buffer getVideoBuffer() {
-        final Buffer buffer = new Buffer();
         buffer.buf = buf;
-        buffer.offset = 0x4000;
-        buffer.length = 0x1B00;
+        buffer.offset = VIDEO_BUFFER_ADDRESS;
+        buffer.length = VIDEO_BUFFER_SIZE;
         return buffer;
     }
 
@@ -195,6 +196,8 @@ abstract class MemoryNotPaged implements MemoryControl {
 
     @Override
     public void reset() {
-        Arrays.fill(buf, 0x4000, lastAddress, (byte) -1);
+        assert rom[0] != null : "rom[0] is null";
+        System.arraycopy(rom[0], 0, buf, 0, rom[0].length);
+        Arrays.fill(buf, VIDEO_BUFFER_ADDRESS, lastAddress, (byte) -1);
     }
 }

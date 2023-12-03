@@ -1,5 +1,8 @@
 package zxspectrum.emul.io.mem.ram.impl;
 
+import lombok.NonNull;
+import zxspectrum.emul.profile.ZxProfile;
+
 /**
  * Memory16K.
  *
@@ -7,9 +10,15 @@ package zxspectrum.emul.io.mem.ram.impl;
  */
 
 public class Memory16K extends MemoryNotPaged {
+    protected static final int RAM_SIZE = 0x8000;
 
-  public Memory16K() {
-    buf = new byte[0x8000];
-    this.lastAddress = 0x7FFF;
-  }
+    public Memory16K(@NonNull final ZxProfile profile) {
+        buf = new byte[RAM_SIZE];
+        this.lastAddress = RAM_SIZE - 1;
+    }
+
+    @Override
+    public int getRomCount() {
+        return 1;
+    }
 }

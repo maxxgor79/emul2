@@ -49,9 +49,4 @@ class ZXSpectrumPlus2A extends CommonZXSpectrum {
         super.reset();
         soundChip.reset();
     }
-
-    @Override
-    public void run() {
-
-    }
 }

@@ -1,5 +1,5 @@
 package zxspectrum.emul;
 
-public interface ClockControl {
+public interface ClockExecutor {
     void clock();
 }

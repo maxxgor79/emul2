@@ -2,29 +2,47 @@ package zxspectrum.emul;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.impl.Z80;
+import zxspectrum.emul.io.mem.MemoryAccess;
+import zxspectrum.emul.io.mem.address.Address;
 import zxspectrum.emul.io.mem.address.Addressing;
 import zxspectrum.emul.io.mem.ram.impl.Memory48K;
+import zxspectrum.emul.machine.ZXSpectrum;
+import zxspectrum.emul.machine.ZXSpectrumFactory;
+import zxspectrum.emul.profile.ZxProfile;
+import zxspectrum.emul.profile.ZxProfiles;
+
+import java.io.IOException;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 public class TestInstr {
-    private final Z80 cpu = new Z80();
+    final static ZxProfiles profiles = ZxProfiles.getInstance();
 
-    private final Memory48K memory = new Memory48K();
+    private static Cpu cpu;
 
-    private final Addressing addressing = new Addressing(cpu);
+    private static MemoryAccess memory;
 
-    {
-        cpu.setMemory(memory);
+    private static Addressing addressing;
+    @BeforeAll
+    static void init() throws IOException {
+        profiles.load();
+        ZxProfile profile = profiles.getByName("ZX Spectrum 48K");
+        ZXSpectrum spectrum = ZXSpectrumFactory.getInstance(profile);
+        cpu = spectrum.getCpu();
+        memory = spectrum.getMemory();
+        addressing = new Addressing(cpu);
         addressing.setMemory(memory);
     }
 
     @Test
     void testAddressingRead() {
+        addressing.reset();
         final int ADDR = 30000;
         cpu.A.setValue(0x77);
         memory.poke(ADDR, cpu.A);
@@ -88,6 +106,7 @@ public class TestInstr {
 
     @Test
     void testAddressingWrite() {
+        addressing.reset();
         final int ADDR = 40000;
         cpu.A.setValue(0x88);
         addressing.HL.setAddress(ADDR).poke(cpu.A);

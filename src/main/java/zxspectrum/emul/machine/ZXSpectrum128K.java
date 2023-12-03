@@ -49,9 +49,4 @@ class ZXSpectrum128K extends CommonZXSpectrum {
         super.reset();
         soundChip.reset();
     }
-
-    @Override
-    public void run() {
-
-    }
 }

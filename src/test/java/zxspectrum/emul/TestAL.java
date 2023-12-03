@@ -2,30 +2,45 @@ package zxspectrum.emul;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import zxspectrum.emul.cpu.Counter;
+import zxspectrum.emul.cpu.Cpu;
 import zxspectrum.emul.cpu.unit.ArithmeticLogical;
 import zxspectrum.emul.cpu.unit.impl.ArithmeticLogicalZ80;
 import zxspectrum.emul.cpu.impl.Z80;
 import zxspectrum.emul.cpu.reg.Const;
+import zxspectrum.emul.io.mem.MemoryAccess;
 import zxspectrum.emul.io.mem.address.Addressing;
 import zxspectrum.emul.io.mem.ram.impl.Memory48K;
 import zxspectrum.emul.io.port.PortIO48k;
+import zxspectrum.emul.machine.ZXSpectrum;
+import zxspectrum.emul.machine.ZXSpectrumFactory;
+import zxspectrum.emul.profile.ZxProfile;
+import zxspectrum.emul.profile.ZxProfiles;
+
+import java.io.IOException;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 public class TestAL {
-    private final Z80 cpu1 = new Z80();
+    final static ZxProfiles profiles = ZxProfiles.getInstance();
 
-    private final Memory48K mem1 = new Memory48K();
+    private static Cpu cpu1;
+
+    private static MemoryAccess mem1;
 
     private final Counter tStatesRemains = new Counter();
 
-    {
-        cpu1.setMemory(mem1);
-        cpu1.setPortIO(new PortIO48k());
+    @BeforeAll
+    static void init() throws IOException {
+        profiles.load();
+        ZxProfile profile = profiles.getByName("ZX Spectrum 48K");
+        ZXSpectrum spectrum = ZXSpectrumFactory.getInstance(profile);
+        cpu1 = spectrum.getCpu();
+        mem1 = spectrum.getMemory();
     }
 
 
@@ -37,7 +52,8 @@ public class TestAL {
     void testAdd() {
         cpu1.A.setValue(0x44);
         cpu1.C.setValue(0x11);
-        cpu1.getALU().add(cpu1.C);
+        arithmeticLogical.add(cpu1.C);
+
         Assertions.assertEquals(cpu1.A.getValue(), 0x55);
 
         cpu1.A.setValue(0x23);

@@ -42,9 +42,4 @@ class ZXSpectrum48K extends CommonZXSpectrum {
     protected void initSoundChip() {
 
     }
-
-    @Override
-    public void run() {
-
-    }
 }
